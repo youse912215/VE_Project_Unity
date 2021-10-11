@@ -1,3 +1,4 @@
+/* ウイルスデータ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Call
             public bool isActivity; //生存状態
         }
 
+        //ウイルス番号
         public enum VIRUS_NUM
         {
             CODE_CLD,
@@ -26,7 +28,7 @@ namespace Call
             CODE_19,
         }
 
-        /* 位置 */
+        //位置
         public static readonly Vector3[] pos =
         {
             new Vector3(0, 0, 0),
@@ -34,7 +36,7 @@ namespace Call
             new Vector3(0, 0, 0),
         };
 
-        /* 位置 */
+        //位置
         public static readonly Quaternion[] rot =
         {
             new Quaternion(0, 0, 0, 0),
@@ -42,7 +44,7 @@ namespace Call
             new Quaternion(0, 0, 0, 0),
         };
 
-        /* スケール */
+        //スケール
         public static readonly Vector3[] scl =
         {
             new Vector3(0, 0, 0),
@@ -50,7 +52,7 @@ namespace Call
             new Vector3(0, 0, 0),
         }; 
 
-        /* 3力 */
+        //3力
         public static readonly Vector3[] force =
             {
             new Vector3(1, 1, 1), //code.cld
@@ -65,7 +67,7 @@ namespace Call
         //ウイルス番号に対応する、値をセットする
         public static void setValue(Virus[] v, VIRUS_NUM n)
         {
-            int num = (int)n;
+            int num = (int)n; //番号取得
             v[num].pos = pos[num]; //位置取得
             v[num].rot = rot[num]; //角度取得
             v[num].scl = scl[num]; //スケール取得
