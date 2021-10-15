@@ -16,7 +16,6 @@ namespace Call
             public Vector3 force; //3力（殺傷力、感染力、突破力）
 
             public float durableValue; //耐久値
-            public int owned; //保有数 
             public bool isActivity; //生存状態
         }
 
@@ -61,18 +60,66 @@ namespace Call
 
             };
 
-        public const int num = 3;
-        private const int owned = 5;
+        public const int CATEGORY = 3;
+        public const int OWNED = 5;
 
-        //ウイルス番号に対応する、値をセットする
-        public static void setValue(Virus[] v, VIRUS_NUM n)
+        public static int[] owned = new int[CATEGORY];
+
+        /// <summary>
+        /// ウイルス番号に対応する、値をセットする
+        /// </summary>
+        /// <param name="v">ウイルス型の変数</param>
+        /// <param name="n">ウイルス名</param>
+        public static void InitValue(Virus[,] v, VIRUS_NUM n)
         {
-            int num = (int)n; //番号取得
-            v[num].pos = pos[num]; //位置取得
-            v[num].rot = rot[num]; //角度取得
-            v[num].scl = scl[num]; //スケール取得
-            v[num].force = force[num]; //3力取得
-            v[num].owned = owned;
+            int i = (int)n; //番号取得
+            owned[i] = OWNED; //保有数取得
+
+            for (int a = 0; a < OWNED; a++) v[i, a].pos = pos[i]; //位置取得
+            for (int a = 0; a < OWNED; a++) v[i, a].rot = rot[i]; //角度取得
+            for (int a = 0; a < OWNED; a++) v[i, a].scl = scl[i]; //スケール取得
+            for (int a = 0; a < OWNED; a++) v[i, a].force = force[i]; //3力取得
+            for (int a = 0; a < OWNED; a++) v[i, a].isActivity = false; //生存状態取得
+        }
+        
+        /// <summary>
+        /// ウイルスをアクティブにする
+        /// </summary>
+        /// <param name="v">ウイルス型の変数</param>
+        /// <param name="n">ウイルス名</param>
+        public static void GetVirus(VIRUS_NUM n)
+        {
+            int i = (int)n;
+            owned[i]--;
+        }
+
+        public static void ReleaseVirus(VIRUS_NUM n)
+        {
+            int i = (int)n;
+            owned[i]++;
+        }
+
+        public static void SetVirus(Virus[,] v, VIRUS_NUM n, GameObject obj)
+        {
+            int i = (int)n; //ウイルス番号
+            int j = OWNED - owned[i] - 1; //ウイルス内識別番号
+            v[i, j].isActivity = true;
+            v[i, j].pos = obj.transform.position;
+            v[i,j].rot = obj.transform.rotation;
+            v[i, j].scl = obj.transform.localScale;
+        }
+
+        public static bool ProcessOutOfRange(VIRUS_NUM n)
+        {
+            int i = (int)n;
+            if (owned[i] == 0) return true;
+            return false;
+        }
+
+        public static int AllocationNumber(VIRUS_NUM n)
+        {
+            int i = (int)n;
+            return OWNED - owned[i] - 1;
         }
     }
 }
