@@ -61,8 +61,8 @@ namespace Call
 
             };
 
-        public const int CATEGORY = 3; //
-        public const int OWNED = 5; //保有数
+        public const int CATEGORY = 3; //ウイルスの種類
+        public const int OWNED = 5; //ウイルスの保有数
         public const float CAM_DISTANCE = 4500.0f;
 
         public static int[] vNum = new int[CATEGORY]; //各ウイルスの設置数
