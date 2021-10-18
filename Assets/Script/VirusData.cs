@@ -73,7 +73,7 @@ namespace Call
         public static void InitValue(Virus[,] v, VIRUS_NUM n)
         {
             int i = (int)n; //番号取得
-            owned[i] = OWNED; //保有数取得
+            owned[i] = 0; //保有数取得
 
             for (int a = 0; a < OWNED; a++) v[i, a].pos = pos[i]; //位置取得
             for (int a = 0; a < OWNED; a++) v[i, a].rot = rot[i]; //角度取得
@@ -90,36 +90,41 @@ namespace Call
         public static void GetVirus(VIRUS_NUM n)
         {
             int i = (int)n;
-            owned[i]--;
+            if (owned[i] != 0) owned[i]++;
         }
 
         public static void ReleaseVirus(VIRUS_NUM n)
         {
             int i = (int)n;
-            owned[i]++;
+            if (owned[i] != 0) owned[i]--;
         }
 
-        public static void SetVirus(Virus[,] v, VIRUS_NUM n, GameObject obj)
+        public static void SetVirus(Virus[,] v, VIRUS_NUM n, GameObject[,] obj)
         {
             int i = (int)n; //ウイルス番号
-            int j = OWNED - owned[i] - 1; //ウイルス内識別番号
+            int j = owned[i]; //ウイルス内識別番号
             v[i, j].isActivity = true;
-            v[i, j].pos = obj.transform.position;
-            v[i,j].rot = obj.transform.rotation;
-            v[i, j].scl = obj.transform.localScale;
+        }
+
+        public static void SaveVirusPosition(Virus[,] v, VIRUS_NUM n, GameObject[,] obj, Vector3 wPos)
+        {
+            int i = (int)n; //ウイルス番号
+            int j = owned[i]; //ウイルス内識別番号
+            obj[i, j].transform.position = wPos; //現在のマウスのワールド座標を保存
+            v[i, j].isActivity = false;
         }
 
         public static bool ProcessOutOfRange(VIRUS_NUM n)
         {
             int i = (int)n;
-            if (owned[i] == 0) return true;
+            if (owned[i] >= OWNED - 1) return true;
             return false;
         }
 
-        public static int AllocationNumber(VIRUS_NUM n)
-        {
-            int i = (int)n;
-            return OWNED - owned[i] - 1;
-        }
+        //public static int AllocationNumber(VIRUS_NUM n)
+        //{
+        //    int i = (int)n;
+        //    return OWNED - owned[i] - 1;
+        //}
     }
 }
