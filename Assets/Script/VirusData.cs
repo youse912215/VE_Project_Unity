@@ -17,6 +17,7 @@ namespace Call
 
             public float durableValue; //耐久値
             public bool isActivity; //生存状態
+            
         }
 
         //ウイルス番号
@@ -60,20 +61,22 @@ namespace Call
 
             };
 
-        public const int CATEGORY = 3;
-        public const int OWNED = 5;
+        public const int CATEGORY = 3; //
+        public const int OWNED = 5; //保有数
+        public const float CAM_DISTANCE = 4500.0f;
 
-        public static int[] owned = new int[CATEGORY];
+        public static int[] vNum = new int[CATEGORY]; //各ウイルスの設置数
+        public static bool[] isLimitCapacity = new bool[CATEGORY]; //限界容量
 
         /// <summary>
         /// ウイルス番号に対応する、値をセットする
         /// </summary>
-        /// <param name="v">ウイルス型の変数</param>
+        /// <param name="v">ウイルス構造体</param>
         /// <param name="n">ウイルス名</param>
         public static void InitValue(Virus[,] v, VIRUS_NUM n)
         {
             int i = (int)n; //番号取得
-            owned[i] = 0; //保有数取得
+            vNum[i] = 0; //保有数取得
 
             for (int a = 0; a < OWNED; a++) v[i, a].pos = pos[i]; //位置取得
             for (int a = 0; a < OWNED; a++) v[i, a].rot = rot[i]; //角度取得
@@ -85,46 +88,52 @@ namespace Call
         /// <summary>
         /// ウイルスをアクティブにする
         /// </summary>
-        /// <param name="v">ウイルス型の変数</param>
         /// <param name="n">ウイルス名</param>
         public static void GetVirus(VIRUS_NUM n)
         {
-            int i = (int)n;
-            if (owned[i] != 0) owned[i]++;
+            int i = (int)n; //ウイルス番号
+
+            //ウイルス内識別番号が保有数未満なら
+            if (vNum[i] < OWNED - 1) vNum[i]++;
+            else isLimitCapacity[i] = true; //限界容量に到達
         }
 
-        public static void ReleaseVirus(VIRUS_NUM n)
-        {
-            int i = (int)n;
-            if (owned[i] != 0) owned[i]--;
-        }
-
-        public static void SetVirus(Virus[,] v, VIRUS_NUM n, GameObject[,] obj)
+        /// <summary>
+        /// ウイルスを生成し、生存情報を取得する
+        /// </summary>
+        /// <param name="v">ウイルス構造体</param>
+        /// <param name="n">ウイルス名</param>
+        /// <param name="obj">ウイルスオブジェクト</param>
+        public static void GenerationVirus(Virus[,] v, VIRUS_NUM n, GameObject[,] obj)
         {
             int i = (int)n; //ウイルス番号
-            int j = owned[i]; //ウイルス内識別番号
+            int j = vNum[i]; //ウイルス内識別番号
             v[i, j].isActivity = true;
         }
 
+        /// <summary>
+        /// 設置指定したウイルスの座標を保存する
+        /// </summary>
+        /// <param name="v">ウイルス構造体</param>
+        /// <param name="n">ウイルス名</param>
+        /// <param name="obj">ウイルスオブジェクト（プレハブ）</param>
+        /// <param name="wPos">ワールド座標</param>
         public static void SaveVirusPosition(Virus[,] v, VIRUS_NUM n, GameObject[,] obj, Vector3 wPos)
         {
             int i = (int)n; //ウイルス番号
-            int j = owned[i]; //ウイルス内識別番号
+            int j = vNum[i]; //ウイルス内識別番号
             obj[i, j].transform.position = wPos; //現在のマウスのワールド座標を保存
             v[i, j].isActivity = false;
         }
 
+        /// <summary>
+        /// 範囲外処理
+        /// </summary>
+        /// <param name="n">ウイルス名</param>
+        /// <returns>限界容量の状態</returns>
         public static bool ProcessOutOfRange(VIRUS_NUM n)
         {
-            int i = (int)n;
-            if (owned[i] >= OWNED - 1) return true;
-            return false;
+            return isLimitCapacity[(int)n];
         }
-
-        //public static int AllocationNumber(VIRUS_NUM n)
-        //{
-        //    int i = (int)n;
-        //    return OWNED - owned[i] - 1;
-        //}
     }
 }

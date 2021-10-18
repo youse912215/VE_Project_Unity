@@ -12,16 +12,17 @@ public class ActVirus : MonoBehaviour
 
     public static bool isButtonActive;
 
+    public GameObject obj;
+
     GameObject[,] virusObj2D = new GameObject[CATEGORY, OWNED];
 
     public static bool[] act = new bool[10000];
 
     Vector3 pos;
 
-        Vector3 mousePos;
-        Vector3 worldPos;
-        Camera cam;
-        public static int iNum; //識別番号
+    Vector3 mousePos;
+    Vector3 worldPos;
+    Camera cam;
 
     // Start is called before the first frame update
     void Start()
@@ -31,65 +32,62 @@ public class ActVirus : MonoBehaviour
         InitValue(virus, CODE_19);
 
         isButtonActive = false;
-        iNum = 0;
+    }
+
+    // Pushing any buttons
+    public void ButtonPush()
+    {
+        if (ProcessOutOfRange(CODE_CLD)) return;
+        isButtonActive = ReverseFlag(isButtonActive);
+
+        if (isButtonActive)
+        {         
+            /* ウイルスが生成される */
+            GenerationVirus(virus, CODE_CLD, virusObj2D);
+            virusObj2D[(int)CODE_CLD, vNum[(int)CODE_CLD]] = Instantiate(obj); //ゲームオブジェクトを生成
+            virusObj2D[(int)CODE_CLD, vNum[(int)CODE_CLD]].SetActive(true); //アクティブ状態にする 
+        }
+        else 
+        {
+            virus[(int)CODE_CLD, vNum[(int)CODE_CLD]].isActivity = false;
+            Destroy(virusObj2D[(int)CODE_CLD, vNum[(int)CODE_CLD]]); //ゲームオブジェクトを削除
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         mousePos = Input.mousePosition;
-        mousePos.z = 4500.0f;
+        mousePos.z = CAM_DISTANCE;
 
         cam = Camera.main;
         worldPos = cam.ScreenToWorldPoint(mousePos);
 
-        if (virus[(int)CODE_CLD, owned[(int)CODE_CLD]].isActivity)
-            virusObj2D[(int)CODE_CLD, owned[(int)CODE_CLD]].transform.position = worldPos;
+        if (virus[(int)CODE_CLD, vNum[(int)CODE_CLD]].isActivity)
+            virusObj2D[(int)CODE_CLD, vNum[(int)CODE_CLD]].transform.position = worldPos;
 
         if (!isButtonActive) return;
-        if (Input.GetMouseButtonDown(1))
-        {
-            SaveVirusPosition(virus, CODE_CLD, virusObj2D, worldPos);
-            isButtonActive = ReverseFlag(isButtonActive);
-            iNum++;
-        }
-
-        
+        SetVirus(); //ウイルスを設置
     }
 
-    public void ButtonPush()
-    {
-        if (ProcessOutOfRange(CODE_CLD)) return;
-        
-
-        isButtonActive = ReverseFlag(isButtonActive);
-
-        if (isButtonActive)
-        {
-            GetVirus(CODE_CLD);
-            //iNum = AllocationNumber(CODE_CLD);
-
-            /* ウイルスが生成される */
-            SetVirus(virus, CODE_CLD, virusObj2D);
-            virusObj2D[(int)CODE_CLD, owned[(int)CODE_CLD]] = GameObject.Find("Virus3D"); //ウイルスオブジェクトを取得
-            Instantiate(
-                virusObj2D[(int)CODE_CLD, owned[(int)CODE_CLD]],
-                virusObj2D[(int)CODE_CLD, owned[(int)CODE_CLD]].transform.position,
-                Quaternion.identity); //ゲームオブジェクトを生成
-            virusObj2D[(int)CODE_CLD, owned[(int)CODE_CLD]].SetActive(true); //アクティブ状態にする
-            act[iNum] = true;
-        }
-        else 
-        {
-            Destroy(virusObj2D[(int)CODE_CLD, owned[(int)CODE_CLD]]); //ゲームオブジェクトを削除
-            act[iNum] = false;
-            ReleaseVirus(CODE_CLD);
-        }
-    }
-
-    //flagを反転する
+    /// <summary>
+    /// flagを反転する
+    /// </summary>
     private bool ReverseFlag(bool flag)
     {
         return !flag ? true : false;
+    }
+
+    /// <summary>
+    /// ウイルスを設置
+    /// </summary>
+    private void SetVirus()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            SaveVirusPosition(virus, CODE_CLD, virusObj2D, worldPos);
+            GetVirus(CODE_CLD);
+            isButtonActive = false;
+        }
     }
 }
