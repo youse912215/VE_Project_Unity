@@ -67,6 +67,7 @@ namespace Call
 
         public static int[] vNum = new int[CATEGORY]; //各ウイルスの設置数
         public static bool[] isLimitCapacity = new bool[CATEGORY]; //限界容量
+        public static string VirusName = "Virus";
 
         /// <summary>
         /// ウイルス番号に対応する、値をセットする
@@ -103,8 +104,7 @@ namespace Call
         /// </summary>
         /// <param name="v">ウイルス構造体</param>
         /// <param name="n">ウイルス名</param>
-        /// <param name="obj">ウイルスオブジェクト</param>
-        public static void GenerationVirus(Virus[,] v, VIRUS_NUM n, GameObject[,] obj)
+        public static void GenerationVirus(Virus[,] v, VIRUS_NUM n)
         {
             int i = (int)n; //ウイルス番号
             int j = vNum[i]; //ウイルス内識別番号
@@ -131,9 +131,9 @@ namespace Call
         /// </summary>
         /// <param name="n">ウイルス名</param>
         /// <returns>限界容量の状態</returns>
-        public static bool ProcessOutOfRange(VIRUS_NUM n)
+        public static bool ProcessOutOfRange(int n)
         {
-            return isLimitCapacity[(int)n];
+            return isLimitCapacity[n];
         }
     }
 }

@@ -10,42 +10,54 @@ public class ActVirus : MonoBehaviour
 {
     private Virus[,] virus = new Virus[CATEGORY, OWNED];
     private GameObject[,] virusObj = new GameObject[CATEGORY, OWNED]; 
-    public GameObject prefab;
+    private GameObject prefab;
     private bool isButtonActive;
 
     private Vector3 mousePos; //マウス座標
     private Vector3 worldPos; //ワールド座標
     private Camera cam; //カメラオブジェクト
 
+    private int buttonMode;
+    private int oldMode;
+
     // Start is called before the first frame update
     void Start()
     {
+        
+
         InitValue(virus, CODE_CLD);
         InitValue(virus, CODE_INF);
         InitValue(virus, CODE_19);
 
         isButtonActive = false;
         cam = Camera.main;
+
+        buttonMode = 0;
+        oldMode = buttonMode;
     }
 
     // Pushing any buttons
-    private void ButtonPush()
+    public void ButtonPush(int n)
     {
-        if (ProcessOutOfRange(CODE_CLD)) return;
+        if (isButtonActive && buttonMode != n) return;
+
+        if (ProcessOutOfRange(n)) return;
         isButtonActive = ReverseFlag(isButtonActive);
 
         if (isButtonActive)
         {         
             /* ウイルスが生成される */
-            GenerationVirus(virus, CODE_CLD, virusObj); //ウイルス生成
-            virusObj[(int)CODE_CLD, vNum[(int)CODE_CLD]] = Instantiate(prefab); //ゲームオブジェクトを生成
-            virusObj[(int)CODE_CLD, vNum[(int)CODE_CLD]].SetActive(true); //アクティブ状態にする 
+            GenerationVirus(virus, (VIRUS_NUM)n); //ウイルス生成
+            prefab = GameObject.Find(VirusName + n.ToString()); //ウイルス番号に合致するPrefabを取得
+            virusObj[n, vNum[n]] = Instantiate(prefab); //ゲームオブジェクトを生成
+            virusObj[n, vNum[n]].SetActive(true); //アクティブ状態にする
+            buttonMode = n;
         }
         else 
         {
             /* ウイルスを削除する */
-            virus[(int)CODE_CLD, vNum[(int)CODE_CLD]].isActivity = false; //生存状態をfalse
-            Destroy(virusObj[(int)CODE_CLD, vNum[(int)CODE_CLD]]); //ゲームオブジェクトを削除
+            virus[n, vNum[n]].isActivity = false; //生存状態をfalse
+            Destroy(virusObj[n, vNum[n]]); //ゲームオブジェクトを削除
         }
     }
 
@@ -54,8 +66,8 @@ public class ActVirus : MonoBehaviour
     {
         MoveVirus(); //ウイルスを移動
 
-        if (virus[(int)CODE_CLD, vNum[(int)CODE_CLD]].isActivity)
-            virusObj[(int)CODE_CLD, vNum[(int)CODE_CLD]].transform.position = worldPos;
+        if (virus[buttonMode, vNum[buttonMode]].isActivity)
+            virusObj[buttonMode, vNum[buttonMode]].transform.position = worldPos;
 
         if (!isButtonActive) return;
         SetVirus(); //ウイルスを設置
@@ -77,8 +89,8 @@ public class ActVirus : MonoBehaviour
         //クリック
         if (Input.GetMouseButtonDown(1))
         {
-            SaveVirusPosition(virus, CODE_CLD, virusObj, worldPos);
-            GetVirus(CODE_CLD);
+            SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos);
+            GetVirus((VIRUS_NUM)buttonMode);
             isButtonActive = false;
         }
     }
