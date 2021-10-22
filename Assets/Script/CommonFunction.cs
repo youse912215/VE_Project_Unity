@@ -6,16 +6,12 @@ namespace Call
 {
     public class CommonFunction : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        /// <summary>
+        /// flag‚ð”½“]‚·‚é
+        /// </summary>
+        public static bool ReverseFlag(bool flag)
         {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            return !flag ? true : false;
         }
     }
 }

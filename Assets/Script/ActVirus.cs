@@ -4,7 +4,7 @@ using UnityEngine;
 
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
-using static Call.TransformVirus;
+using static Call.CommonFunction;
 
 public class ActVirus : MonoBehaviour
 {
@@ -23,12 +23,10 @@ public class ActVirus : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-
         InitValue(virus, CODE_CLD);
         InitValue(virus, CODE_INF);
         InitValue(virus, CODE_19);
-
+        
         isButtonActive = false;
         cam = Camera.main;
 
@@ -66,6 +64,7 @@ public class ActVirus : MonoBehaviour
     {
         MoveVirus(); //ウイルスを移動
 
+        //ウイルスオブジェクトの位置をワールド座標で更新する
         if (virus[buttonMode, vNum[buttonMode]].isActivity)
             virusObj[buttonMode, vNum[buttonMode]].transform.position = worldPos;
 
@@ -73,25 +72,19 @@ public class ActVirus : MonoBehaviour
         SetVirus(); //ウイルスを設置
     }
 
-    /// <summary>
-    /// flagを反転する
-    /// </summary>
-    private bool ReverseFlag(bool flag)
-    {
-        return !flag ? true : false;
-    }
+    
 
     /// <summary>
     /// ウイルスを設置
     /// </summary>
     private void SetVirus()
     {
-        //クリック
+        //クリック操作
         if (Input.GetMouseButtonDown(1))
         {
-            SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos);
-            GetVirus((VIRUS_NUM)buttonMode);
-            isButtonActive = false;
+            SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos); //設置したウイルス座標を保存
+            GetVirus((VIRUS_NUM)buttonMode); //ウイルスをアクティブにする
+            isButtonActive = false; //ボタン操作をfalse
         }
     }
 
@@ -100,8 +93,8 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     private void MoveVirus()
     {
-        mousePos = Input.mousePosition;
-        mousePos.z = CAM_DISTANCE;  
-        worldPos = cam.ScreenToWorldPoint(mousePos);
+        mousePos = Input.mousePosition; //マウスの座標を取得
+        mousePos.z = CAM_DISTANCE; //マウスz座標にカメラとの距離を代入
+        worldPos = cam.ScreenToWorldPoint(mousePos); //スクリーン→ワールド変換
     }
 }
