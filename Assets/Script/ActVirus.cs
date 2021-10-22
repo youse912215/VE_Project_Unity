@@ -5,20 +5,23 @@ using UnityEngine;
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
 using static Call.CommonFunction;
+using static ShowMenu;
 
 public class ActVirus : MonoBehaviour
 {
     private Virus[,] virus = new Virus[CATEGORY, OWNED];
     private GameObject[,] virusObj = new GameObject[CATEGORY, OWNED]; 
     private GameObject prefab;
-    private bool isButtonActive;
 
-    private Vector3 mousePos; //マウス座標
+    private bool isButtonActive;
+ 
+    public static Vector3 mousePos; //マウス座標
     private Vector3 worldPos; //ワールド座標
     private Camera cam; //カメラオブジェクト
 
     private int buttonMode;
-    private int oldMode;
+
+    Vector3 t2Pos = new Vector3(100, 100, 200);
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +34,6 @@ public class ActVirus : MonoBehaviour
         cam = Camera.main;
 
         buttonMode = 0;
-        oldMode = buttonMode;
     }
 
     // Pushing any buttons
@@ -62,6 +64,8 @@ public class ActVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("AAA" + a);
+
         MoveVirus(); //ウイルスを移動
 
         //ウイルスオブジェクトの位置をワールド座標で更新する
@@ -97,4 +101,9 @@ public class ActVirus : MonoBehaviour
         mousePos.z = CAM_DISTANCE; //マウスz座標にカメラとの距離を代入
         worldPos = cam.ScreenToWorldPoint(mousePos); //スクリーン→ワールド変換
     }
+
+    //public static bool GetButtonActive()
+    //{
+    //    return isButtonActive;
+    //} 
 }

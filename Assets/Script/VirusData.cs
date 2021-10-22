@@ -67,7 +67,7 @@ namespace Call
 
         public static int[] vNum = new int[CATEGORY]; //各ウイルスの設置数
         public static bool[] isLimitCapacity = new bool[CATEGORY]; //限界容量
-        public static string VirusName = "Virus";
+        public static string VirusName = "Virus"; //ウイルス頭名
 
         /// <summary>
         /// ウイルス番号に対応する、値をセットする
@@ -79,11 +79,13 @@ namespace Call
             int i = (int)n; //番号取得
             vNum[i] = 0; //保有数取得
 
-            for (int a = 0; a < OWNED; a++) v[i, a].pos = pos[i]; //位置取得
-            for (int a = 0; a < OWNED; a++) v[i, a].rot = rot[i]; //角度取得
-            for (int a = 0; a < OWNED; a++) v[i, a].scl = scl[i]; //スケール取得
-            for (int a = 0; a < OWNED; a++) v[i, a].force = force[i]; //3力取得
-            for (int a = 0; a < OWNED; a++) v[i, a].isActivity = false; //生存状態取得
+            for (int a = 0; a < OWNED; a++) {
+                v[i, a].pos = pos[i]; //位置取得
+                v[i, a].rot = rot[i]; //角度取得
+                v[i, a].scl = scl[i]; //スケール取得
+                v[i, a].force = force[i]; //3力取得
+                v[i, a].isActivity = false; //生存状態取得
+            }
         }
         
         /// <summary>
@@ -108,7 +110,7 @@ namespace Call
         {
             int i = (int)n; //ウイルス番号
             int j = vNum[i]; //ウイルス内識別番号
-            v[i, j].isActivity = true;
+            v[i, j].isActivity = true; //生存状態をアクティブ
         }
 
         /// <summary>
@@ -123,7 +125,7 @@ namespace Call
             int i = (int)n; //ウイルス番号
             int j = vNum[i]; //ウイルス内識別番号
             obj[i, j].transform.position = wPos; //現在のマウスのワールド座標を保存
-            v[i, j].isActivity = false;
+            v[i, j].isActivity = false; //生存状態をインアクティブ
         }
 
         /// <summary>
