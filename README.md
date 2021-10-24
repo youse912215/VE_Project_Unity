@@ -1,2 +1,2 @@
 # VirusEvolutionProject_Unity
-This is Game, and team project...
+チーム製作（2021/10 -） ジャンル : TowerDefence、Simulation
