@@ -44,6 +44,7 @@ public class ShowMenu : MonoBehaviour
     /// </summary>
     public static void OpenMenu()
     {
+        Debug.Log("マウス" + mousePos);
         ReverseMenuFlag(OPEN); //メニューを開く
     }
 

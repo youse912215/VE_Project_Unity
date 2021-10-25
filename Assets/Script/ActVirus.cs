@@ -13,7 +13,10 @@ public class ActVirus : MonoBehaviour
 {
     private Virus[,] virus = new Virus[CATEGORY, OWNED]; //ウイルス構造体配列
     private GameObject[,] virusObj = new GameObject[CATEGORY, OWNED]; //ウイルスオブジェクト配列
-    private GameObject prefab; //ウイルスプレファブ
+    private GameObject vPrefab; //ウイルスプレファブ
+    private GameObject[] rangeObj = new GameObject[CATEGORY * OWNED]; //範囲オブジェクト配列
+    private GameObject rPrefab; //範囲プレファブ
+    private int rangeCount; //範囲オブジェクト個数
 
     private bool isGrabbedVirus; //ウイルスを掴んでいるか
     private Vector3 worldPos; //ワールド座標
@@ -29,6 +32,24 @@ public class ActVirus : MonoBehaviour
         
         isGrabbedVirus = false;
         buttonMode = 0;
+
+        rPrefab = GameObject.Find("VirusRange");
+        rangeCount = 0;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換 //ウイルスを移動
+
+        Debug.Log("ワールド座標" + worldPos);
+
+        //ウイルスオブジェクトの位置をワールド座標で更新する
+        if (virus[buttonMode, vNum[buttonMode]].isActivity)
+            virusObj[buttonMode, vNum[buttonMode]].transform.position = worldPos;
+
+        if (!isGrabbedVirus) return;
+        OpenVirusMenu(); //ウイルスメニューを開く
     }
 
     /// <summary>
@@ -63,6 +84,7 @@ public class ActVirus : MonoBehaviour
     {
         if (!isGrabbedVirus) return;
         virus[buttonMode, vNum[buttonMode]].isActivity = true; //再びアクティブ状態に
+        RemoveVirusRange(); //ウイルス範囲をリムーブ
         ReverseMenuFlag(BACK); //メニューを閉じる
     }
 
@@ -74,20 +96,8 @@ public class ActVirus : MonoBehaviour
         if (!isGrabbedVirus) return;
         DestroyVirus(); // ウイルスを削除する
         isGrabbedVirus = ReverseFlag(isGrabbedVirus);
+        RemoveVirusRange(); //ウイルス範囲をリムーブ
         ReverseMenuFlag(BACK); //メニューを閉じる
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換 //ウイルスを移動
-
-        //ウイルスオブジェクトの位置をワールド座標で更新する
-        if (virus[buttonMode, vNum[buttonMode]].isActivity)
-            virusObj[buttonMode, vNum[buttonMode]].transform.position = worldPos;
-
-        if (!isGrabbedVirus) return;
-        OpenVirusMenu(); //ウイルスメニューを開く
     }
 
     /// <summary>
@@ -97,8 +107,8 @@ public class ActVirus : MonoBehaviour
     public void CreateVirus(int n)
     {
         GenerationVirus(virus, (VIRUS_NUM)n); //ウイルス生成
-        prefab = GameObject.Find(VirusName + n.ToString()); //ウイルス番号に合致するPrefabを取得
-        virusObj[n, vNum[n]] = Instantiate(prefab); //ゲームオブジェクトを生成
+        vPrefab = GameObject.Find(VirusName + n.ToString()); //ウイルス番号に合致するPrefabを取得
+        virusObj[n, vNum[n]] = Instantiate(vPrefab); //ゲームオブジェクトを生成
         virusObj[n, vNum[n]].SetActive(true); //アクティブ状態にする
         buttonMode = n; //現在のボタンの状態を更新
     }
@@ -128,8 +138,30 @@ public class ActVirus : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
+            Debug.Log("Virus::" + virusObj[buttonMode, vNum[buttonMode]].transform.position);
             OpenMenu(); //メニューを開く
             SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos); //設置したウイルス座標を保存
+            SetVirusRange(); //ウイルス範囲をセット
         }
+    }
+
+    /// <summary>
+    /// ウイルス範囲をセット
+    /// </summary>
+    private void SetVirusRange()
+    {
+        rangeObj[rangeCount] = Instantiate(rPrefab); //範囲オブジェクトを生成
+        rangeObj[rangeCount].SetActive(true); //アクティブ状態に
+        rangeObj[rangeCount].transform.position = worldPos; //ウイルスと同じ座標に保存
+        rangeCount++; //カウントを増やす
+    }
+
+    /// <summary>
+    /// ウイルス範囲をリムーブ
+    /// </summary>
+    private void RemoveVirusRange()
+    {
+        rangeCount--; //カウント減らす
+        Destroy(rangeObj[rangeCount]); //範囲オブジェクトを削除
     }
 }

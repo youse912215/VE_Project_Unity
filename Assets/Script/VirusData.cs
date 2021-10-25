@@ -123,7 +123,8 @@ namespace Call
         {
             int i = (int)n; //ウイルス番号
             int j = vNum[i]; //ウイルス内識別番号
-            obj[i, j].transform.position = wPos; //現在のマウスのワールド座標を保存
+            obj[i, j].transform.position = wPos; //ウイルスオブジェクトに、現在のマウスのワールド座標を保存
+            v[i, j].pos = wPos;  //ウイルス構造体に、現在のマウスのワールド座標を保存
             v[i, j].isActivity = false; //生存状態をインアクティブ
         }
 
