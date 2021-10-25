@@ -15,11 +15,16 @@ namespace Call
 
         //メニューUI
         public static readonly Vector3 INIT_MENU_POS = new Vector3(-9999.0f, -9999.0f, 0.0f);
+        public static readonly Vector3 BACK_SET_POS = new Vector3(0.0f, 0.0f, 0.0f);
+        public static readonly Vector3 BACK_AFTER_POS = new Vector3(0.0f, -30.0f, 0.0f);
 
         //メニュータイプ
         public enum MENU_TYPE : int
         {
-            OPEN,
+            SET,
+            DELETE,
+            MOVE,
+            DETAIL,
             BACK,
         }
     }

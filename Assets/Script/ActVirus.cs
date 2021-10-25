@@ -37,7 +37,7 @@ public class ActVirus : MonoBehaviour
     {
         worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換 //ウイルスを移動
 
-        //Debug.Log("ワールド座標" + worldPos);
+        if (!isGrabbedVirus && isColllider && Input.GetMouseButtonDown(1)) OpenAfterMenu(); //設置後メニューを開く
 
         //ウイルスオブジェクトの位置をワールド座標で更新する
         if (virus[buttonMode, vNum[buttonMode]].isActivity)
@@ -130,8 +130,7 @@ public class ActVirus : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            //Debug.Log("Virus::" + virusObj[buttonMode, vNum[buttonMode]].transform.position);
-            OpenMenu(); //メニューを開く
+            OpenSetMenu(); //メニューを開く
             SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos); //設置したウイルス座標を保存
         }
     }
