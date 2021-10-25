@@ -46,6 +46,9 @@ public class ActVirus : MonoBehaviour
         else DestroyVirus(); // ウイルスを削除する
     }
 
+    /// <summary>
+    /// Pushing set button
+    /// </summary>
     public void SetButtonPush()
     {
         if (!isGrabbedVirus) return;
@@ -53,6 +56,9 @@ public class ActVirus : MonoBehaviour
         ReverseMenuFlag(BACK); //メニューを閉じる
     }
 
+    /// <summary>
+    /// Pushing back button
+    /// </summary>
     public void BackButtonPush()
     {
         if (!isGrabbedVirus) return;
@@ -60,6 +66,9 @@ public class ActVirus : MonoBehaviour
         ReverseMenuFlag(BACK); //メニューを閉じる
     }
 
+    /// <summary>
+    /// pushing delete button
+    /// </summary>
     public void DeleteButtonPush()
     {
         if (!isGrabbedVirus) return;
