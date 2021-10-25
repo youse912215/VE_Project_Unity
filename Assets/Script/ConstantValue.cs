@@ -12,6 +12,16 @@ namespace Call
 
         //カメラ
         public const float CAM_DISTANCE = 4500.0f;
+
+        //メニューUI
+        public static readonly Vector3 INIT_MENU_POS = new Vector3(-9999.0f, -9999.0f, 0.0f);
+
+        //メニュータイプ
+        public enum MENU_TYPE : int
+        {
+            OPEN,
+            BACK,
+        }
     }
 }
 

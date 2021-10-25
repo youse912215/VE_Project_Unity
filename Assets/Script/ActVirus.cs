@@ -5,29 +5,29 @@ using UnityEngine;
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
 using static Call.CommonFunction;
+using static Call.ConstantValue.MENU_TYPE;
 using static ShowMenu;
+
 
 public class ActVirus : MonoBehaviour
 {
-    private Virus[,] virus = new Virus[CATEGORY, OWNED];
-    private GameObject[,] virusObj = new GameObject[CATEGORY, OWNED]; 
-    private GameObject prefab;
+    private Virus[,] virus = new Virus[CATEGORY, OWNED]; //ウイルス構造体配列
+    private GameObject[,] virusObj = new GameObject[CATEGORY, OWNED]; //ウイルスオブジェクト配列
+    private GameObject prefab; //ウイルスプレファブ
 
-    private bool isButtonActive;
-     private Vector3 worldPos; //ワールド座標
-    
-    bool RIGHT;
-
+    private bool isGrabbedVirus; //ウイルスを掴んでいるか
+    private Vector3 worldPos; //ワールド座標
     private int buttonMode; //ボタンの状態（ウイルスの種類）
 
     // Start is called before the first frame update
     void Start()
     {
+        /* ウイルス情報の初期化 */
         InitValue(virus, CODE_CLD);
         InitValue(virus, CODE_INF);
         InitValue(virus, CODE_19);
         
-        isButtonActive = false;
+        isGrabbedVirus = false;
         buttonMode = 0;
     }
 
@@ -35,28 +35,37 @@ public class ActVirus : MonoBehaviour
     /// Pushing any buttons
     /// </summary>
     /// <param name="n">ウイルスの種類（番号）</param>
-    public void ButtonPush(int n)
+    public void VirusButtonPush(int n)
     {
-        if (isButtonActive && buttonMode != n) return;
+        if (isGrabbedVirus && buttonMode != n) return;
 
         if (ProcessOutOfRange(n)) return;
-        isButtonActive = ReverseFlag(isButtonActive);
+        isGrabbedVirus = ReverseFlag(isGrabbedVirus);
 
-        if (isButtonActive)
-        {         
-            /* ウイルスが生成される */
-            GenerationVirus(virus, (VIRUS_NUM)n); //ウイルス生成
-            prefab = GameObject.Find(VirusName + n.ToString()); //ウイルス番号に合致するPrefabを取得
-            virusObj[n, vNum[n]] = Instantiate(prefab); //ゲームオブジェクトを生成
-            virusObj[n, vNum[n]].SetActive(true); //アクティブ状態にする
-            buttonMode = n;
-        }
-        else 
-        {
-            /* ウイルスを削除する */
-            virus[n, vNum[n]].isActivity = false; //生存状態をfalse
-            Destroy(virusObj[n, vNum[n]]); //ゲームオブジェクトを削除
-        }
+        if (isGrabbedVirus) CreateVirus(n); //ウイルスを作成する
+        else DestroyVirus(); // ウイルスを削除する
+    }
+
+    public void SetButtonPush()
+    {
+        if (!isGrabbedVirus) return;
+        SetVirus(); //ウイルスを設置
+        ReverseMenuFlag(BACK); //メニューを閉じる
+    }
+
+    public void BackButtonPush()
+    {
+        if (!isGrabbedVirus) return;
+        virus[buttonMode, vNum[buttonMode]].isActivity = true; //再びアクティブ状態に
+        ReverseMenuFlag(BACK); //メニューを閉じる
+    }
+
+    public void DeleteButtonPush()
+    {
+        if (!isGrabbedVirus) return;
+        DestroyVirus(); // ウイルスを削除する
+        isGrabbedVirus = ReverseFlag(isGrabbedVirus);
+        ReverseMenuFlag(BACK); //メニューを閉じる
     }
 
     // Update is called once per frame
@@ -68,8 +77,30 @@ public class ActVirus : MonoBehaviour
         if (virus[buttonMode, vNum[buttonMode]].isActivity)
             virusObj[buttonMode, vNum[buttonMode]].transform.position = worldPos;
 
-        if (!isButtonActive) return;
-        SetVirus(); //ウイルスを設置
+        if (!isGrabbedVirus) return;
+        OpenVirusMenu(); //ウイルスメニューを開く
+    }
+
+    /// <summary>
+    /// ウイルスを作成する
+    /// </summary>
+    /// <param name="n">ウイルスの種類（番号）</param>
+    public void CreateVirus(int n)
+    {
+        GenerationVirus(virus, (VIRUS_NUM)n); //ウイルス生成
+        prefab = GameObject.Find(VirusName + n.ToString()); //ウイルス番号に合致するPrefabを取得
+        virusObj[n, vNum[n]] = Instantiate(prefab); //ゲームオブジェクトを生成
+        virusObj[n, vNum[n]].SetActive(true); //アクティブ状態にする
+        buttonMode = n; //現在のボタンの状態を更新
+    }
+
+    /// <summary>
+    /// ウイルスを削除する
+    /// </summary>
+    private void DestroyVirus()
+    {
+        virus[buttonMode, vNum[buttonMode]].isActivity = false; //生存状態をfalse
+        Destroy(virusObj[buttonMode, vNum[buttonMode]]); //ゲームオブジェクトを削除
     }
 
     /// <summary>
@@ -77,12 +108,19 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     private void SetVirus()
     {
-        //クリック操作
+        GetVirus((VIRUS_NUM)buttonMode); //ウイルスをアクティブにする
+        isGrabbedVirus = false; //ボタン操作をfalse
+    }
+
+    /// <summary>
+    /// ウイルスメニューを開く
+    /// </summary>
+    private void OpenVirusMenu()
+    {
         if (Input.GetMouseButtonDown(1))
         {
+            OpenMenu(); //メニューを開く
             SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos); //設置したウイルス座標を保存
-            GetVirus((VIRUS_NUM)buttonMode); //ウイルスをアクティブにする
-            isButtonActive = false; //ボタン操作をfalse
         }
     }
 }
