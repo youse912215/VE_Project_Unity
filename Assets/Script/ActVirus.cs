@@ -14,14 +14,11 @@ public class ActVirus : MonoBehaviour
     private GameObject prefab;
 
     private bool isButtonActive;
- 
-    public static Vector3 mousePos; //マウス座標
-    private Vector3 worldPos; //ワールド座標
-    private Camera cam; //カメラオブジェクト
+     private Vector3 worldPos; //ワールド座標
+    
+    bool RIGHT;
 
-    private int buttonMode;
-
-    Vector3 t2Pos = new Vector3(100, 100, 200);
+    private int buttonMode; //ボタンの状態（ウイルスの種類）
 
     // Start is called before the first frame update
     void Start()
@@ -31,12 +28,13 @@ public class ActVirus : MonoBehaviour
         InitValue(virus, CODE_19);
         
         isButtonActive = false;
-        cam = Camera.main;
-
         buttonMode = 0;
     }
 
-    // Pushing any buttons
+    /// <summary>
+    /// Pushing any buttons
+    /// </summary>
+    /// <param name="n">ウイルスの種類（番号）</param>
     public void ButtonPush(int n)
     {
         if (isButtonActive && buttonMode != n) return;
@@ -64,9 +62,7 @@ public class ActVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("AAA" + a);
-
-        MoveVirus(); //ウイルスを移動
+        worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換 //ウイルスを移動
 
         //ウイルスオブジェクトの位置をワールド座標で更新する
         if (virus[buttonMode, vNum[buttonMode]].isActivity)
@@ -75,8 +71,6 @@ public class ActVirus : MonoBehaviour
         if (!isButtonActive) return;
         SetVirus(); //ウイルスを設置
     }
-
-    
 
     /// <summary>
     /// ウイルスを設置
@@ -91,19 +85,4 @@ public class ActVirus : MonoBehaviour
             isButtonActive = false; //ボタン操作をfalse
         }
     }
-
-    /// <summary>
-    /// ウイルスを移動
-    /// </summary>
-    private void MoveVirus()
-    {
-        mousePos = Input.mousePosition; //マウスの座標を取得
-        mousePos.z = CAM_DISTANCE; //マウスz座標にカメラとの距離を代入
-        worldPos = cam.ScreenToWorldPoint(mousePos); //スクリーン→ワールド変換
-    }
-
-    //public static bool GetButtonActive()
-    //{
-    //    return isButtonActive;
-    //} 
 }
