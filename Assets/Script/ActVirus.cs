@@ -19,6 +19,7 @@ public class ActVirus : MonoBehaviour
     private bool isGrabbedVirus; //ウイルスを掴んでいるか
     private Vector3 worldPos; //ワールド座標
     private int buttonMode; //ボタンの状態（ウイルスの種類）
+    private bool isOpenMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -52,10 +53,11 @@ public class ActVirus : MonoBehaviour
     /// <param name="n">ウイルスの種類（番号）</param>
     public void VirusButtonPush(int n)
     {
-        if (isGrabbedVirus && buttonMode != n) return;
+        if (isOpenMenu) return; //メニュー開いているときはスキップ
+        if (isGrabbedVirus && buttonMode != n) return; //ウイルスを持っているときかつ、別のボタンの状態のときはスキップ
+        if (ProcessOutOfRange(n)) return; //例外処理ならスキップ
 
-        if (ProcessOutOfRange(n)) return;
-        isGrabbedVirus = ReverseFlag(isGrabbedVirus);
+        isGrabbedVirus = ReverseFlag(isGrabbedVirus); //フラグを反転して、更新する
 
         if (isGrabbedVirus) CreateVirus(n); //ウイルスを作成する
         else DestroyVirus(); // ウイルスを削除する
@@ -69,6 +71,7 @@ public class ActVirus : MonoBehaviour
         if (!isGrabbedVirus) return;
         SetVirus(); //ウイルスを設置
         ReverseMenuFlag(BACK); //メニューを閉じる
+        isOpenMenu = false;
     }
 
     /// <summary>
@@ -79,6 +82,7 @@ public class ActVirus : MonoBehaviour
         if (!isGrabbedVirus) return;
         virus[buttonMode, vNum[buttonMode]].isActivity = true; //再びアクティブ状態に
         ReverseMenuFlag(BACK); //メニューを閉じる
+        isOpenMenu = false;
     }
 
     /// <summary>
@@ -90,6 +94,7 @@ public class ActVirus : MonoBehaviour
         DestroyVirus(); // ウイルスを削除する
         isGrabbedVirus = ReverseFlag(isGrabbedVirus);
         ReverseMenuFlag(BACK); //メニューを閉じる
+        isOpenMenu = false;
     }
 
     /// <summary>
@@ -132,6 +137,7 @@ public class ActVirus : MonoBehaviour
         {
             OpenSetMenu(); //メニューを開く
             SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos); //設置したウイルス座標を保存
+            isOpenMenu = true;
         }
     }
 }

@@ -10,7 +10,6 @@ public class ShowMenu : MonoBehaviour
     public static Vector3 mousePos; //マウス座標
     public static Camera cam; //カメラオブジェクト
     
-    public static bool isOpenMenu;
     private const int MENU_TYPE = 5;
     public static bool[] isMenuFlag = new bool[MENU_TYPE];
     public static bool[] menuMode = new bool[MENU_TYPE];
