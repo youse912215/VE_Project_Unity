@@ -8,6 +8,7 @@ using static Call.CommonFunction;
 using static Call.ConstantValue.MENU_TYPE;
 using static ShowMenu;
 using static MouseCollision;
+using static RangeCollision;
 
 
 public class ActVirus : MonoBehaviour
@@ -133,6 +134,8 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     private void OpenVirusMenu()
     {
+        if (isCollisionTrigger) return;
+        if (isOpenMenu) return;
         if (Input.GetMouseButtonDown(1))
         {
             OpenSetMenu(); //ƒƒjƒ…[‚ğŠJ‚­

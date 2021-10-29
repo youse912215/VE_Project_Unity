@@ -13,6 +13,17 @@ namespace Call
         {
             return !flag ? true : false;
         }
+
+        /// <summary>
+        /// 他のオブジェクトのマテリアルを指定のマテリアルカラーに変える
+        /// </summary>
+        /// <param name="other">他のオブジェクト</param>
+        /// <param name="mtl">マテリアル</param>
+        public static void ChangeRangeColor(GameObject obj, Collider other, Material mtl)
+        {
+            obj = other.gameObject; //他ゲームオブジェクトを取得
+            obj.GetComponent<Renderer>().material = mtl; //マテリアルを代入
+        }
     }
 }
 

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using static ShowMenu;
+using static RangeCollision;
+using static MaterialManager;
+using static Call.CommonFunction;
 
 public class MouseCollision : MonoBehaviour
 {
     public static bool isColllider; //コライダー
     private GameObject obj; //格納用オブジェクト
-    public Material normalMtl; //ノーマルマテリアル
-    public Material activeMtl; //アクション時マテリアル
+
+    public static GameObject vObj;
 
     // Start is called before the first frame update
     void Start()
@@ -27,32 +30,24 @@ public class MouseCollision : MonoBehaviour
     /// マウスポインタが、ウイルス範囲の中にいるとき
     /// </summary>
     void OnTriggerStay(Collider other) {
-		if (other.gameObject.tag == "Range")
-        {
+		if (other.gameObject.tag != "Range") return;
             isColllider = true; //コライダーをtrue
-            ChangeRangeColor(other, activeMtl); //色変更
-        }
+            if (isCollisionTrigger)
+            {
+                ChangeRangeColor(obj, other, mat[2]);
+            }
+            else ChangeRangeColor(obj, other, mat[1]); //色変更
+            vObj = other.gameObject;
 	}
 
     /// <summary>
     /// マウスポインタが、ウイルス範囲から離れたとき
     /// </summary>
     void OnTriggerExit(Collider other) {
-	    if (other.gameObject.tag == "Range")
-        {
-            isColllider = false; //コライダーをfalse
-            ChangeRangeColor(other, normalMtl); //色変更
-        }
-    }
+	    if (other.gameObject.tag != "Range") return;
 
-    /// <summary>
-    /// 他のオブジェクトのマテリアルを指定のマテリアルカラーに変える
-    /// </summary>
-    /// <param name="other">他のオブジェクト</param>
-    /// <param name="mtl">マテリアル</param>
-    private void ChangeRangeColor(Collider other, Material mtl)
-    {
-        obj = other.gameObject; //他ゲームオブジェクトを取得
-        obj.GetComponent<Renderer>().material = mtl; //マテリアルを代入
+            isColllider = false; //コライダーをfalse
+            ChangeRangeColor(obj, other, mat[0]); //色変更
+
     }
 }
