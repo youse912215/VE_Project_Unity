@@ -12,7 +12,7 @@ public class ShowMenu : MonoBehaviour
     
     private const int MENU_TYPE = 5;
     public static bool[] isMenuFlag = new bool[MENU_TYPE];
-    public static bool[] menuMode = new bool[MENU_TYPE];
+    public static bool menuMode; //false:設置前, true:設置後
     public static GameObject[] buttonObj = new GameObject[MENU_TYPE];
 
     // Start is called before the first frame update
@@ -25,6 +25,7 @@ public class ShowMenu : MonoBehaviour
             buttonObj[i] = transform.GetChild(i).gameObject;
             buttonObj[i].SetActive(false);
         }
+        menuMode = false;
     }
 
     // Update is called once per frame
@@ -56,13 +57,15 @@ public class ShowMenu : MonoBehaviour
     /// <summary>
     /// メニューを開く
     /// </summary>
-    public static void OpenSetMenu()
+    public static void OpenBeforeMenu()
     {
+        menuMode = false;
         SetButtonActive(true, true, false, false, true);
         ReverseMenuFlag(SET); //メニューを開く
     }
     public static void OpenAfterMenu()
     {
+        menuMode = true;
         SetButtonActive(false, true, true, true, true);
         ReverseMenuFlag(SET); //メニューを開く
     }

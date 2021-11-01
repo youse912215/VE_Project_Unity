@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
@@ -8,8 +9,6 @@ using static Call.CommonFunction;
 using static Call.ConstantValue.MENU_TYPE;
 using static ShowMenu;
 using static MouseCollision;
-using static RangeCollision;
-
 
 public class ActVirus : MonoBehaviour
 {
@@ -21,6 +20,8 @@ public class ActVirus : MonoBehaviour
     private Vector3 worldPos; //ワールド座標
     private int buttonMode; //ボタンの状態（ウイルスの種類）
     private bool isOpenMenu;
+
+    private int storage;
 
     // Start is called before the first frame update
     void Start()
@@ -39,11 +40,17 @@ public class ActVirus : MonoBehaviour
     {
         worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換 //ウイルスを移動
 
-        if (!isGrabbedVirus && isColllider && Input.GetMouseButtonDown(1)) OpenAfterMenu(); //設置後メニューを開く
+        Debug.Log("ウイルス番号::" + storage);
+        Debug.Log("Flag" + isGrabbedVirus);
 
-        //ウイルスオブジェクトの位置をワールド座標で更新する
+        if (!isGrabbedVirus && isMouseCollider && Input.GetMouseButtonDown(1)){
+            OpenAfterMenu(); //設置後メニューを開く
+            isOpenMenu = true;
+            SearchVirusArray();
+        }
+
         if (virus[buttonMode, vNum[buttonMode]].isActivity)
-            virusObj[buttonMode, vNum[buttonMode]].transform.position = worldPos;
+            virusObj[buttonMode, vNum[buttonMode]].transform.position = worldPos; //ウイルスオブジェクトの位置をワールド座標で更新する
         if (!isGrabbedVirus) return;
         OpenVirusMenu(); //ウイルスメニューを開く
     }
@@ -61,7 +68,7 @@ public class ActVirus : MonoBehaviour
         isGrabbedVirus = ReverseFlag(isGrabbedVirus); //フラグを反転して、更新する
 
         if (isGrabbedVirus) CreateVirus(n); //ウイルスを作成する
-        else DestroyVirus(); // ウイルスを削除する
+        else DestroyBeforeVirus(); // ウイルスを削除する
     }
 
     /// <summary>
@@ -69,7 +76,7 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     public void SetButtonPush()
     {
-        if (!isGrabbedVirus) return;
+        //if (!isGrabbedVirus) return;
         SetVirus(); //ウイルスを設置
         ReverseMenuFlag(BACK); //メニューを閉じる
         isOpenMenu = false;
@@ -80,7 +87,7 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     public void BackButtonPush()
     {
-        if (!isGrabbedVirus) return;
+        //if (!isGrabbedVirus) return;
         virus[buttonMode, vNum[buttonMode]].isActivity = true; //再びアクティブ状態に
         ReverseMenuFlag(BACK); //メニューを閉じる
         isOpenMenu = false;
@@ -91,9 +98,14 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     public void DeleteButtonPush()
     {
-        if (!isGrabbedVirus) return;
-        DestroyVirus(); // ウイルスを削除する
-        isGrabbedVirus = ReverseFlag(isGrabbedVirus);
+        //if (!isGrabbedVirus) return;
+        if (!menuMode)
+        {
+            DestroyBeforeVirus(); // ウイルスを削除する
+            isGrabbedVirus = ReverseFlag(isGrabbedVirus);
+        }
+        else Destroy(virusObj[storage / OWNED, storage % OWNED]);
+
         ReverseMenuFlag(BACK); //メニューを閉じる
         isOpenMenu = false;
     }
@@ -114,7 +126,7 @@ public class ActVirus : MonoBehaviour
     /// <summary>
     /// ウイルスを削除する
     /// </summary>
-    private void DestroyVirus()
+    private void DestroyBeforeVirus()
     {
         virus[buttonMode, vNum[buttonMode]].isActivity = false; //生存状態をfalse
         Destroy(virusObj[buttonMode, vNum[buttonMode]]); //ゲームオブジェクトを削除
@@ -134,13 +146,28 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     private void OpenVirusMenu()
     {
-        if (isCollisionTrigger) return;
+        if (isRangeCollision) return;
         if (isOpenMenu) return;
+
         if (Input.GetMouseButtonDown(1))
         {
-            OpenSetMenu(); //メニューを開く
+            OpenBeforeMenu(); //メニューを開く
             SaveVirusPosition(virus, (VIRUS_NUM)buttonMode, virusObj, worldPos); //設置したウイルス座標を保存
             isOpenMenu = true;
+        }
+    }
+
+    private void SearchVirusArray()
+    {
+        Virus[] ary = virus.Cast<Virus>().ToArray(); //配列を一次元化
+        for (int i = 0; i < CATEGORY * OWNED; ++i)
+        {
+            //各ウイルスの座標と範囲オブジェクトの座標が一致するまで繰り返す
+            if (ary[i].pos == rangeObj.transform.position)
+            {
+                storage = i; //特定の要素を格納
+                break; //繰り返しから抜け出す
+            }
         }
     }
 }

@@ -19,9 +19,9 @@ namespace Call
         /// </summary>
         /// <param name="other">他のオブジェクト</param>
         /// <param name="mtl">マテリアル</param>
-        public static void ChangeRangeColor(GameObject obj, Collider other, Material mtl)
+        public static void ChangeRangeColor(GameObject obj, Material mtl)
         {
-            obj = other.gameObject; //他ゲームオブジェクトを取得
+            //obj = other.gameObject; //他ゲームオブジェクトを取得
             obj.GetComponent<Renderer>().material = mtl; //マテリアルを代入
         }
     }

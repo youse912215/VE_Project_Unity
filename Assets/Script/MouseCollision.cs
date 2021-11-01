@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using static ShowMenu;
-using static RangeCollision;
 using static MaterialManager;
 using static Call.CommonFunction;
 
 public class MouseCollision : MonoBehaviour
 {
-    public static bool isColllider; //コライダー
-    private GameObject obj; //格納用オブジェクト
+    public static bool isMouseCollider; //マウスコライダー
+    public static bool isRangeCollision; //範囲コリジョン
 
-    public static GameObject vObj;
+    public static GameObject rangeObj; //格納用オブジェクト
 
     // Start is called before the first frame update
     void Start()
     {
-        isColllider = false; //コライダーをfalse
+        isMouseCollider = false; //マウスコライダーをfalse
+        isRangeCollision = false; //範囲コリジョンをfalse
     }
 
     // Update is called once per frame
@@ -31,13 +31,12 @@ public class MouseCollision : MonoBehaviour
     /// </summary>
     void OnTriggerStay(Collider other) {
 		if (other.gameObject.tag != "Range") return;
-            isColllider = true; //コライダーをtrue
-            if (isCollisionTrigger)
-            {
-                ChangeRangeColor(obj, other, mat[2]);
-            }
-            else ChangeRangeColor(obj, other, mat[1]); //色変更
-            vObj = other.gameObject;
+
+        isMouseCollider = true; //コライダーをtrue
+        rangeObj = other.gameObject;
+        if (isRangeCollision) ChangeRangeColor(rangeObj, mat[2]);
+        else ChangeRangeColor(rangeObj, mat[1]); //色変更
+        //Debug.Log("範囲::" + rangeObj.transform.position);
 	}
 
     /// <summary>
@@ -46,8 +45,11 @@ public class MouseCollision : MonoBehaviour
     void OnTriggerExit(Collider other) {
 	    if (other.gameObject.tag != "Range") return;
 
-            isColllider = false; //コライダーをfalse
-            ChangeRangeColor(obj, other, mat[0]); //色変更
+            rangeObj = other.gameObject;
+            isMouseCollider = false; //コライダーをfalse
+            ChangeRangeColor(rangeObj, mat[0]); //色変更
 
     }
+
+    
 }
