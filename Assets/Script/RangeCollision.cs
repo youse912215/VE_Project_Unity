@@ -23,14 +23,6 @@ public class RangeCollision : MonoBehaviour
     {
         transform.position = transform.parent.position;
         transform.rotation = transform.parent.rotation;
-
-        //Debug.Log("(0, 0):::" + currentVirus[0,0]);
-        //Debug.Log("(0, 1):::" + currentVirus[0,1]);
-        //Debug.Log("(1, 0):::" + currentVirus[1,0]);
-        //Debug.Log("(1, 1):::" + currentVirus[1,1]);
-        //Debug.Log("(2, 0):::" + currentVirus[2,0]);
-        //Debug.Log("(2, 1):::" + currentVirus[2,1]);
-        //Debug.Log("”ÍˆÍ::" + transform.position);
     }
 
     void OnTriggerStay(Collider other) {

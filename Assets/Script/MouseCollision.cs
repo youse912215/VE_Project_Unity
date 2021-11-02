@@ -36,7 +36,6 @@ public class MouseCollision : MonoBehaviour
         rangeObj = other.gameObject;
         if (isRangeCollision) ChangeRangeColor(rangeObj, mat[2]);
         else ChangeRangeColor(rangeObj, mat[1]); //F•ÏX
-        //Debug.Log("”ÍˆÍ::" + rangeObj.transform.position);
 	}
 
     /// <summary>

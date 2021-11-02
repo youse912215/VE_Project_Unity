@@ -13,35 +13,31 @@ using static MouseCollision;
 
 public class ActVirus : MonoBehaviour
 {
-    private VirusChildren[,] vChildren = new VirusChildren[CATEGORY, OWNED]; //ウイルス構造体配列
+    private VirusParents[] vParents = new VirusParents[CATEGORY]; //親ウイルス構造体配列
+    private VirusChildren[,] vChildren = new VirusChildren[CATEGORY, OWNED]; //子ウイルス構造体配列
     private GameObject[,] vObject = new GameObject[CATEGORY, OWNED]; //ウイルスオブジェクト配列
     private GameObject vPrefab; //ウイルスプレファブ
 
     private bool isGrabbedVirus; //ウイルスを掴んでいるか
     private Vector3 worldPos; //ワールド座標
     private int buttonMode; //ボタンの状態（ウイルスの種類）
-    private bool isOpenMenu;
-
-    private int storage;
-
+    private bool isOpenMenu; //メニューフラグ
+    private int element; //要素格納変数
    
-    private VirusParents[] vParents = new VirusParents[CATEGORY];
-    
-
     // Start is called before the first frame update
     void Start()
     {
-        /* ウイルス情報の初期化 */
-        InitValue(vParents, vChildren, CODE_CLD);
-        InitValue(vParents, vChildren, CODE_INF);
-        InitValue(vParents, vChildren, CODE_19);
+        for (VIRUS_NUM i = CODE_CLD; i < (VIRUS_NUM)CATEGORY; ++i)
+            InitValue(vParents, vChildren, i); //ウイルス情報の初期化
         
-        isGrabbedVirus = false;
-        buttonMode = 0;
+        isGrabbedVirus = false; //何も掴んでいない状態
+        buttonMode = 0; //ボタンの状態をoff
 
         for (int i = 0; i < CATEGORY; ++i)
-            vParents[i].tag = VirusTagName[i];
-        vParents[0].creationCount = 5;
+            vParents[i].tag = VirusTagName[i]; //タグを保存
+        vParents[0].creationCount = 5; //作成したウイルスを代入
+        vParents[1].creationCount = 5;
+        vParents[2].creationCount = 5;
     }
 
     // Update is called once per frame
@@ -49,22 +45,19 @@ public class ActVirus : MonoBehaviour
     {
         worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換 //ウイルスを移動
 
-        vParents[0].obj = GameObject.FindGameObjectsWithTag(vParents[0].tag);
-        vParents[0].setCount = vParents[0].obj.Length - 1;
-        //Debug.Log("ウイルス数::" + vParents[0].setCount);
-        Debug.Log("storage::" + storage);
-
+        vParents[buttonMode].setCount = GameObject.FindGameObjectsWithTag(vParents[buttonMode].tag).Length - 1; //ウイルスの設置数を計算
 
         if (!isGrabbedVirus && isMouseCollider && Input.GetMouseButtonDown(1)){
             OpenAfterMenu(); //設置後メニューを開く
-            isOpenMenu = true;
-            SearchVirusArray();
+            isOpenMenu = true; //メニューフラグをtrue
+            SearchVirusArray(); //ウイルス配列を検索する
         }
 
-        if (vParents[buttonMode].setCount == 0) return;
-        if (vChildren[buttonMode, /*vNum[buttonMode]*/vParents[buttonMode].setCount - 1].isActivity)
-            vObject[buttonMode, /*vNum[buttonMode]*/vParents[buttonMode].setCount - 1].transform.position = worldPos; //ウイルスオブジェクトの位置をワールド座標で更新する
-        if (!isGrabbedVirus) return;
+        if (vParents[buttonMode].setCount == 0) return; //指定のウイルスが存在してないとき、処理をスキップ
+        //ウイルスオブジェクトの位置をワールド座標で更新する
+        if (vChildren[buttonMode, vParents[buttonMode].setCount - 1].isActivity)
+            vObject[buttonMode, vParents[buttonMode].setCount - 1].transform.position = worldPos;
+        if (!isGrabbedVirus) return; //何も掴んでいないとき、処理をスキップ
         OpenVirusMenu(); //ウイルスメニューを開く
     }
 
@@ -101,9 +94,16 @@ public class ActVirus : MonoBehaviour
     public void BackButtonPush()
     {
         //if (!isGrabbedVirus) return;
-        vChildren[buttonMode, /*vNum[buttonMode]*/vParents[buttonMode].setCount - 1].isActivity = true; //再びアクティブ状態に
-        ReverseMenuFlag(BACK); //メニューを閉じる
-        isOpenMenu = false;
+        if (!menuMode)
+        {
+            vChildren[buttonMode, vParents[buttonMode].setCount - 1].isActivity = true; //再びアクティブ状態に
+            ReverseMenuFlag(BACK); //メニューを閉じる
+            isOpenMenu = false;
+        }
+        else
+        {
+
+        }
     }
 
     /// <summary>
@@ -119,16 +119,16 @@ public class ActVirus : MonoBehaviour
         }
         else
         {
-            int column = storage / OWNED;
-            int row = storage % OWNED;
+            int column = element / OWNED; //列（ウイルス種類）
+            int row = element % OWNED; //行（ウイルス保有番号）
             if (vParents[column].setCount == vParents[column].creationCount)
-                isLimitCapacity[column] = false;
-            Debug.Log("aaa:::" + vObject[column, row].activeInHierarchy);
-            Destroy(vObject[column, row]); 
+                isLimitCapacity[column] = false; //容量の限界状態を解除   
+            Destroy(vObject[column, row]); //ウイルスを削除する
+            SortVirusArray(column, row); //ウイルス配列をソート
         }
 
         ReverseMenuFlag(BACK); //メニューを閉じる
-        isOpenMenu = false;
+        isOpenMenu = false; //メニューフラグをfalse
     }
 
     /// <summary>
@@ -149,8 +149,7 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     private void DestroyBeforeVirus()
     {
-        //vChildren[buttonMode, vNum[buttonMode]].isActivity = false; //生存状態をfalse
-        Destroy(vObject[buttonMode, /*vNum[buttonMode]*/vParents[buttonMode].setCount - 1]); //ゲームオブジェクトを削除
+        Destroy(vObject[buttonMode, vParents[buttonMode].setCount - 1]); //ゲームオブジェクトを削除
     }
 
     /// <summary>
@@ -167,28 +166,66 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     private void OpenVirusMenu()
     {
-        if (isRangeCollision) return;
-        if (isOpenMenu) return;
+        if (isRangeCollision) return; //ウイルスの範囲同士が重なっているとき、処理をスキップ
+        if (isOpenMenu) return; //メニュー表示時、処理をスキップ
 
+        //右クリック時
         if (Input.GetMouseButtonDown(1))
         {
             OpenBeforeMenu(); //メニューを開く
             SaveVirusPosition(vParents, vChildren, (VIRUS_NUM)buttonMode, vObject, worldPos); //設置したウイルス座標を保存
-            isOpenMenu = true;
+            isOpenMenu = true; //メニューフラグをtrue
         }
     }
 
+    /// <summary>
+    /// ウイルス配列の特定の要素を検索
+    /// </summary>
     private void SearchVirusArray()
     {
-        VirusChildren[] ary = vChildren.Cast<VirusChildren>().ToArray(); //配列を一次元化
+        var list = new List<VirusChildren>(); //リスト定義
+        VirusChildren[] array1 = vChildren.Cast<VirusChildren>().ToArray(); //配列を一次元化
+        //全要素分繰り返す
         for (int i = 0; i < CATEGORY * OWNED; ++i)
         {
             //各ウイルスの座標と範囲オブジェクトの座標が一致するまで繰り返す
-            if (ary[i].pos == rangeObj.transform.position)
+            if (array1[i].pos == rangeObj.transform.position)
             {
-                storage = i; //特定の要素を格納
+                element = i; //特定の要素を格納
                 break; //繰り返しから抜け出す
             }
+        }
+    }
+
+    /// <summary>
+    /// ウイルス配列をソートする
+    /// </summary>
+    private void SortVirusArray(int column, int row)
+    {
+        var list1 = new List<VirusChildren>(); //リスト定義
+        var list2 = new List<GameObject>(); //リスト定義
+        VirusChildren[] structArray = vChildren.Cast<VirusChildren>().ToArray(); //ウイルス構造体配列を一次元化
+        GameObject[] objectArray = vObject.Cast<GameObject>().ToArray(); //ウイルスゲームオブジェクト配列を一次元化
+
+        //指定のウイルスのリストを作成
+        for (int i = 0; i < OWNED; ++i)
+        {
+            list1.Add(structArray[column * OWNED + i]);
+            list2.Add(objectArray[column * OWNED + i]);
+        }
+
+        //要素を末尾に追加
+        list1.Add(list1[row]); 
+        list2.Add(list2[row]);
+        //指定の要素を削除
+        list1.RemoveAt(row);
+        list2.RemoveAt(row); 
+
+        //整列させたゲームオブジェクトリストに更新
+        for (int i = 0; i < OWNED; ++i)
+        {
+            vChildren[column, i] = list1[i];
+            vObject[column, i] = list2[i];
         }
     }
 }

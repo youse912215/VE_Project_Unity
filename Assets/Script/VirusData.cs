@@ -7,6 +7,16 @@ namespace Call
 {
     public class VirusData : MonoBehaviour
     {
+        //親ウイルス構造体
+        public struct VirusParents
+        {
+            public GameObject[] obj; //親オブジェクト
+            public string tag; //タグ名
+            public int setCount; //現在設置した個数
+            public int creationCount; //作成した個数
+        }
+
+        //子ウイルス構造体
         public struct VirusChildren
         {
             public Vector3 pos; //位置
@@ -18,14 +28,6 @@ namespace Call
             public float durableValue; //耐久値
             public bool isActivity; //生存状態
             
-        }
-
-        public struct VirusParents
-        {
-            public GameObject[] obj; //親オブジェクト
-            public string tag; //タグ名
-            public int setCount; //現在設置した個数
-            public int creationCount; //作成した個数
         }
 
         //ウイルス番号
