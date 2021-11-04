@@ -23,6 +23,9 @@ public class ActVirus : MonoBehaviour
     private int buttonMode; //ボタンの状態（ウイルスの種類）
     private bool isOpenMenu; //メニューフラグ
     private int element; //要素格納変数
+
+    int column; //列（ウイルス種類）
+    int row; //行（ウイルス保有番号）
    
     // Start is called before the first frame update
     void Start()
@@ -38,6 +41,10 @@ public class ActVirus : MonoBehaviour
         vParents[0].creationCount = 5; //作成したウイルスを代入
         vParents[1].creationCount = 5;
         vParents[2].creationCount = 5;
+
+        element = 0;
+        column = 0;
+        row = 0;
     }
 
     // Update is called once per frame
@@ -51,6 +58,9 @@ public class ActVirus : MonoBehaviour
             OpenAfterMenu(); //設置後メニューを開く
             isOpenMenu = true; //メニューフラグをtrue
             SearchVirusArray(); //ウイルス配列を検索する
+            column = element / OWNED; //列（ウイルス種類）
+            row = element % OWNED; //行（ウイルス保有番号）
+            buttonMode = column; //ボタンの状態を更新
         }
 
         if (vParents[buttonMode].setCount == 0) return; //指定のウイルスが存在してないとき、処理をスキップ
@@ -82,7 +92,6 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     public void SetButtonPush()
     {
-        //if (!isGrabbedVirus) return;
         SetVirus(); //ウイルスを設置
         ReverseMenuFlag(BACK); //メニューを閉じる
         isOpenMenu = false;
@@ -93,7 +102,6 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     public void BackButtonPush()
     {
-        //if (!isGrabbedVirus) return;
         if (!menuMode)
         {
             vChildren[buttonMode, vParents[buttonMode].setCount - 1].isActivity = true; //再びアクティブ状態に
@@ -111,7 +119,6 @@ public class ActVirus : MonoBehaviour
     /// </summary>
     public void DeleteButtonPush()
     {
-        //if (!isGrabbedVirus) return;
         if (!menuMode)
         {
             DestroyBeforeVirus(); // ウイルスを削除する
@@ -119,16 +126,16 @@ public class ActVirus : MonoBehaviour
         }
         else
         {
-            int column = element / OWNED; //列（ウイルス種類）
-            int row = element % OWNED; //行（ウイルス保有番号）
-            if (vParents[column].setCount == vParents[column].creationCount)
-                isLimitCapacity[column] = false; //容量の限界状態を解除   
             Destroy(vObject[column, row]); //ウイルスを削除する
             SortVirusArray(column, row); //ウイルス配列をソート
         }
-
+        
         ReverseMenuFlag(BACK); //メニューを閉じる
         isOpenMenu = false; //メニューフラグをfalse
+
+        //限界容量に達していないとき、処理をスキップ
+        if (vParents[buttonMode].setCount != vParents[buttonMode].creationCount) return;
+        isLimitCapacity[buttonMode] = false; //容量の限界状態を解除
     }
 
     /// <summary>
