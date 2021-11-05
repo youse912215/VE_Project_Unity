@@ -48,7 +48,6 @@ public class ActVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換
 
         vParents[buttonMode].setCount = GameObject.FindGameObjectsWithTag(vParents[buttonMode].tag).Length - 1; //ウイルスの設置数を計算
@@ -90,12 +89,11 @@ public class ActVirus : MonoBehaviour
         
         ReverseMenuFlag(BACK); //メニューを閉じる
         isOpenMenu = false; //メニューフラグをfalse
-        
 
         if (menuMode) return; //ボタン状態がtrueのとき、処理をスキップ
-        vChildren[buttonMode, vParents[buttonMode].setCount - 1].isActivity = true; //再びアクティブ状態に
-        isGrabbedVirus = true;
-        menuMode = true;
+        vChildren[column, row].isActivity = true; //再びアクティブ状態に
+        isGrabbedVirus = true; //掴んでいない状態
+        menuMode = true; //メニューモードをtrue
     }
 
     /// <summary>
