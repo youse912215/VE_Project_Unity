@@ -6,6 +6,8 @@ namespace Call
 {
     public class CommonFunction : MonoBehaviour
     {
+        private const string objName = "GameManager"; //ゲームオブジェクト名
+
         /// <summary>
         /// flagを反転する
         /// </summary>
@@ -27,8 +29,14 @@ namespace Call
 
         public static T GetActVirusScript<T>(GameObject obj)
         {
-            obj = GameObject.Find("GameManager");
+            obj = GameObject.Find(objName);
             return obj.GetComponent<T>();
+        }
+
+        public static void culc(GameObject obj, Vector3[] v, int count)
+        {
+            for (int i = 0; i < count; ++i)
+            v[i] = obj.transform.position;
         }
     }
 }

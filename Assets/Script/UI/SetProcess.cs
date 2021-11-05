@@ -32,7 +32,7 @@ public class SetProcess : MonoBehaviour
     /// </summary>
     private void SetVirus()
     {
-        GetVirus((VIRUS_NUM)script.buttonMode, script.vParents); //ウイルスをアクティブにする
+        GetVirus(script.vParents, script.buttonMode); //ウイルスをアクティブにする
         script.isGrabbedVirus = false; //ボタン操作をfalse
     }
 }

@@ -102,14 +102,9 @@ namespace Call
         /// ウイルスをアクティブにする
         /// </summary>
         /// <param name="n">ウイルス名</param>
-        public static void GetVirus(VIRUS_NUM n, VirusParents[] vP)
+        public static void GetVirus(VirusParents[] vP, int n)
         {
-            int i = (int)n; //ウイルス番号
-
-            //ウイルス内識別番号が保有数未満なら
-            //if (vP[i].setCount < vP[i].creationCount) vP[i].setCount++;
-            //else isLimitCapacity[i] = true; //限界容量に到達
-            if (vP[i].setCount == vP[i].creationCount) isLimitCapacity[i] = true; //限界容量に到達
+            if (vP[n].setCount == vP[n].creationCount) isLimitCapacity[n] = true; //限界容量に到達
         }
 
         /// <summary>
@@ -117,19 +112,19 @@ namespace Call
         /// </summary>
         /// <param name="vC">ウイルス構造体</param>
         /// <param name="n">ウイルス名</param>
-        public static void GenerationVirus(VirusParents[] vP,　VirusChildren[,] vC, VIRUS_NUM n)
+        public static void GenerationVirus(VirusParents[] vP,　VirusChildren[,] vC, int n)
         {
-            int i = (int)n; //ウイルス番号
-            int j = vP[i].setCount; //ウイルス内識別番号
-            vC[i, j].isActivity = true; //生存状態をアクティブ
+            int j = vP[n].setCount; //ウイルス内識別番号
+            vC[n, j].isActivity = true; //生存状態をアクティブ
         }
 
         /// <summary>
         /// 設置指定したウイルスの座標を保存する
         /// </summary>
-        /// <param name="vC">ウイルス構造体</param>
-        /// <param name="vNum">ウイルス名</param>
-        /// <param name="obj">ウイルスオブジェクト（プレハブ）</param>
+        /// <param name="vC">ウイルス構造体配列</param>
+        /// <param name="vNum">ウイルス番号</param>
+        /// <param name="sNum">設置番号</param>
+        /// <param name="obj">ゲームオブジェクト</param>
         /// <param name="wPos">ワールド座標</param>
         public static void SaveVirusPosition(VirusChildren[,] vC, int vNum, int sNum,
             GameObject[,] obj, Vector3 wPos)

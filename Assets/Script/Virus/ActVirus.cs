@@ -6,23 +6,23 @@ using System.Linq;
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
 using static Call.CommonFunction;
-using static Call.ConstantValue.MENU_TYPE;
 using static ShowMenu;
 using static MouseCollision;
 
 public class ActVirus : MonoBehaviour
 {
+    /* private */
+    private GameObject vPrefab; //ウイルスプレファブ
+    private Vector3 worldPos; //ワールド座標
+    private int element; //要素格納変数
+
+    /* public */
     public VirusParents[] vParents = new VirusParents[CATEGORY]; //親ウイルス構造体配列
     public VirusChildren[,] vChildren = new VirusChildren[CATEGORY, OWNED]; //子ウイルス構造体配列
     public GameObject[,] vObject = new GameObject[CATEGORY, OWNED]; //ウイルスオブジェクト配列
-    private GameObject vPrefab; //ウイルスプレファブ
-
     public bool isGrabbedVirus; //ウイルスを掴んでいるか
-    private Vector3 worldPos; //ワールド座標
-    public int buttonMode; //ボタンの状態（ウイルスの種類）
     public bool isOpenMenu; //メニューフラグ
-    private int element; //要素格納変数
-
+    public int buttonMode; //ボタンの状態（ウイルスの種類）
     public int column; //列（ウイルス種類）
     public int row; //行（ウイルス保有番号）
    
@@ -82,43 +82,22 @@ public class ActVirus : MonoBehaviour
     }
 
     /// <summary>
-    /// Pushing back button
-    /// </summary>
-    public void BackButtonPush()
-    {
-        
-        ReverseMenuFlag(BACK); //メニューを閉じる
-        isOpenMenu = false; //メニューフラグをfalse
-
-        if (menuMode) return; //ボタン状態がtrueのとき、処理をスキップ
-        vChildren[column, row].isActivity = true; //再びアクティブ状態に
-        isGrabbedVirus = true; //掴んでいない状態
-        menuMode = true; //メニューモードをtrue
-    }
-
-    /// <summary>
-    /// pushing move button
-    /// </summary>
-    public void MoveButtonPush()
-    {
-        vChildren[column, row].isActivity = true; //指定のウイルスをアクティブ状態に
-        ReverseMenuFlag(BACK); //メニューを閉じる
-        isOpenMenu = false; //メニューフラグをfalse
-        //menuMode = false; //メニューモードを設置前に
-        isGrabbedVirus = true; //掴んでいる状態に
-    }
-
-    /// <summary>
     /// ウイルスを作成する
     /// </summary>
     /// <param name="n">ウイルスの種類（番号）</param>
     public void CreateVirus(int n)
     {
-        GenerationVirus(vParents, vChildren, (VIRUS_NUM)n); //ウイルス生成
+        GenerationVirus(vParents, vChildren, n); //ウイルス生成
         vPrefab = GameObject.Find(VirusHeadName + n.ToString()); //ウイルス番号に合致するPrefabを取得
         vObject[n, vParents[n].setCount] = Instantiate(vPrefab); //ゲームオブジェクトを生成
         vObject[n, vParents[n].setCount].SetActive(true); //アクティブ状態にする
         buttonMode = n; //現在のボタンの状態を更新
+    }
+
+    //掴んでいるウイルスの位置を更新
+    private void UpdateViursPosition()
+    {
+        if (vChildren[column, row].isActivity) vObject[column, row].transform.position = worldPos; //マウスポインタと同じ位置
     }
 
     /// <summary>
@@ -181,11 +160,5 @@ public class ActVirus : MonoBehaviour
         column = element / OWNED; //列（ウイルス種類）
         row = element % OWNED; //行（ウイルス保有番号）
         buttonMode = column; //ボタンの状態を更新
-    }
-
-    //掴んでいるウイルスの位置を更新
-    private void UpdateViursPosition()
-    {
-        if (vChildren[column, row].isActivity) vObject[column, row].transform.position = worldPos; //マウスポインタと同じ位置
     }
 }
