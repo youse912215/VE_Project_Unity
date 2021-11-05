@@ -128,14 +128,14 @@ namespace Call
         /// 設置指定したウイルスの座標を保存する
         /// </summary>
         /// <param name="vC">ウイルス構造体</param>
-        /// <param name="n">ウイルス名</param>
+        /// <param name="vNum">ウイルス名</param>
         /// <param name="obj">ウイルスオブジェクト（プレハブ）</param>
         /// <param name="wPos">ワールド座標</param>
-        public static void SaveVirusPosition(VirusParents[] vP, VirusChildren[,] vC, VIRUS_NUM n,
+        public static void SaveVirusPosition(VirusChildren[,] vC, int vNum, int sNum,
             GameObject[,] obj, Vector3 wPos)
         {
-            int i = (int)n; //ウイルス番号
-            int j = vP[i].setCount - 1; //ウイルス内識別番号
+            int i = vNum; //ウイルス番号
+            int j = sNum; //ウイルス内識別番号
             obj[i, j].transform.position = wPos; //ウイルスオブジェクトに、現在のマウスのワールド座標を保存
             vC[i, j].pos = wPos;  //ウイルス構造体に、現在のマウスのワールド座標を保存
             vC[i, j].isActivity = false; //生存状態をインアクティブ

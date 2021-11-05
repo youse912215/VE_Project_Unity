@@ -24,6 +24,12 @@ namespace Call
             //obj = other.gameObject; //他ゲームオブジェクトを取得
             obj.GetComponent<Renderer>().material = mtl; //マテリアルを代入
         }
+
+        public static T GetActVirusScript<T>(GameObject obj)
+        {
+            obj = GameObject.Find("GameManager");
+            return obj.GetComponent<T>();
+        }
     }
 }
 
