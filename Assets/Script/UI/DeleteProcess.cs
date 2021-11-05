@@ -50,7 +50,7 @@ public class DeleteProcess : MonoBehaviour
     /// </summary>
     private void DestroyBeforeVirus(int mode)
     {
-        Destroy(actV.vObject[mode, actV.vParents[mode].setCount - 1]); //ゲームオブジェクトを削除
+        Destroy(actV.vObject[mode, actV.row]); //ゲームオブジェクトを削除
     }
 
     /// <summary>

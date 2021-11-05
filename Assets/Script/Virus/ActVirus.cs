@@ -48,6 +48,8 @@ public class ActVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("row" + row);
+
         worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換
 
         vParents[buttonMode].setCount = GameObject.FindGameObjectsWithTag(vParents[buttonMode].tag).Length - 1; //ウイルスの設置数を計算
