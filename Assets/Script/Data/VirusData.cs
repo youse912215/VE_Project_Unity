@@ -36,6 +36,12 @@ namespace Call
             CODE_CLD,
             CODE_INF,
             CODE_19,
+            CODE_NOV,
+            CODE_EHF,
+            CODE_EV,
+            CODE_BD,
+            CODE_ULT,
+            CODE_NONE = 99,
         }
 
         //位置
@@ -72,9 +78,8 @@ namespace Call
             };
 
         public const int CATEGORY = 3; //ウイルスの種類
-        public const int OWNED = 5; //ウイルスの保有数
+        public const int OWNED = 5; //ウイルスの最大保有数
 
-        //public static int[] vNum = new int[CATEGORY]; //各ウイルスの設置数
         public static bool[] isLimitCapacity = new bool[CATEGORY]; //限界容量
         public static string VirusHeadName = "Virus"; //ウイルス頭名
         public static string[] VirusTagName = {"Cold", "Inf", "19"};
