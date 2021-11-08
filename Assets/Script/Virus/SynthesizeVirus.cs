@@ -11,21 +11,21 @@ using static SimulationButtonManager;
 
 public class SynthesizeVirus : MonoBehaviour
 {
-    private VIRUS_NUM currentCode;
+    private VIRUS_NUM currentCode; //現在選択しているウイルスコード
 
-    private bool isB;
+    private bool isCreate; //ウイルスを作れるか
 
     // Start is called before the first frame update
     void Start()
     {
-        InitSetButton();
+        InitSetButton(); //ボタンの初期化処理
 
         currentCode = CODE_NONE;
         vMatOwned[0] = 2;
         vMatOwned[1] = 3;
         vMatOwned[2] = 1;
-        vMatOwned[15] = 0;
-        isB = false;
+        vMatOwned[17] = 0;
+        isCreate = false;
     }
 
     // Update is called once per frame
@@ -35,48 +35,89 @@ public class SynthesizeVirus : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Pushing cld button
+    /// </summary>
     public void PushCldButton()
     {
-       currentCode = CODE_CLD;
-       isB = CheckMaterialCount(V1_PROTEIN, V2_PROTEIN, V3_PROTEIN, BLUE_POTION, CODE_CLD);
-       DebugFunc(isB);
+       isCreate = false;
+       currentCode = CODE_CLD; //CLD選択中
+       isCreate = CheckMaterialCount(V1_PROTEIN, V2_PROTEIN, V3_PROTEIN, BLUE_POTION, CODE_CLD); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// Pushing inf button
+    /// </summary>
     public void PushInfButton()
     {
-        currentCode = CODE_INF;
+        isCreate = false;
+        currentCode = CODE_INF; //INF選択中
+        isCreate = CheckMaterialCount(ERYTHROCYTE_AGGLUTININ, NEURAMINIDASE, ENVELOPE, RED_POTION, CODE_INF); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// pushing c19 button
+    /// </summary>
     public void Push19Button()
     {
-        currentCode = CODE_19;
+        isCreate = false;
+        currentCode = CODE_19; //19選択中
+        isCreate = CheckMaterialCount(S_PROTEIN, N_PROTEIN, ENVELOPE, RED_POTION, CODE_19); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// pushing nov button
+    /// </summary>
     public void PushNovButton()
     {
-        currentCode = CODE_NOV;
+        isCreate = false;
+        currentCode = CODE_NOV; //NOV選択中
+        isCreate = CheckMaterialCount(PROTEASE, V1_PROTEIN, V2_PROTEIN, BLUE_POTION, CODE_NOV); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// pushing ehf button
+    /// </summary>
     public void PushEhfButton()
     {
-        currentCode = CODE_EHF;
+        isCreate = false;
+        currentCode = CODE_EHF; //EHF選択中
+        isCreate = CheckMaterialCount(V24_PROTEIN, V40_PROTEIN, NUCLEOCCAPSID, YELLOW_POTION, CODE_EHF); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// pushing ev button
+    /// </summary>
     public void PushEvButton()
     {
-        currentCode = CODE_EV;
+        isCreate = false;
+        currentCode = CODE_EV; //EV選択中
+        isCreate = CheckMaterialCount(FEN1_PROTEIN, POLYMERASE, ENVELOPE, BLUE_POTION, CODE_EV); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// pushing bd button
+    /// </summary>
     public void PushBdButton()
     {
-        currentCode = CODE_BD;
+        isCreate = false;
+        currentCode = CODE_BD; //BD選択中
+        isCreate = CheckMaterialCount(V3_PROTEIN, F1_ANTIGEN, V_ANTIGEN, RED_POTION, CODE_BD); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// pushing ult button
+    /// </summary>
     public void PushUltButton()
     {
-        currentCode = CODE_ULT;
+        isCreate = false;
+        currentCode = CODE_ULT; //ULT選択中
+        isCreate = CheckMaterialCount(ULX_PROTEIN, ERYTHROCYTE_AGGLUTININ, ENVELOPE, BLOOD_POTION, CODE_ULT); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// ボタンの初期化割り当て
+    /// </summary>
     private void InitSetButton()
     {
         buttons[0].onClick.AddListener(PushCldButton);
