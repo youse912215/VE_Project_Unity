@@ -34,8 +34,8 @@ public class MouseCollision : MonoBehaviour
 
         isMouseCollider = true; //コライダーをtrue
         rangeObj = other.gameObject;
-        if (isRangeCollision) ChangeRangeColor(rangeObj, mat[2]);
-        else ChangeRangeColor(rangeObj, mat[1]); //色変更
+        if (isRangeCollision) ChangeMaterialColor(rangeObj, rangeMat[2]);
+        else ChangeMaterialColor(rangeObj, rangeMat[1]); //色変更
 	}
 
     /// <summary>
@@ -46,7 +46,7 @@ public class MouseCollision : MonoBehaviour
 
             rangeObj = other.gameObject;
             isMouseCollider = false; //コライダーをfalse
-            ChangeRangeColor(rangeObj, mat[0]); //色変更
+            ChangeMaterialColor(rangeObj, rangeMat[0]); //色変更
 
     }
 

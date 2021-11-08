@@ -7,8 +7,7 @@ using static DebugManager;
 
 public class VirusMaterialData : MonoBehaviour
 {
-    public const int matNum = 18;
-
+    //ウイルス素材コード
     public enum MATERIAL_CODE
     {
         V1_PROTEIN,
@@ -16,6 +15,8 @@ public class VirusMaterialData : MonoBehaviour
         V3_PROTEIN,
         V24_PROTEIN,
         V40_PROTEIN,
+        S_PROTEIN,
+        N_PROTEIN,
         FEN1_PROTEIN,
         ULX_PROTEIN,
         F1_ANTIGEN,
@@ -34,6 +35,7 @@ public class VirusMaterialData : MonoBehaviour
         NONE = 99
     }
 
+    //ウイルス作成必要個数
     public static int[,] REQUIRED_MATERIALS = {
         { 1, 1, 1, 1 }, //Cld
         { 2, 1, 3, 1 }, //Inf
