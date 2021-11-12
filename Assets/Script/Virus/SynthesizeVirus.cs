@@ -20,9 +20,10 @@ public class SynthesizeVirus : MonoBehaviour
     private bool initFlag;
     private bool[] isCreate = new bool[8]; //ウイルスを作れるか
     private int[] creationArray = new int[9]; //作成数配列
-    private List<int> tmpList = new List<int>{0, 0, 0, 0};
+    private List<int> tmpList = new List<int>{0, 0, 0, 0}; //一旦、素材を保存するリスト
 
-    private MATERIAL_CODE[,] matList =
+    //素材合成リスト
+    private MATERIAL_CODE[,] matCompositList =
     {
         { V1_PROTEIN, V2_PROTEIN, V3_PROTEIN, BLUE_POTION },
         { ERYTHROCYTE_AGGLUTININ, NEURAMINIDASE, ENVELOPE, RED_POTION },
@@ -62,7 +63,7 @@ public class SynthesizeVirus : MonoBehaviour
     {
         creationArray[(int)currentCode] = 0; //作成数をリセット
         currentCode = (VIRUS_NUM)code; //現在のコードを保存
-        isCreate[(int)currentCode] = CheckMaterialCount(matList, currentCode); //必要個数に達しているか確認
+        isCreate[(int)currentCode] = CheckMaterialCount(matCompositList, currentCode); //必要個数に達しているか確認
     }
 
     public void PushCreateButton()
@@ -77,10 +78,13 @@ public class SynthesizeVirus : MonoBehaviour
 
     public void PushAddButton(int sign)
     {
+        GameObject ob = buttons[0].transform.parent.gameObject;
+        ob.SetActive(false);
+
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
         if (creationArray[(int)currentCode] == 0)
-            SaveOwnedVirusMaterial(matList, tmpList, currentCode); //0個のときの素材数を保存
+            SaveOwnedVirusMaterial(matCompositList, tmpList, currentCode); //0個のときの素材数を保存
 
         if (!isCreate[(int)currentCode]) return; //作成できない状態のとき、処理をスキップ
 
@@ -92,7 +96,7 @@ public class SynthesizeVirus : MonoBehaviour
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
         if (creationArray[(int)currentCode] == 0)
-            SaveOwnedVirusMaterial(matList, tmpList, currentCode); //0個のときの素材数を保存
+            SaveOwnedVirusMaterial(matCompositList, tmpList, currentCode); //0個のときの素材数を保存
 
         if (creationArray[(int)currentCode] == 0) return; //作成数が0のとき、処理をスキップ
 
@@ -106,8 +110,8 @@ public class SynthesizeVirus : MonoBehaviour
     private void OrganizeVirusMaterialCount(int sign)
     {
         creationArray[(int)currentCode] -= sign; //作成数を減らす
-        CulcOwnedVirus(matList, currentCode, sign); //作成に使用する素材を増やす
-        isCreate[(int)currentCode] = CheckMaterialCount(matList, currentCode); //必要個数に達しているか確認
+        CulcOwnedVirus(matCompositList, currentCode, sign); //作成に使用する素材を増やす
+        isCreate[(int)currentCode] = CheckMaterialCount(matCompositList, currentCode); //必要個数に達しているか確認
     }
 
     /// <summary>
