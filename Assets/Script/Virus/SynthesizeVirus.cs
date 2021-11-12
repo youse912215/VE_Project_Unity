@@ -75,7 +75,7 @@ public class SynthesizeVirus : MonoBehaviour
         creationArray[(int)currentCode] = 0; //作成数をリセット
     }
 
-    public void PushAddButton()
+    public void PushAddButton(int sign)
     {
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
@@ -84,12 +84,10 @@ public class SynthesizeVirus : MonoBehaviour
 
         if (!isCreate[(int)currentCode]) return; //作成できない状態のとき、処理をスキップ
 
-        creationArray[(int)currentCode]++; //作成数を増やす
-        CulcOwnedVirus(matList, currentCode, -1); //作成に使用する素材を減らす
-        isCreate[(int)currentCode] = CheckMaterialCount(matList, currentCode); //必要個数に達しているか確認
+        OrganizeVirusMaterialCount(sign); //素材量を整理する
     }
 
-    public void PushSubButton()
+    public void PushSubButton(int sign)
     {
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
@@ -98,8 +96,17 @@ public class SynthesizeVirus : MonoBehaviour
 
         if (creationArray[(int)currentCode] == 0) return; //作成数が0のとき、処理をスキップ
 
-        creationArray[(int)currentCode]--; //作成数を減らす
-        CulcOwnedVirus(matList, currentCode, 1); //作成に使用する素材を増やす
+        OrganizeVirusMaterialCount(sign); //素材量を整理する
+    }
+
+    /// <summary>
+    /// 素材量を整理する
+    /// </summary>
+    /// <param name="sign">符号</param>
+    private void OrganizeVirusMaterialCount(int sign)
+    {
+        creationArray[(int)currentCode] -= sign; //作成数を減らす
+        CulcOwnedVirus(matList, currentCode, sign); //作成に使用する素材を増やす
         isCreate[(int)currentCode] = CheckMaterialCount(matList, currentCode); //必要個数に達しているか確認
     }
 
@@ -117,8 +124,8 @@ public class SynthesizeVirus : MonoBehaviour
         buttons[6].onClick.AddListener( () => { PushVirusButton(6); } );
         buttons[7].onClick.AddListener( () => { PushVirusButton(7); } );
         buttons[8].onClick.AddListener(PushCreateButton);
-        buttons[9].onClick.AddListener(PushSubButton);
-        buttons[10].onClick.AddListener(PushAddButton);
+        buttons[9].onClick.AddListener(() => { PushSubButton(1); } );
+        buttons[10].onClick.AddListener(() => { PushAddButton(-1); } );
 
         initFlag = ReverseFlag(initFlag); //初期化フラグを反転
         yield return null; //関数から抜ける
