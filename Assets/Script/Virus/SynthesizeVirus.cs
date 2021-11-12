@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using UnityEngine.UI;
 
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
@@ -9,6 +11,7 @@ using static DebugManager;
 using static VirusMaterialData;
 using static VirusMaterialData.MATERIAL_CODE;
 using static SimulationButtonManager;
+using System;
 
 public class SynthesizeVirus : MonoBehaviour
 {
@@ -16,120 +19,86 @@ public class SynthesizeVirus : MonoBehaviour
 
     private bool initFlag;
     private bool[] isCreate = new bool[8]; //ウイルスを作れるか
-    private int creationNum; //作成数
+    private int[] creationArray = new int[9]; //作成数配列
+    private List<int> tmpList = new List<int>{0, 0, 0, 0};
+
+    private MATERIAL_CODE[,] matList =
+    {
+        { V1_PROTEIN, V2_PROTEIN, V3_PROTEIN, BLUE_POTION },
+        { ERYTHROCYTE_AGGLUTININ, NEURAMINIDASE, ENVELOPE, RED_POTION },
+        { S_PROTEIN, N_PROTEIN, ENVELOPE, RED_POTION },
+        { PROTEASE, V1_PROTEIN, V2_PROTEIN, BLUE_POTION },
+        { V24_PROTEIN, V40_PROTEIN, NUCLEOCCAPSID, YELLOW_POTION },
+        { FEN1_PROTEIN, POLYMERASE, ENVELOPE, BLUE_POTION },
+        { V3_PROTEIN, F1_ANTIGEN, V_ANTIGEN, RED_POTION },
+        { ULX_PROTEIN, ERYTHROCYTE_AGGLUTININ, ENVELOPE, BLOOD_POTION },
+    };
+
+    public GameObject s = null;
+    public GameObject s2 = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        currentCode = 0;
-        vMatOwned[0] = 2;
-        vMatOwned[1] = 3;
-        vMatOwned[2] = 1;
-        vMatOwned[17] = 1;
-
-        creationNum = 0; //0個で初期化
+        currentCode = CODE_NONE; //現在のコードなし
+        creationArray = Enumerable.Repeat(0, creationArray.Length).ToArray(); //0個で配列を初期化
+        InitOwnedVirus();
     }
 
     // Update is called once per frame
     void Update()
     {
-        DebugFunc(isCreate[(int)currentCode]);
-        if (initFlag)return;
-        StartCoroutine("InitSetButton");
+        Text vN = s.GetComponent<Text>();
+        vN.text = "[0]::" + vCreationCount[0].ToString()
+            + "[1]::" + vCreationCount[1].ToString()
+            + "[2]::" + vCreationCount[2].ToString();
+        Text vN2 = s2.GetComponent<Text>();
+        vN2.text = "[0]::" + creationArray[0].ToString()
+            + "[1]::" + creationArray[1].ToString()
+            + "[2]::" + creationArray[2].ToString();
+
+        if (initFlag) return; //初期化フラグがtrueのとき、処理をスキップ
+        StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
     }
 
     /// <summary>
-    /// Pushing cld button
+    /// Pushing virus button
     /// </summary>
-    public void PushCldButton()
+    /// <param name="code">現在のコード</param>
+    public void PushVirusButton(int code)
     {
-        currentCode = CODE_CLD; //CLD選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(V1_PROTEIN, V2_PROTEIN, V3_PROTEIN, BLUE_POTION, CODE_CLD); //必要個数に達しているか確認
-        DebugFunc(currentCode);
-
+        creationArray[(int)currentCode] = 0; //作成数をリセット
+        currentCode = (VIRUS_NUM)code; //現在のコードを保存
+        isCreate[(int)currentCode] = CheckMaterialCount(matList, currentCode); //必要個数に達しているか確認
     }
 
-    /// <summary>
-    /// Pushing inf button
-    /// </summary>
-    public void PushInfButton()
+    public void PushCreateButton()
     {
-        currentCode = CODE_INF; //INF選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(ERYTHROCYTE_AGGLUTININ, NEURAMINIDASE, ENVELOPE, RED_POTION, CODE_INF); //必要個数に達しているか確認
-        DebugFunc(currentCode);
-    }
+        if (creationArray[(int)currentCode] <= 0) return; //作成数が0以下のとき、処理をスキップ
 
-    /// <summary>
-    /// pushing c19 button
-    /// </summary>
-    public void Push19Button()
-    {
-        currentCode = CODE_19; //19選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(S_PROTEIN, N_PROTEIN, ENVELOPE, RED_POTION, CODE_19); //必要個数に達しているか確認
-        DebugFunc(currentCode);
-    }
-
-    /// <summary>
-    /// pushing nov button
-    /// </summary>
-    public void PushNovButton()
-    {
-        currentCode = CODE_NOV; //NOV選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(PROTEASE, V1_PROTEIN, V2_PROTEIN, BLUE_POTION, CODE_NOV); //必要個数に達しているか確認
-        DebugFunc(currentCode);
-    }
-
-    /// <summary>
-    /// pushing ehf button
-    /// </summary>
-    public void PushEhfButton()
-    {
-        currentCode = CODE_EHF; //EHF選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(V24_PROTEIN, V40_PROTEIN, NUCLEOCCAPSID, YELLOW_POTION, CODE_EHF); //必要個数に達しているか確認
-        DebugFunc(currentCode);
-    }
-
-    /// <summary>
-    /// pushing ev button
-    /// </summary>
-    public void PushEvButton()
-    {
-        currentCode = CODE_EV; //EV選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(FEN1_PROTEIN, POLYMERASE, ENVELOPE, BLUE_POTION, CODE_EV); //必要個数に達しているか確認
-        DebugFunc(currentCode);
-    }
-
-    /// <summary>
-    /// pushing bd button
-    /// </summary>
-    public void PushBdButton()
-    {
-        currentCode = CODE_BD; //BD選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(V3_PROTEIN, F1_ANTIGEN, V_ANTIGEN, RED_POTION, CODE_BD); //必要個数に達しているか確認
-        DebugFunc(currentCode);
-    }
-
-    /// <summary>
-    /// pushing ult button
-    /// </summary>
-    public void PushUltButton()
-    {
-        currentCode = CODE_ULT; //ULT選択中
-        isCreate[(int)currentCode] =
-            CheckMaterialCount(ULX_PROTEIN, ERYTHROCYTE_AGGLUTININ, ENVELOPE, BLOOD_POTION, CODE_ULT); //必要個数に達しているか確認
-        DebugFunc(currentCode);
+        SaveCreationVirus(creationArray, currentCode);
     }
 
     public void PushAddButton()
     {
-        　creationNum++; //作成数を増やす
+        if (creationArray[(int)currentCode] == 0) SaveOwnedVirus(matList, tmpList, currentCode); 
+
+        if (!isCreate[(int)currentCode]) return; //作成できない状態のとき、処理をスキップ
+
+        creationArray[(int)currentCode]++; //作成数を増やす
+        CulcOwnedVirus(matList, currentCode, -1); //作成に使用する素材を減らす
+        isCreate[(int)currentCode] = CheckMaterialCount(matList, currentCode); //必要個数に達しているか確認
+    }
+
+    public void PushSubButton()
+    {
+        if (creationArray[(int)currentCode] == 0) SaveOwnedVirus(matList, tmpList, currentCode);
+
+        if (creationArray[(int)currentCode] == 0) return; //作成数が0のとき、処理をスキップ
+
+        creationArray[(int)currentCode]--; //作成数を減らす
+        CulcOwnedVirus(matList, currentCode, 1); //作成に使用する素材を増やす
+        isCreate[(int)currentCode] = CheckMaterialCount(matList, currentCode); //必要個数に達しているか確認
     }
 
     /// <summary>
@@ -137,15 +106,19 @@ public class SynthesizeVirus : MonoBehaviour
     /// </summary>
     IEnumerator InitSetButton()
     {
-        buttons[0].onClick.AddListener(PushCldButton);
-        buttons[1].onClick.AddListener(PushInfButton);
-        buttons[2].onClick.AddListener(Push19Button);
-        buttons[3].onClick.AddListener(PushNovButton);
-        buttons[4].onClick.AddListener(PushEhfButton);
-        buttons[5].onClick.AddListener(PushEvButton);
-        buttons[6].onClick.AddListener(PushBdButton);
-        buttons[7].onClick.AddListener(PushUltButton);
-        initFlag = ReverseFlag(initFlag);
-        yield return null;
+        buttons[0].onClick.AddListener( () => { PushVirusButton(0); } );
+        buttons[1].onClick.AddListener( () => { PushVirusButton(1); } );
+        buttons[2].onClick.AddListener( () => { PushVirusButton(2); } );
+        buttons[3].onClick.AddListener( () => { PushVirusButton(3); } );
+        buttons[4].onClick.AddListener( () => { PushVirusButton(4); } );
+        buttons[5].onClick.AddListener( () => { PushVirusButton(5); } );
+        buttons[6].onClick.AddListener( () => { PushVirusButton(6); } );
+        buttons[7].onClick.AddListener( () => { PushVirusButton(7); } );
+        buttons[8].onClick.AddListener(PushCreateButton);
+        buttons[9].onClick.AddListener(PushSubButton);
+        buttons[10].onClick.AddListener(PushAddButton);
+
+        initFlag = ReverseFlag(initFlag); //初期化フラグを反転
+        yield return null; //関数から抜ける
     }
 }

@@ -41,7 +41,7 @@ namespace Call
             CODE_EV,
             CODE_BD,
             CODE_ULT,
-            CODE_NONE = 99,
+            CODE_NONE,
         }
 
         //ˆÊ’u
