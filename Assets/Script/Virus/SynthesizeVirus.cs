@@ -42,20 +42,13 @@ public class SynthesizeVirus : MonoBehaviour
     {
         currentCode = CODE_NONE; //現在のコードなし
         creationArray = Enumerable.Repeat(0, creationArray.Length).ToArray(); //0個で配列を初期化
-        InitOwnedVirus();
+        InitOwnedVirus(); //現在の保有数の初期化
     }
 
     // Update is called once per frame
     void Update()
     {
-        Text vN = s.GetComponent<Text>();
-        vN.text = "[0]::" + vCreationCount[0].ToString()
-            + "[1]::" + vCreationCount[1].ToString()
-            + "[2]::" + vCreationCount[2].ToString();
-        Text vN2 = s2.GetComponent<Text>();
-        vN2.text = "[0]::" + creationArray[0].ToString()
-            + "[1]::" + creationArray[1].ToString()
-            + "[2]::" + creationArray[2].ToString();
+        debug();
 
         if (initFlag) return; //初期化フラグがtrueのとき、処理をスキップ
         StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
@@ -74,14 +67,19 @@ public class SynthesizeVirus : MonoBehaviour
 
     public void PushCreateButton()
     {
+        if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
+
         if (creationArray[(int)currentCode] <= 0) return; //作成数が0以下のとき、処理をスキップ
 
-        SaveCreationVirus(creationArray, currentCode);
+        SaveCreationVirus(creationArray, currentCode); //作成したウイルス数を保存
     }
 
     public void PushAddButton()
     {
-        if (creationArray[(int)currentCode] == 0) SaveOwnedVirus(matList, tmpList, currentCode); 
+        if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
+
+        if (creationArray[(int)currentCode] == 0)
+            SaveOwnedVirusMaterial(matList, tmpList, currentCode); //0個のときの素材数を保存
 
         if (!isCreate[(int)currentCode]) return; //作成できない状態のとき、処理をスキップ
 
@@ -92,7 +90,10 @@ public class SynthesizeVirus : MonoBehaviour
 
     public void PushSubButton()
     {
-        if (creationArray[(int)currentCode] == 0) SaveOwnedVirus(matList, tmpList, currentCode);
+        if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
+
+        if (creationArray[(int)currentCode] == 0)
+            SaveOwnedVirusMaterial(matList, tmpList, currentCode); //0個のときの素材数を保存
 
         if (creationArray[(int)currentCode] == 0) return; //作成数が0のとき、処理をスキップ
 
@@ -120,5 +121,17 @@ public class SynthesizeVirus : MonoBehaviour
 
         initFlag = ReverseFlag(initFlag); //初期化フラグを反転
         yield return null; //関数から抜ける
+    }
+
+    private void debug()
+    {
+        Text vN = s.GetComponent<Text>();
+        vN.text = "[0]::" + vCreationCount[0].ToString()
+            + "[1]::" + vCreationCount[1].ToString()
+            + "[2]::" + vCreationCount[2].ToString();
+        Text vN2 = s2.GetComponent<Text>();
+        vN2.text = "[0]::" + creationArray[0].ToString()
+            + "[1]::" + creationArray[1].ToString()
+            + "[2]::" + creationArray[2].ToString();
     }
 }

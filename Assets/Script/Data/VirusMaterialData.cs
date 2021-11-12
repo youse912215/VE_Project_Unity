@@ -93,7 +93,7 @@ public class VirusMaterialData : MonoBehaviour
            vMatOwned[(int)list[(int)c, i]] += requiredMaterials[(int)c, i] * o;
     }
 
-    public static void SaveOwnedVirus(MATERIAL_CODE[,] list, List<int> tmp, VIRUS_NUM c)
+    public static void SaveOwnedVirusMaterial(MATERIAL_CODE[,] list, List<int> tmp, VIRUS_NUM c)
     {
         tmp.RemoveRange(0, 4);
 
