@@ -72,6 +72,7 @@ public class SynthesizeVirus : MonoBehaviour
         if (creationArray[(int)currentCode] <= 0) return; //作成数が0以下のとき、処理をスキップ
 
         SaveCreationVirus(creationArray, currentCode); //作成したウイルス数を保存
+        creationArray[(int)currentCode] = 0; //作成数をリセット
     }
 
     public void PushAddButton()
