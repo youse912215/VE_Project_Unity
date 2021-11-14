@@ -14,7 +14,7 @@ public class SetProcess : MonoBehaviour
 
     private void Start()
     {
-        script = GetActVirusScript<ActVirus>(obj);
+        script = GetOtherScriptObject<ActVirus>(obj);
     }
 
     /// <summary>

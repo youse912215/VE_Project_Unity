@@ -16,7 +16,7 @@ public class DeleteProcess : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        actV = GetActVirusScript<ActVirus>(obj);
+        actV = GetOtherScriptObject<ActVirus>(obj);
     }
 
     /// <summary>

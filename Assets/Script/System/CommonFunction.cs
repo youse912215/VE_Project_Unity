@@ -26,7 +26,12 @@ namespace Call
             obj.GetComponent<Renderer>().material = mtl; //マテリアルを代入
         }
 
-        public static T GetActVirusScript<T>(GameObject obj)
+        /// <summary>
+        /// 他のスクリプトのオブジェクトを取得
+        /// </summary>
+        /// <typeparam name="T">他のスクリプト</typeparam>
+        /// <param name="obj">オブジェクト</param>
+        public static T GetOtherScriptObject<T>(GameObject obj)
         {
             obj = GameObject.Find(objName);
             return obj.GetComponent<T>();
