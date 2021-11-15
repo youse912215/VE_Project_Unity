@@ -26,6 +26,11 @@ namespace Call
             obj.GetComponent<Renderer>().material = mtl; //マテリアルを代入
         }
 
+        public static GameObject GetHierarchyObject(string s)
+        {
+            return GameObject.Find(s);
+        }
+
         /// <summary>
         /// 他のスクリプトのオブジェクトを取得
         /// </summary>
