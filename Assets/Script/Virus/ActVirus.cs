@@ -39,11 +39,13 @@ public class ActVirus : MonoBehaviour
         column = 0; //列を0に初期化
         row = 0; //行を0に初期化
 
-        for (int i = 0; i < CATEGORY; ++i)
+        for (int i = 0; i < CATEGORY; ++i){
             vParents[i].tag = VirusTagName[i]; //タグを保存
-        vParents[0].creationCount = 5; //作成したウイルスを代入
-        vParents[1].creationCount = 5;
-        vParents[2].creationCount = 5;
+            vParents[i].creationCount = 5;
+        }
+        //vParents[0].creationCount = 5; //作成したウイルスを代入
+        //vParents[1].creationCount = 5;
+        //vParents[2].creationCount = 5;
     }
 
     // Update is called once per frame
@@ -91,6 +93,8 @@ public class ActVirus : MonoBehaviour
         GenerationVirus(vParents, vChildren, n); //ウイルス生成
         vPrefab = GameObject.Find(VirusHeadName + n.ToString()); //ウイルス番号に合致するPrefabを取得
         vObject[n, vParents[n].setCount] = Instantiate(vPrefab); //ゲームオブジェクトを生成
+        vObject[n, vParents[n].setCount].transform.localScale = V_SIZE; //スケールサイズを取得
+        vObject[n, vParents[n].setCount].transform.GetChild(0).gameObject.transform.localScale = vRange; //範囲を取得
         vObject[n, vParents[n].setCount].SetActive(true); //アクティブ状態にする
         buttonMode = n; //現在のボタンの状態を更新
     }

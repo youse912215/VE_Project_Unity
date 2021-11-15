@@ -50,11 +50,21 @@ namespace Call
             new Vector3(0, 0, 0),
             new Vector3(0, 0, 0),
             new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
         };
 
         //位置
         public static readonly Quaternion[] rot =
         {
+            new Quaternion(0, 0, 0, 0),
+            new Quaternion(0, 0, 0, 0),
+            new Quaternion(0, 0, 0, 0),
+            new Quaternion(0, 0, 0, 0),
+            new Quaternion(0, 0, 0, 0),
             new Quaternion(0, 0, 0, 0),
             new Quaternion(0, 0, 0, 0),
             new Quaternion(0, 0, 0, 0),
@@ -66,6 +76,11 @@ namespace Call
             new Vector3(0, 0, 0),
             new Vector3(0, 0, 0),
             new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 0),
         }; 
 
         //3力
@@ -74,15 +89,22 @@ namespace Call
             new Vector3(1, 1, 1), //code.cld
             new Vector3(3, 2, 1), //code.inf
             new Vector3(2, 3, 3), //code.19
+            new Vector3(1, 1, 1), //code.cld
+            new Vector3(3, 2, 1), //code.inf
+            new Vector3(2, 3, 3), //code.19
+            new Vector3(1, 1, 1), //code.cld
+            new Vector3(3, 2, 1), //code.inf
 
             };
 
-        public const int CATEGORY = 3; //ウイルスの種類
+        public const int CATEGORY = 8; //ウイルスの種類
         public const int OWNED = 5; //ウイルスの最大保有数
 
         public static bool[] isLimitCapacity = new bool[CATEGORY]; //限界容量
         public static string VirusHeadName = "Virus"; //ウイルス頭名
-        public static string[] VirusTagName = {"Cold", "Inf", "19"};
+        public static string[] VirusTagName = {"Cold", "Inf", "19", "Nov", "Ehf", "Ev", "Bd", "Ult"};
+        public static readonly Vector3 V_SIZE = new Vector3(10.0f, 10.0f, 1.0f);
+        public static Vector3 vRange = new Vector3(50.0f, 50.0f, 1.0f);
 
         /// <summary>
         /// ウイルス番号に対応する、値をセットする
