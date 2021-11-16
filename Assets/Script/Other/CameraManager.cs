@@ -14,6 +14,7 @@ public class CameraManager : MonoBehaviour
     private GameObject pVirusButton;
     private bool isActiveButton;
 
+    private Vector3 pos;
     private Vector3 rot;
 
     // Start is called before the first frame update
@@ -23,7 +24,9 @@ public class CameraManager : MonoBehaviour
         pVirusButton = GetHierarchyObject("ParentVirusButton");
 
         transform.position = CAM_POS;
+        pos = CAM_POS;
         rot = CAM_ROT;
+        transform.position = pos;
         transform.rotation = Quaternion.Euler(rot);
         isSetButton = false;
         isPerChange = false;
@@ -33,6 +36,8 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(isActiveButton);
+
         ChangePerspective();
 
         if (isSetButton) return;
@@ -46,6 +51,7 @@ public class CameraManager : MonoBehaviour
     {
         if (!isPerChange) return; //視点変更されていないとき、処理をスキップ
 
+        transform.position = pos;
         transform.rotation = Quaternion.Euler(rot); //視点を変更
         isPerChange = false; //フラグをfalse
     }
@@ -55,7 +61,8 @@ public class CameraManager : MonoBehaviour
     /// </summary>
     public void PushChangeButton()
     {
-        rot.x = ChangeRot(rot.x); //角度を変更
+        pos = ChangeTransformCamera(pos, CAM_POS, CAM_P_POS); //位置を変更
+        rot = ChangeTransformCamera(rot, CAM_ROT, CAM_P_ROT); //角度を変更
         VirusMenuSetActive(pVirusButton); //メニューの状態を変更
         isPerChange = true; //フラグをtrue
     }
@@ -82,12 +89,12 @@ public class CameraManager : MonoBehaviour
     /// <summary>
     /// 角度を変更する
     /// </summary>
-    /// <param name="x">値</param>
+    /// <param name="y">値</param>
     /// <returns>角度</returns>
-    private float ChangeRot(float x)
+    private Vector3 ChangeTransformCamera(Vector3 y, Vector3 x1, Vector3 x2)
     {
-        x = x == HALF_CIRCLE ? QUARTER_CIRCLE : HALF_CIRCLE;
-        return x;
+        y = y == x2 ? x1 : x2;
+        return y;
     }
 
     /// <summary>

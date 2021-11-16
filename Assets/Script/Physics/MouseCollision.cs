@@ -23,6 +23,7 @@ public class MouseCollision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Cursor.lockState = CursorLockMode.Confined;
         transform.position = ReturnOnScreenMousePos(); //スクリーン→ワールド変換
     }
 
