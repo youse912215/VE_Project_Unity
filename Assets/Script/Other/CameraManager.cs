@@ -17,6 +17,8 @@ public class CameraManager : MonoBehaviour
     private Vector3 pos;
     private Vector3 rot;
 
+    public Canvas canvas;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +38,7 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(isActiveButton);
+        canvas.transform.rotation = Camera.main.transform.rotation; //HPÇê^è„Ç©ÇÁÇ≈Ç‡å©Ç¶ÇÈÇÊÇ§Ç…Ç∑ÇÈ
 
         ChangePerspective();
 

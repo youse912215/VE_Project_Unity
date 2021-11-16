@@ -97,10 +97,10 @@ namespace Call
 
             };
 
-        public const int CATEGORY = 8; //ウイルスの種類
+        public const int V_CATEGORY = 8; //ウイルスの種類
         public const int OWNED = 5; //ウイルスの最大保有数
 
-        public static bool[] isLimitCapacity = new bool[CATEGORY]; //限界容量
+        public static bool[] isLimitCapacity = new bool[V_CATEGORY]; //限界容量
         public static string VirusHeadName = "Virus"; //ウイルス頭名
         public static string[] VirusTagName = {"Cold", "Inf", "19", "Nov", "Ehf", "Ev", "Bd", "Ult"};
         public static readonly Vector3 V_SIZE = new Vector3(10.0f, 10.0f, 1.0f);

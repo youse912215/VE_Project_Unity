@@ -18,9 +18,9 @@ public class ActVirus : MonoBehaviour
     private int element; //要素格納変数
 
     /* public */
-    public VirusParents[] vParents = new VirusParents[CATEGORY]; //親ウイルス構造体配列
-    public VirusChildren[,] vChildren = new VirusChildren[CATEGORY, OWNED]; //子ウイルス構造体配列
-    public GameObject[,] vObject = new GameObject[CATEGORY, OWNED]; //ウイルスオブジェクト配列
+    public VirusParents[] vParents = new VirusParents[V_CATEGORY]; //親ウイルス構造体配列
+    public VirusChildren[,] vChildren = new VirusChildren[V_CATEGORY, OWNED]; //子ウイルス構造体配列
+    public GameObject[,] vObject = new GameObject[V_CATEGORY, OWNED]; //ウイルスオブジェクト配列
     public bool isGrabbedVirus; //ウイルスを掴んでいるか
     public bool isOpenMenu; //メニューフラグ
     public int buttonMode; //ボタンの状態（ウイルスの種類）
@@ -30,7 +30,7 @@ public class ActVirus : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (VIRUS_NUM i = CODE_CLD; i < (VIRUS_NUM)CATEGORY; ++i)
+        for (VIRUS_NUM i = CODE_CLD; i < (VIRUS_NUM)V_CATEGORY; ++i)
             InitValue(vParents, vChildren, i); //ウイルス情報の初期化
         
         isGrabbedVirus = false; //何も掴んでいない状態
@@ -39,7 +39,7 @@ public class ActVirus : MonoBehaviour
         column = 0; //列を0に初期化
         row = 0; //行を0に初期化
 
-        for (int i = 0; i < CATEGORY; ++i){
+        for (int i = 0; i < V_CATEGORY; ++i){
             vParents[i].tag = VirusTagName[i]; //タグを保存
             vParents[i].creationCount = 5;
         }
@@ -146,7 +146,7 @@ public class ActVirus : MonoBehaviour
         var list = new List<VirusChildren>(); //リスト定義
         VirusChildren[] array1 = vChildren.Cast<VirusChildren>().ToArray(); //配列を一次元化
         //全要素分繰り返す
-        for (int i = 0; i < CATEGORY * OWNED; ++i)
+        for (int i = 0; i < V_CATEGORY * OWNED; ++i)
         {
             //各ウイルスの座標と範囲オブジェクトの座標が一致するまで繰り返す
             if (array1[i].pos == rangeObj.transform.position)
