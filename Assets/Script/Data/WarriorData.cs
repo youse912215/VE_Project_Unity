@@ -24,11 +24,13 @@ public class WarriorData : MonoBehaviour
     public static readonly float[] adList = {5.0f, 10.0f, 15.0f};
     public static readonly string[] EnemyTags = {"meleeEnemy", "protectiveEnemy", "rangedEnemy"};
     public static readonly Vector3 E_SIZE = new Vector3(10.0f, 10.0f, 10.0f);
-    public static Vector3 SPAWN_POS = new Vector3(40.0f, -2843.0f, 2193.0f);
+    public static Vector3 SPAWN_POS = new Vector3(40.0f, -2800.0f, 6000.0f);
 
     public const int ALL_ENEMEY_MAX = 10;
     public const int E_CATEGORY = 2;
     public const string EnemyHeadName = "Enemy";
+    public const float SPAWN_INTERVAL = 1000.0f;
+    public const float MOVE_SPEED = -0.5f;
 
     public static int CulcEnemyCount(WarriorParents[] wP)
     {
@@ -52,7 +54,7 @@ public class WarriorData : MonoBehaviour
             wP[n].survivalCount = 0;
         }
 
-        for (int i = 0; i < ALL_ENEMEY_MAX; ++i)
+        for (int i = 0; i < ALL_ENEMEY_MAX * E_CATEGORY; ++i)
         {
             wC[n, i].pos = Vector3.zero;
             wC[n, i].rot = Vector3.zero;
