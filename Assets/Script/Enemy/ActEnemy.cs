@@ -12,8 +12,7 @@ public class ActEnemy : MonoBehaviour
 
     private WarriorParents[] eParents = new WarriorParents[E_CATEGORY];
     private WarriorChildren[,] eChildren = new WarriorChildren[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
-    private GameObject[,] eObject = new GameObject[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
-    public static ParticleSystem[,] ps = new ParticleSystem[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
+    public GameObject[,] eObject = new GameObject[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +47,12 @@ public class ActEnemy : MonoBehaviour
         SPAWN_POS.x = (float)Random.Range(-400, 600);
         eObject[n, eParents[n].survivalCount].transform.position = SPAWN_POS; //スポーン位置を取得
         eObject[n, eParents[n].survivalCount].SetActive(true); //ゲームオブジェクトをアクティブにする
+
+        MoveEnemy mE;
+        mE = eObject[n, eParents[n].survivalCount].GetComponent<MoveEnemy>();
+        mE.isStart = true;
+        Debug.Log(mE.isStart);
+
         eParents[n].survivalCount++; //最後に一体追加
     }
 

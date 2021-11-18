@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class ColonyHealth : MonoBehaviour
 {
     //Å‘åHP‚ÆŒ»İ‚ÌHPB
-    float maxHp = 1550;
-    float currentHp;
+    private float maxHp = 3000;
+    public static float currentHp;
     //Slider‚ğ“ü‚ê‚é
     [SerializeField]
     private Slider slider;

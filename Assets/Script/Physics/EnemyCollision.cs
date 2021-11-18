@@ -6,6 +6,7 @@ using System.Linq;
 using static Call.CommonFunction;
 using static MaterialManager;
 using static ActVirus;
+using static WarriorData;
 using static Call.VirusData;
 
 public class EnemyCollision : MonoBehaviour
@@ -17,6 +18,8 @@ public class EnemyCollision : MonoBehaviour
     private float cCount;
     private bool isCollision;
     private const float ACTIVE_COUNT = 30.0f;
+
+    GameObject[] eList = new GameObject[ALL_ENEMEY_MAX * E_CATEGORY];
 
     // Start is called before the first frame update
     void Start()
@@ -45,10 +48,18 @@ public class EnemyCollision : MonoBehaviour
         enemyObj = other.gameObject;
         isCollision = true;
 
+        EnemyHealth eH;
+        eH = enemyObj.GetComponent<EnemyHealth>();
+        eH.isInfection = true;
+        eH.damage |= (uint)(0b0001 << GetVirusNumber());
+        Debug.Log(eH.damage);
+        eH.total = (float)eH.CulculationHealth(eH.damage);
+        
+
         var ps = enemyObj.GetComponentsInChildren<ParticleSystem>(); //範囲に入った敵のパーティクルを取得
         var renderer = enemyObj.GetComponentsInChildren<ParticleSystemRenderer>(); // //範囲に入った敵のパーティクルレンダラーを取得
         renderer[GetVirusNumber()].material = virusMat[GetVirusNumber()]; //マテリアルをウイルスの種類によって変更
-        ps[GetVirusNumber()].Play(); //パーティクル発生
+        ps[GetVirusNumber()].Play(); //パーティクル発生      
     }
 
     /// <summary>

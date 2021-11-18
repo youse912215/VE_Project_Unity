@@ -8,6 +8,7 @@ using static Call.ConstantValue;
 public class MoveEnemy : MonoBehaviour
 {
     private float speed; //速度
+    public bool isStart;
 
     private const float INIT_ACCELE = 0.1f; //加速度の初期値
     private const int MIN_RAND = 10; //乱数最小値
@@ -21,13 +22,14 @@ public class MoveEnemy : MonoBehaviour
         speed = GetMoveSpeed(); //移動速度を取得
         ps = GetComponentsInChildren<ParticleSystem>();
         for (int i = 0; i < ps.Length; ++i) ps[i].Stop();
+        //isStart = false;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-
+        if (!isStart) return;
         if (transform.position.z <= TARGET_POS) return;
 
         transform.position += new Vector3(0, 0, speed); //移動する
