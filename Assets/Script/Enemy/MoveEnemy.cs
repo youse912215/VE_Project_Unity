@@ -13,14 +13,14 @@ public class MoveEnemy : MonoBehaviour
     private const int MIN_RAND = 10; //—”Å¬’l
     private const int MAX_RAND = 50; //—”Å‘å’l
 
-    private ParticleSystem ps;
+    private ParticleSystem[] ps = new ParticleSystem[3];
 
     // Start is called before the first frame update
     void Start()
     {
         speed = GetMoveSpeed(); //ˆÚ“®‘¬“x‚ğæ“¾
-        ps = GetComponentInChildren<ParticleSystem>();
-        ps.Stop();
+        ps = GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < ps.Length; ++i) ps[i].Stop();
     }
 
     // Update is called once per frame

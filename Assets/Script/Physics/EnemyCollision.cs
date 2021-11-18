@@ -12,8 +12,8 @@ public class EnemyCollision : MonoBehaviour
 {
     private GameObject enemyObj;
 
-    GameObject obj;
-    ActVirus actV;
+    private GameObject obj;
+    private ActVirus actV;
     private float cCount;
     private bool isCollision;
     private const float ACTIVE_COUNT = 30.0f;
@@ -33,31 +33,40 @@ public class EnemyCollision : MonoBehaviour
         CountCollisionTime();
     }
 
+    /// <summary>
+    /// 範囲に入っている間
+    /// </summary>
+    /// <param name="other">他のオブジェクト</param>
     void OnTriggerStay(Collider other) {
-        if (actV.isGrabbedVirus) return;
-		if (other.gameObject.tag != "Enemy") return;
+        if (actV.isGrabbedVirus) return; //ウイルスを持っているときは、処理をスキップ
+		if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
 
         ChangeMaterialColor(this.gameObject, rangeMat[3]);
         enemyObj = other.gameObject;
         isCollision = true;
 
-        Debug.Log("Num::" + GetVirusNumber());
-
-        var ps = enemyObj.GetComponentInChildren<ParticleSystem>();
-        var main = ps.main;
-        main.startColor = new Color(255, 255, 255);
-        ps.Play();
+        var ps = enemyObj.GetComponentsInChildren<ParticleSystem>(); //範囲に入った敵のパーティクルを取得
+        var renderer = enemyObj.GetComponentsInChildren<ParticleSystemRenderer>(); // //範囲に入った敵のパーティクルレンダラーを取得
+        renderer[GetVirusNumber()].material = virusMat[GetVirusNumber()]; //マテリアルをウイルスの種類によって変更
+        ps[GetVirusNumber()].Play(); //パーティクル発生
     }
 
+    /// <summary>
+    /// 範囲から離れたとき
+    /// </summary>
+    /// <param name="other">他のオブジェクト</param>
     void OnTriggerExit(Collider other) {
         if (other.gameObject.tag != "Enemy") return;
         ChangeMaterialColor(this.gameObject, rangeMat[0]);
         
     }
 
+    /// <summary>
+    /// 衝突カウントを計算し、ウイルスを消す
+    /// </summary>
     private void CountCollisionTime()
     {
-        cCount += 0.1f;
+        cCount += 0.1f; //カウント開始
 
         if (cCount <= ACTIVE_COUNT) return;
         this.gameObject.transform.parent.gameObject.SetActive(false);
@@ -65,15 +74,21 @@ public class EnemyCollision : MonoBehaviour
         isCollision = false;
     }
 
+    /// <summary>
+    /// ウイルスの種類を取得
+    /// </summary>
+    /// <returns></returns>
     private int GetVirusNumber()
     {
-        int n = 0;
+        int n = 0; //格納用変数
+        //ウイルスタグの値と要素番号を返し、繰り返す
         foreach (var (value, index) in VirusTagName.Select((value, index) => (value, index)))
         {
+            //タグと一致したとき
             if (value == this.gameObject.transform.parent.tag)
             {
-                n = index;
-                break;
+                n = index; //要素番号を格納
+                break; //ループを抜け出す
             }
         }        
         return n;

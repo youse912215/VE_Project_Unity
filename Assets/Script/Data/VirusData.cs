@@ -85,7 +85,7 @@ namespace Call
 
         //3力
         public static readonly Vector3[] force =
-            {
+        {
             new Vector3(1, 1.0f, 1), //code.cld
             new Vector3(3, 1.25f, 1), //code.inf
             new Vector3(2, 1.5f, 3), //code.19
@@ -95,7 +95,19 @@ namespace Call
             new Vector3(1, 1.0f, 1), //code.cld
             new Vector3(3, 1.25f, 1), //code.inf
 
-            };
+        };
+
+        public static readonly Color[] COLOR_SET =
+        {
+            new Color(84, 7, 84),
+            new Color(0, 7, 84),
+            new Color(0, 120, 84),
+            new Color(255,255,255),
+            new Color(255,255,255),
+            new Color(255,255,255),
+            new Color(255,255,255),
+            new Color(255,255,255),
+        };
 
         public const int V_CATEGORY = 8; //ウイルスの種類
         public const int OWNED = 5; //ウイルスの最大保有数
