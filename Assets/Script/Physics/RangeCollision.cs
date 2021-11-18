@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using static Call.CommonFunction;
-using static Call.VirusData;
 using static MaterialManager;
 using static MouseCollision;
 

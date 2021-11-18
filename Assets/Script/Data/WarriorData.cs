@@ -50,7 +50,7 @@ public class WarriorData : MonoBehaviour
     {
         for (int i = 0; i < n; ++i)
         {
-            wP[n].tag = EnemyTags[n];
+            //wP[n].tag = EnemyTags[n];
             wP[n].survivalCount = 0;
         }
 

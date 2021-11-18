@@ -66,7 +66,7 @@ public class ShowMenu : MonoBehaviour
     public static void OpenAfterMenu()
     {
         menuMode = true;
-        SetButtonActive(false, true, true, true, true);
+        SetButtonActive(false, true, true, false, true);
         ReverseMenuFlag(SET); //ƒƒjƒ…[‚ğŠJ‚­
     }
 

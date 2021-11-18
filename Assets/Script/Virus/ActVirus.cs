@@ -94,7 +94,8 @@ public class ActVirus : MonoBehaviour
         vPrefab = GameObject.Find(VirusHeadName + n.ToString()); //ウイルス番号に合致するPrefabを取得
         vObject[n, vParents[n].setCount] = Instantiate(vPrefab); //ゲームオブジェクトを生成
         vObject[n, vParents[n].setCount].transform.localScale = V_SIZE; //スケールサイズを取得
-        vObject[n, vParents[n].setCount].transform.GetChild(0).gameObject.transform.localScale = vRange; //範囲を取得
+        vObject[n, vParents[n].setCount].transform.GetChild(0).gameObject.transform.localScale =
+            vRange * vChildren[n, vParents[n].setCount].force.y; //範囲を取得
         vObject[n, vParents[n].setCount].SetActive(true); //アクティブ状態にする
         buttonMode = n; //現在のボタンの状態を更新
     }
