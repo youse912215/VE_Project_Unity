@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ColonyHealth : MonoBehaviour
 {
     //Å‘åHP‚ÆŒ»İ‚ÌHPB
-    private float maxHp = 3000;
+    private float maxHp = 1000;
     public static float currentHp;
     //Slider‚ğ“ü‚ê‚é
     [SerializeField]
@@ -22,6 +22,9 @@ public class ColonyHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        slider.value = currentHp / maxHp; ;
+        slider.value = currentHp / maxHp;
+
+        if (currentHp > 0.0f) return;
+
     }
 }

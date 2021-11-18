@@ -4,20 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using static Call.ConstantValue;
-using static Call.VirusData;
+using static WarriorData;
 
 public class EnemyHealth : MonoBehaviour
 {
     //ç≈ëÂHPÇ∆åªç›ÇÃHPÅB
     private float maxHp = 2000;
-    private float currentHp;
+    public float currentHp;
     //SliderÇì¸ÇÍÇÈ
     [SerializeField]
     private Slider slider;
 
+    [SerializeField]
+    private ParticleSystem ps;
+
+    private ParticleSystem effect;
+
     public bool isInfection;
     public uint damage;
     public float total;
+    public bool isDead;
 
     void Start()
     {   
@@ -25,16 +31,30 @@ public class EnemyHealth : MonoBehaviour
         currentHp = maxHp; //åªç›ÇÃHPÇ…ç≈ëÂHPÇë„ì¸
         damage = 0b0000;
         total = 0.0f;
+        effect = Instantiate(ps);
+        effect.Stop();
+        
     }
 
     void Update()
     {
-        if (transform.position.z <= TARGET_POS) ColonyHealth.currentHp -= 0.5f;
+        if (transform.position.z <= TARGET_POS)
+        {
+            ColonyHealth.currentHp -= 0.5f;
+            effect.transform.position = new Vector3(transform.position.x, transform.position.y + 250.0f, transform.position.z - 170.0f);
+            effect.Play();
+            //GetComponent<AudioSource>().Play();
+        }
 
         if (!isInfection) return;
 
         currentHp -= total;
         slider.value = currentHp / maxHp;
+
+        if (currentHp > 0.0f) return;
+        deadCount++;
+        effect.Stop();
+        Destroy(gameObject);
     }
 
     public int CulculationHealth(uint damage)

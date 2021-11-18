@@ -9,7 +9,7 @@ namespace Call
         public const float HALF_CIRCLE = 90.0f;
         public const float QUARTER_CIRCLE = HALF_CIRCLE / 2.0f;
 
-        public const float TARGET_POS = 650.0f;
+        public const float TARGET_POS = 400.0f;
 
         //マウスとの差分座標
         public const float DIFF_X = 100.0f;
@@ -21,8 +21,8 @@ namespace Call
         public static readonly Vector3 CAM_POS = new Vector3(300.0f, 2050.0f, 2000.0f); //位置
         public static Vector3 CAM_ROT = new Vector3(90.0f, 0.0f, 0.0f); //角度
         /* プレイヤー視点 */
-        public static readonly Vector3 CAM_P_POS = new Vector3(167.0f ,-2106.0f, -20.0f); //位置
-        public static Vector3 CAM_P_ROT = new Vector3(30.0f, 0.0f, 0.0f); //角度
+        public static readonly Vector3 CAM_P_POS = new Vector3(167.0f ,-2106.0f, -109.0f); //位置
+        public static Vector3 CAM_P_ROT = new Vector3(30.5f, 0.0f, 0.0f); //角度
 
         //メニューUI
         public static readonly Vector3 INIT_MENU_POS = new Vector3(-9999.0f, -9999.0f, 0.0f);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using static WarriorData;
+
+
 public class ActEnemy : MonoBehaviour
 {
     private GameObject ePrefab;
@@ -30,7 +32,7 @@ public class ActEnemy : MonoBehaviour
     {
         spawnTime++; //èoåªéûä‘åoâﬂ
 
-        //Debug.Log(CulcEnemyCount(eParents));
+        Debug.Log("Dead::" + deadCount);
 
         if (spawnTime < SPAWN_INTERVAL) return;
         SpawnEnemy();

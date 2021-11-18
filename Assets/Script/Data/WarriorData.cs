@@ -32,6 +32,8 @@ public class WarriorData : MonoBehaviour
     public const float SPAWN_INTERVAL = 1000.0f;
     public const float MOVE_SPEED = -0.5f;
 
+    public static int deadCount;
+
     public static int CulcEnemyCount(WarriorParents[] wP)
     {
         int total = 0;
