@@ -31,7 +31,7 @@ public class ActEnemy : MonoBehaviour
     {
         spawnTime++; //èoåªéûä‘åoâﬂ
 
-        Debug.Log(CulcEnemyCount(eParents));
+        //Debug.Log(CulcEnemyCount(eParents));
 
         if (spawnTime < SPAWN_INTERVAL) return;
         SpawnEnemy();

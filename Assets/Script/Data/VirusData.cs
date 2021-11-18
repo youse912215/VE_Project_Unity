@@ -103,8 +103,10 @@ namespace Call
         public static bool[] isLimitCapacity = new bool[V_CATEGORY]; //限界容量
         public static string VirusHeadName = "Virus"; //ウイルス頭名
         public static string[] VirusTagName = {"Cold", "Inf", "19", "Nov", "Ehf", "Ev", "Bd", "Ult"};
-        public static readonly Vector3 V_SIZE = new Vector3(10.0f, 10.0f, 1.0f);
-        public static Vector3 vRange = new Vector3(50.0f, 50.0f, 1.0f);
+        public static readonly Vector3 V_SIZE = new Vector3(10.0f, 10.0f, 10.0f);
+        public static Vector3 vRange = new Vector3(50.0f, 50.0f, 50.0f);
+
+        public const float CONSTANT_FORCE = 5.0f;
 
         /// <summary>
         /// ウイルス番号に対応する、値をセットする

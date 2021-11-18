@@ -9,6 +9,8 @@ namespace Call
         public const float HALF_CIRCLE = 90.0f;
         public const float QUARTER_CIRCLE = HALF_CIRCLE / 2.0f;
 
+        public const float TARGET_POS = 650.0f;
+
         //マウスとの差分座標
         public const float DIFF_X = 100.0f;
         public const float DIFF_Y = -75.0f;
