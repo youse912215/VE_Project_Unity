@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using static Call.ConstantValue;
+using static Call.VirusData;
 using static WarriorData;
 
 public class EnemyHealth : MonoBehaviour
@@ -57,11 +58,16 @@ public class EnemyHealth : MonoBehaviour
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// 体力を計算する
+    /// </summary>
+    /// <param name="damage">ダメージ</param>
+    /// <returns></returns>
     public int CulculationHealth(uint damage)
     {
-        uint d0 = ((damage & 0b0001) >> 0) * 1;
-        uint d1 = ((damage & 0b0010) >> 1) * 2;
-        uint d2 = ((damage & 0b0100) >> 2) * 3;
+        uint d0 = ((damage & 0b0001) >> 0) * (uint)force[0].x; //
+        uint d1 = ((damage & 0b0010) >> 1) * (uint)force[1].x; //
+        uint d2 = ((damage & 0b0100) >> 2) * (uint)force[2].x; //
         return (int)(d0 + d1 + d2);
     }
 }
