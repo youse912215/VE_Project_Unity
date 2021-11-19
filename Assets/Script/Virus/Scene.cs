@@ -21,9 +21,11 @@ public class Scene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.Escape)) {Application.Quit(); return; }
+
         sceneName = SceneManager.GetActiveScene().buildIndex; //Œ»İ‚ÌƒV[ƒ“”Ô†‚ğ•Û‘¶
 
-        if (deadCount <= 5) return;
+        if (deadCount <= 10) return;
         SceneManager.LoadScene("End");
     }
 

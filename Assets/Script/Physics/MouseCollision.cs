@@ -10,7 +10,6 @@ public class MouseCollision : MonoBehaviour
 {
     public static bool isMouseCollider; //マウスコライダー
     public static bool isRangeCollision; //範囲コリジョン
-
     public static GameObject rangeObj; //格納用オブジェクト
 
     // Start is called before the first frame update

@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ColonyHealth : MonoBehaviour
 {
     //Å‘åHP‚ÆŒ»İ‚ÌHPB
-    private float maxHp = 1000;
+    private float maxHp = 5000;
     public static float currentHp;
     //Slider‚ğ“ü‚ê‚é
     [SerializeField]
@@ -25,6 +26,6 @@ public class ColonyHealth : MonoBehaviour
         slider.value = currentHp / maxHp;
 
         if (currentHp > 0.0f) return;
-
+            SceneManager.LoadScene("End");
     }
 }

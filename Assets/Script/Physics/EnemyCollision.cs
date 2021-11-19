@@ -48,13 +48,7 @@ public class EnemyCollision : MonoBehaviour
         enemyObj = other.gameObject;
         isCollision = true;
 
-        EnemyHealth eH;
-        eH = enemyObj.GetComponent<EnemyHealth>();
-        eH.isInfection = true;
-        eH.damage |= (uint)(0b0001 << GetVirusNumber());
-        Debug.Log(eH.damage);
-        eH.total = (float)eH.CulculationHealth(eH.damage);
-        
+        GetEnemyDamage(enemyObj); //敵のダメージを取得
 
         var ps = enemyObj.GetComponentsInChildren<ParticleSystem>(); //範囲に入った敵のパーティクルを取得
         var renderer = enemyObj.GetComponentsInChildren<ParticleSystemRenderer>(); // //範囲に入った敵のパーティクルレンダラーを取得
@@ -103,5 +97,19 @@ public class EnemyCollision : MonoBehaviour
             }
         }        
         return n;
+    }
+
+    /// <summary>
+    /// 敵のダメージを取得
+    /// </summary>
+    /// <param name="obj"></param>
+    private void GetEnemyDamage(GameObject obj)
+    {
+        EnemyHealth eH;
+        eH = obj.GetComponent<EnemyHealth>();
+        eH.isInfection = true;
+        eH.damage |= (uint)(0b0001 << GetVirusNumber());
+        Debug.Log(eH.damage);
+        eH.total = (float)eH.CulculationHealth(eH.damage);
     }
 }
