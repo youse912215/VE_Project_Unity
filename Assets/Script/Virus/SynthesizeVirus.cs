@@ -1,17 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
-
+using static Call.CommonFunction;
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
-using static Call.CommonFunction;
-using static DebugManager;
+using static SimulationButtonManager;
 using static VirusMaterialData;
 using static VirusMaterialData.MATERIAL_CODE;
-using static SimulationButtonManager;
-using System;
 
 public class SynthesizeVirus : MonoBehaviour
 {
@@ -20,7 +17,7 @@ public class SynthesizeVirus : MonoBehaviour
     private bool initFlag;
     private bool[] isCreate = new bool[8]; //ウイルスを作れるか
     private int[] creationArray = new int[9]; //作成数配列
-    private List<int> tmpList = new List<int>{0, 0, 0, 0}; //一旦、素材を保存するリスト
+    private List<int> tmpList = new List<int> { 0, 0, 0, 0 }; //一旦、素材を保存するリスト
 
     //素材合成リスト
     private MATERIAL_CODE[,] matCompositList =
@@ -35,22 +32,25 @@ public class SynthesizeVirus : MonoBehaviour
         { ULX_PROTEIN, ERYTHROCYTE_AGGLUTININ, ENVELOPE, BLOOD_POTION },
     };
 
-    public GameObject s = null;
-    public GameObject s2 = null;
+    private Text[] vCount = new Text[V_CATEGORY];
+    private Text vArray;
+    private GameObject[] countText = new GameObject[V_CATEGORY];
+    private GameObject arrayText;
 
     // Start is called before the first frame update
     void Start()
     {
-        currentCode = CODE_NONE; //現在のコードなし
+        currentCode = CODE_CLD; //現在のコードなし
         creationArray = Enumerable.Repeat(0, creationArray.Length).ToArray(); //0個で配列を初期化
         InitOwnedVirus(); //現在の保有数の初期化
+
+        InitText(); //テキストの初期化
     }
 
     // Update is called once per frame
     void Update()
     {
-        debug();
-        Debug.Log("現在のコード::" + currentCode);
+        ShowCurrentCounts();
 
         if (initFlag) return; //初期化フラグがtrueのとき、処理をスキップ
         StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
@@ -67,6 +67,9 @@ public class SynthesizeVirus : MonoBehaviour
         isCreate[(int)currentCode] = CheckMaterialCount(matCompositList, currentCode); //必要個数に達しているか確認
     }
 
+    /// <summary>
+    /// Pushing creation button
+    /// </summary>
     public void PushCreateButton()
     {
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
@@ -77,6 +80,10 @@ public class SynthesizeVirus : MonoBehaviour
         creationArray[(int)currentCode] = 0; //作成数をリセット
     }
 
+    /// <summary>
+    /// Pushing addition button
+    /// </summary>
+    /// <param name="sign"></param>
     public void PushAddButton(int sign)
     {
         //GameObject ob = buttons[0].transform.parent.gameObject;
@@ -92,6 +99,10 @@ public class SynthesizeVirus : MonoBehaviour
         OrganizeVirusMaterialCount(sign); //素材量を整理する
     }
 
+    /// <summary>
+    /// Pushing subtraction button
+    /// </summary>
+    /// <param name="sign"></param>
     public void PushSubButton(int sign)
     {
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
@@ -120,31 +131,51 @@ public class SynthesizeVirus : MonoBehaviour
     /// </summary>
     IEnumerator InitSetButton()
     {
-        buttons[0].onClick.AddListener( () => { PushVirusButton(0); } );
-        buttons[1].onClick.AddListener( () => { PushVirusButton(1); } );
-        buttons[2].onClick.AddListener( () => { PushVirusButton(2); } );
-        buttons[3].onClick.AddListener( () => { PushVirusButton(3); } );
-        buttons[4].onClick.AddListener( () => { PushVirusButton(4); } );
-        buttons[5].onClick.AddListener( () => { PushVirusButton(5); } );
-        buttons[6].onClick.AddListener( () => { PushVirusButton(6); } );
-        buttons[7].onClick.AddListener( () => { PushVirusButton(7); } );
+        for (int i = 0; i < V_CATEGORY; ++i)
+            buttons[0].onClick.AddListener(() => { PushVirusButton(0); });
+        buttons[1].onClick.AddListener(() => { PushVirusButton(1); });
+        buttons[2].onClick.AddListener(() => { PushVirusButton(2); });
+        buttons[3].onClick.AddListener(() => { PushVirusButton(3); });
+        buttons[4].onClick.AddListener(() => { PushVirusButton(4); });
+        buttons[5].onClick.AddListener(() => { PushVirusButton(5); });
+        buttons[6].onClick.AddListener(() => { PushVirusButton(6); });
+        buttons[7].onClick.AddListener(() => { PushVirusButton(7); });
         buttons[8].onClick.AddListener(PushCreateButton);
-        buttons[9].onClick.AddListener(() => { PushSubButton(1); } );
-        buttons[10].onClick.AddListener(() => { PushAddButton(-1); } );
+        buttons[9].onClick.AddListener(() => { PushSubButton(1); });
+        buttons[10].onClick.AddListener(() => { PushAddButton(-1); });
 
         initFlag = ReverseFlag(initFlag); //初期化フラグを反転
         yield return null; //関数から抜ける
     }
 
-    private void debug()
+    /// <summary>
+    /// テキストオブジェクトの初期化
+    /// </summary>
+    private void InitText()
     {
-        Text vN = s.GetComponent<Text>();
-        vN.text = "[0]::" + vCreationCount[0].ToString()
-            + "[1]::" + vCreationCount[1].ToString()
-            + "[2]::" + vCreationCount[2].ToString();
-        Text vN2 = s2.GetComponent<Text>();
-        vN2.text = "[0]::" + creationArray[0].ToString()
-            + "[1]::" + creationArray[1].ToString()
-            + "[2]::" + creationArray[2].ToString();
+        for (int i = 0; i < V_CATEGORY; ++i)
+        {
+            countText[i] = GameObject.Find("vCount" + i.ToString());
+            vCount[i] = countText[i].GetComponent<Text>();
+        }
+        arrayText = GameObject.Find("cArray");
+        vArray = arrayText.GetComponent<Text>();
+    }
+
+    /// <summary>
+    /// 現在の作成数等を表示
+    /// </summary>
+    private void ShowCurrentCounts()
+    {
+        if (currentCode == CODE_NONE) return;
+        vCount[0].text = "×" + vCreationCount[0].ToString();
+        vCount[1].text = "×" + vCreationCount[1].ToString();
+        vCount[2].text = "×" + vCreationCount[2].ToString();
+        vCount[3].text = "×" + vCreationCount[3].ToString();
+        vCount[4].text = "×" + vCreationCount[4].ToString();
+        vCount[5].text = "×" + vCreationCount[5].ToString();
+        vCount[6].text = "×" + vCreationCount[6].ToString();
+        vCount[7].text = "×" + vCreationCount[7].ToString();
+        vArray.text = creationArray[(int)currentCode].ToString();
     }
 }

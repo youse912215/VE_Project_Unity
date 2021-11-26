@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using static Call.ConstantValue;
+
 public class InitSources : MonoBehaviour
 {
     public static Sprite[] infoSp = new Sprite[8];
