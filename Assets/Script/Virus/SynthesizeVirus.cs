@@ -15,7 +15,7 @@ using System;
 
 public class SynthesizeVirus : MonoBehaviour
 {
-    private VIRUS_NUM currentCode; //現在選択しているウイルスコード
+    public static VIRUS_NUM currentCode; //現在選択しているウイルスコード
 
     private bool initFlag;
     private bool[] isCreate = new bool[8]; //ウイルスを作れるか
@@ -50,6 +50,7 @@ public class SynthesizeVirus : MonoBehaviour
     void Update()
     {
         debug();
+        Debug.Log("現在のコード::" + currentCode);
 
         if (initFlag) return; //初期化フラグがtrueのとき、処理をスキップ
         StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
@@ -78,8 +79,8 @@ public class SynthesizeVirus : MonoBehaviour
 
     public void PushAddButton(int sign)
     {
-        GameObject ob = buttons[0].transform.parent.gameObject;
-        ob.SetActive(false);
+        //GameObject ob = buttons[0].transform.parent.gameObject;
+        //ob.SetActive(false);
 
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
