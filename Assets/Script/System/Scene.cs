@@ -21,8 +21,6 @@ public class Scene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Escape)) {Application.Quit(); return; }
-
         sceneName = SceneManager.GetActiveScene().buildIndex; //Œ»İ‚ÌƒV[ƒ“”Ô†‚ğ•Û‘¶
 
         if (deadCount <= 10) return;
@@ -31,6 +29,6 @@ public class Scene : MonoBehaviour
 
     public void startgame()
     {
-        SceneManager.LoadScene("Simulation");
+        SceneManager.LoadScene("TowerDefence");
     }
 }

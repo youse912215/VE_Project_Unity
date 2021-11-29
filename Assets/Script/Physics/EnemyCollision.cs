@@ -103,8 +103,8 @@ public class EnemyCollision : MonoBehaviour
         EnemyHealth eH; //EenemyHealthスクリプト
         eH = obj.GetComponent<EnemyHealth>(); //スクリプトを取得
         eH.isInfection = true; //感染状態をtrue
-        eH.damage |= (uint)(0b0001 << GetVirusNumber()); //取得したウイルス番号分、シフトしてからORで代入演算
-        eH.total = (float)eH.CulculationHealth(eH.damage); //計算したダメージをトータル値として格納
+        eH.takenDamage |= (uint)(0b0001 << GetVirusNumber()); //取得したウイルス番号分、シフトしてからORで代入演算
+        eH.totalDamage = (float)eH.CulculationHealth(eH.takenDamage); //計算したダメージをトータル値として格納
     }
 
     /// <summary>

@@ -29,7 +29,7 @@ public class WarriorData : MonoBehaviour
     public const int ALL_ENEMEY_MAX = 10;
     public const int E_CATEGORY = 2;
     public const string EnemyHeadName = "Enemy";
-    public const float SPAWN_INTERVAL = 1000.0f;
+    public const float SPAWN_INTERVAL = 10.0f;
     public const float MOVE_SPEED = -0.5f;
 
     public static int deadCount;

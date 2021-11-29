@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,32 +7,33 @@ using static WarriorData;
 
 public class EnemyHealth : MonoBehaviour
 {
+    /* private */ 
     //最大HPと現在のHP。
     private float maxHp = 2000;
-    public float currentHp;
-    //Sliderを入れる
-    [SerializeField]
-    private Slider slider;
+    private float currentHp;
+    
+    [SerializeField] private Slider slider; //スライダー
+    [SerializeField] private ParticleSystem impactPs; //衝撃波のパーティクルシステム
+    [SerializeField] private ParticleSystem bloodPs; //血しぶきのパーティクルシステム
+    private ParticleSystem impactEffect; //衝撃波のエフェクト
+    private ParticleSystem bloodEffect; //衝撃波のエフェクト
 
-    [SerializeField]
-    private ParticleSystem ps;
-
-    private ParticleSystem effect;
-
-    public bool isInfection;
-    public uint damage;
-    public float total;
-    public bool isDead;
+    /* public */ 
+    public uint takenDamage; //被ダメージ
+    public float totalDamage; //合計ダメージ
+    public bool isInfection; //感染したかどうか
+    public bool isDead; //死んだかどうか
 
     void Start()
     {   
         slider.value = 1; //Sliderを満タン
         currentHp = maxHp; //現在のHPに最大HPを代入
-        damage = 0b0000;
-        total = 0.0f;
-        effect = Instantiate(ps);
-        effect.Stop();
-        
+        takenDamage = 0b0000;
+        totalDamage = 0.0f;
+        impactEffect = Instantiate(impactPs);
+        impactEffect.Stop();
+        bloodEffect = Instantiate(bloodPs);
+        bloodEffect.Stop();
     }
 
     void Update()
@@ -42,19 +41,28 @@ public class EnemyHealth : MonoBehaviour
         if (transform.position.z <= TARGET_POS)
         {
             ColonyHealth.currentHp -= 0.5f;
-            effect.transform.position = new Vector3(transform.position.x, transform.position.y + 250.0f, transform.position.z - 170.0f);
-            effect.Play();
+            impactEffect.transform.position = new Vector3(
+                transform.position.x,
+                transform.position.y + 250.0f,
+                transform.position.z - 170.0f);
+            impactEffect.Play();
             //GetComponent<AudioSource>().Play();
         }
 
         if (!isInfection) return;
 
-        currentHp -= total;
+        currentHp -= totalDamage;
         slider.value = currentHp / maxHp;
 
         if (currentHp > 0.0f) return;
         deadCount++;
-        effect.Stop();
+        impactEffect.Stop();
+        bloodEffect.transform.position = new Vector3(
+                transform.position.x,
+                transform.position.y + 250.0f,
+                transform.position.z);
+        bloodEffect.Play();
+        
         Destroy(gameObject);
     }
 
