@@ -11,6 +11,9 @@ namespace Call
 
         public const float TARGET_POS = 400.0f;
 
+        public static readonly Vector3 SELECT_UI_POS = new Vector3(-830, 250, 0); //選択UI
+        public const float BUTTON_HEIGHT = 120.0f;
+
         //マウスとの差分座標
         public const float DIFF_X = 100.0f;
         public const float DIFF_Y = -75.0f;

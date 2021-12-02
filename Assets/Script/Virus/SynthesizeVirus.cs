@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using static Call.CommonFunction;
+using static Call.ConstantValue;
 using static Call.VirusData;
 using static Call.VirusData.VIRUS_NUM;
 using static SimulationButtonManager;
@@ -18,6 +19,9 @@ public class SynthesizeVirus : MonoBehaviour
     private bool[] isCreate = new bool[8]; //ウイルスを作れるか
     private int[] creationArray = new int[9]; //作成数配列
     private List<int> tmpList = new List<int> { 0, 0, 0, 0 }; //一旦、素材を保存するリスト
+
+    private GameObject selectUI;
+    private RectTransform selRect;
 
     //素材合成リスト
     private MATERIAL_CODE[,] matCompositList =
@@ -45,6 +49,7 @@ public class SynthesizeVirus : MonoBehaviour
         InitOwnedVirus(); //現在の保有数の初期化
 
         InitText(); //テキストの初期化
+        InitUI(); //UIの初期化
     }
 
     // Update is called once per frame
@@ -62,6 +67,7 @@ public class SynthesizeVirus : MonoBehaviour
     /// <param name="code">現在のコード</param>
     public void PushVirusButton(int code)
     {
+        GetSelectPosition(code);
         creationArray[(int)currentCode] = 0; //作成数をリセット
         currentCode = (VIRUS_NUM)code; //現在のコードを保存
         isCreate[(int)currentCode] = CheckMaterialCount(matCompositList, currentCode); //必要個数に達しているか確認
@@ -163,6 +169,16 @@ public class SynthesizeVirus : MonoBehaviour
     }
 
     /// <summary>
+    /// UIの初期化
+    /// </summary>
+    private void InitUI()
+    {
+        selectUI = GameObject.Find("CurrentSelect");
+        selRect = selectUI.GetComponent<RectTransform>();
+        selRect.localPosition = SELECT_UI_POS; //初期位置にセット
+    }
+
+    /// <summary>
     /// 現在の作成数等を表示
     /// </summary>
     private void ShowCurrentCounts()
@@ -177,5 +193,51 @@ public class SynthesizeVirus : MonoBehaviour
         vCount[6].text = "×" + vCreationCount[6].ToString();
         vCount[7].text = "×" + vCreationCount[7].ToString();
         vArray.text = creationArray[(int)currentCode].ToString();
+    }
+
+    /// <summary>
+    /// 選択UIの位置を取得
+    /// </summary>
+    /// <param name="code">ウイルスコード</param>
+    private void GetSelectPosition(int code)
+    {
+        selRect.localPosition = new Vector3(
+            SELECT_UI_POS.x,
+            SELECT_UI_POS.y - CulculationSelectPos(code),
+            SELECT_UI_POS.z);
+    }
+
+    /// <summary>
+    /// 選択UIの位置の計算
+    /// </summary>
+    /// <param name="code">ウイルスコード</param>
+    /// <returns></returns>
+    private float CulculationSelectPos(int code)
+    {
+        return code == (int)CODE_ULT ? BUTTON_HEIGHT * 5.0f : (BUTTON_HEIGHT * code);
+    }
+
+    /// <summary>
+    /// Pushing create screen button
+    /// </summary>
+    private void PushCreateScreenButton()
+    {
+
+    }
+
+    /// <summary>
+    /// Pushing prepare screen button
+    /// </summary>
+    private void PushPrepareScreenButton()
+    {
+
+    }
+
+    /// <summary>
+    /// Pushing supplies screen button
+    /// </summary>
+    private void PushSuppliesScreenButton()
+    {
+
     }
 }
