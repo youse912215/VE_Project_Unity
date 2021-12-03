@@ -21,7 +21,7 @@ namespace Call
         //カメラ
         public const float CAM_DISTANCE = 4850.0f;
         /* 真上 */
-        public static readonly Vector3 CAM_POS = new Vector3(300.0f, 2050.0f, 2000.0f); //位置
+        public static readonly Vector3 CAM_POS = new Vector3(232,670,1260); //位置
         public static Vector3 CAM_ROT = new Vector3(90.0f, 0.0f, 0.0f); //角度
         /* プレイヤー視点 */
         public static readonly Vector3 CAM_P_POS = new Vector3(167.0f ,-2106.0f, -109.0f); //位置
