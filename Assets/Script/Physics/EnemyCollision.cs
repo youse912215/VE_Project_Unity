@@ -72,7 +72,8 @@ public class EnemyCollision : MonoBehaviour
 
         var pObject = this.gameObject.transform.parent.gameObject; //親オブジェクトを格納
         actV.ExplosionVirus(pObject.transform.position); //ウイルス装置を爆発させる
-        pObject.SetActive(false); //範囲を非アクティブ状態に
+        Destroy(pObject);
+        //pObject.SetActive(false); //範囲を非アクティブ状態に
         cCount = 0; //衝突カウントをリセット
         isCollision = false; //衝突状態をfalse
     }

@@ -30,6 +30,11 @@ public class CameraManager : MonoBehaviour
     int currentSetNum;
     private GameObject wheelUI;
 
+    [SerializeField] private GameObject water;
+    [SerializeField] private Material nonActiveMat;
+    [SerializeField] private Material activeMat;
+    Renderer waterRenderer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +59,8 @@ public class CameraManager : MonoBehaviour
         SetVirusButtonPosition(ACTIVE_POS);
         wheelUI = GameObject.Find("WheelUI");
         wheelUI.SetActive(false);
+
+        waterRenderer = water.GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -67,10 +74,14 @@ public class CameraManager : MonoBehaviour
         {
             wheelUI.SetActive(true);
             wheelUI.transform.position = new Vector3(mousePos.x + 55.0f, mousePos.y + 55.0f, 0.0f);
+            waterRenderer.material = activeMat;
             if (wheel != 0.0f) StartCoroutine("sample");
         }
         else
+        {
             wheelUI.SetActive(false);
+            waterRenderer.material = nonActiveMat;
+        }
 
         ChangePerspective();
 
@@ -155,7 +166,6 @@ public class CameraManager : MonoBehaviour
             SetVirusButtonPosition(NON_ACTIVE_POS);
             currentSetNum = currentSetNum == 2 ? 0 : ++currentSetNum;
             SetVirusButtonPosition(ACTIVE_POS);
-            Debug.Log("Šm”F" + currentSetNum);
         }
         isWheel = false;
     }
