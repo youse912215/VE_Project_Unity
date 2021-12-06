@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class ColonyHealth : MonoBehaviour
 {
     //Å‘åHP‚ÆŒ»İ‚ÌHPB
-    private float maxHp = 50000;
+    private float maxHp = 5000;
     public static float currentHp;
     //Slider‚ğ“ü‚ê‚é
     [SerializeField]

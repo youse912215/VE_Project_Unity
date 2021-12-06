@@ -16,6 +16,8 @@ public class ActVirus : MonoBehaviour
     private GameObject vPrefab; //ウイルスプレファブ
     private Vector3 worldPos; //ワールド座標
     private int element; //要素格納変数
+    [SerializeField] private ParticleSystem explosion;
+    [SerializeField] public Material defaultPs;
 
     /* public */
     public VirusParents[] vParents = new VirusParents[V_CATEGORY]; //親ウイルス構造体配列
@@ -169,5 +171,11 @@ public class ActVirus : MonoBehaviour
         column = element / OWNED; //列（ウイルス種類）
         row = element % OWNED; //行（ウイルス保有番号）
         buttonMode = column; //ボタンの状態を更新
+    }
+
+    public void ExplosionVirus(Vector3 pos)
+    {
+        explosion.transform.position = pos;
+        explosion.Play();
     }
 }

@@ -66,7 +66,7 @@ public class CameraManager : MonoBehaviour
         if (WheelPos())
         {
             wheelUI.SetActive(true);
-            wheelUI.transform.position = new Vector3(mousePos.x + 60.0f, mousePos.y + 60.0f, 0.0f);
+            wheelUI.transform.position = new Vector3(mousePos.x + 55.0f, mousePos.y + 55.0f, 0.0f);
             if (wheel != 0.0f) StartCoroutine("sample");
         }
         else

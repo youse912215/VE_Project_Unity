@@ -8,6 +8,7 @@ public class MaterialManager : MonoBehaviour
     public static Material[] rangeMat = new Material[4]; //範囲マテリアル配列
     public static Material[] createMat = new Material[3]; //作成マテリアル配列
     public static Material[] virusMat = new Material[3];
+    public static Material poison;
 
     // Start is called before the first frame update
     void Start()
@@ -19,5 +20,7 @@ public class MaterialManager : MonoBehaviour
             createMat[i] = Resources.Load<Material>("Material/Create/Create" + i.ToString());
         for (int i = 0; i < virusMat.Length; ++i)
             virusMat[i] = Resources.Load<Material>("Material/Virus/Virus" + i.ToString());
+        poison = Resources.Load<Material>("Material/Unlit_Poison");
+
     }
 }
