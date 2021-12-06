@@ -31,9 +31,6 @@ public class ActEnemy : MonoBehaviour
     void Update()
     {
         spawnTime++; //oŒ»ŠÔŒo‰ß
-
-        Debug.Log("Dead::" + deadCount);
-
         if (spawnTime < SPAWN_INTERVAL) return;
         SpawnEnemy();
     }
@@ -53,8 +50,6 @@ public class ActEnemy : MonoBehaviour
         MoveEnemy mE;
         mE = eObject[n, eParents[n].survivalCount].GetComponent<MoveEnemy>();
         mE.isStart = true;
-        Debug.Log(mE.isStart);
-
         eParents[n].survivalCount++; //ÅŒã‚Éˆê‘Ì’Ç‰Á
     }
 

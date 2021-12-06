@@ -70,6 +70,8 @@ public class ActVirus : MonoBehaviour
     /// <param name="n">ウイルスの種類（番号）</param>
     public void VirusButtonPush(int n)
     {
+        
+
         if (isOpenMenu) return; //メニュー開いているときはスキップ
         if (isGrabbedVirus && buttonMode != n) return; //ウイルスを持っているときかつ、別のボタンの状態のときはスキップ
         if (isLimitCapacity[n]) return; //例外処理ならスキップ
@@ -81,6 +83,7 @@ public class ActVirus : MonoBehaviour
 
         column = buttonMode; //列（ウイルス種類）
         row = vParents[buttonMode].setCount; //行（ウイルス保有番号）
+        
 
     }
 

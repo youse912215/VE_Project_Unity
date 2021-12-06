@@ -19,9 +19,9 @@ namespace Call
         public const float DIFF_Y = -75.0f;
 
         //カメラ
-        public const float CAM_DISTANCE = 4850.0f;
+        public const float CAM_DISTANCE = 3450.0f;
         /* 真上 */
-        public static readonly Vector3 CAM_POS = new Vector3(232,670,1260); //位置
+        public static readonly Vector3 CAM_POS = new Vector3(232, 670, 1260); //位置
         public static Vector3 CAM_ROT = new Vector3(90.0f, 0.0f, 0.0f); //角度
         /* プレイヤー視点 */
         public static readonly Vector3 CAM_P_POS = new Vector3(167.0f ,-2106.0f, -109.0f); //位置
@@ -33,8 +33,8 @@ namespace Call
         public static readonly Vector3 BACK_AFTER_POS = new Vector3(0.0f, -30.0f, 0.0f);
 
         //ウイルスUI
-        public static readonly Vector3 NON_ACTIVE_POS = new Vector3(730.0f, -100.0f, 0.0f);
-        public static readonly Vector3 ACTIVE_POS = new Vector3(730.0f, 10.0f, 0.0f);
+        public static readonly Vector3 NON_ACTIVE_POS = new Vector3(4000.0f, -350.0f, 0.0f);
+        public static readonly Vector3 ACTIVE_POS = new Vector3(2140.0f, -390.0f, 0.0f);
 
         //メニュータイプ
         public enum MENU_TYPE : int

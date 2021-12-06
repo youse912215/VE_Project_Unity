@@ -4,6 +4,7 @@ using UnityEngine;
 
 using static Call.ConstantValue;
 using static Call.CommonFunction;
+using static ShowMenu;
 using static TowerDefenceButtonManager;
 
 public class CameraManager : MonoBehaviour
@@ -12,13 +13,22 @@ public class CameraManager : MonoBehaviour
     private bool isPerChange; //視点変更したか
     private GameObject pMenuButton;
     private GameObject pVirusButton;
-    private bool isActiveButton;
+    public static bool isActiveButton;
 
     private Vector3 pos;
     private Vector3 rot;
 
     public Canvas canvas0;
     public Canvas canvas1;
+
+    GameObject subCam;
+    GameObject obj;
+    ActVirus actV;
+
+    float wheel;
+    bool isWheel;
+    int currentSetNum;
+    private GameObject wheelUI;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +44,16 @@ public class CameraManager : MonoBehaviour
         isSetButton = false;
         isPerChange = false;
         isActiveButton = true;
+
+        subCam = GameObject.Find("SubCamera");
+        actV = GetOtherScriptObject<ActVirus>(obj);
+
+        wheel = 0.0f;
+        isWheel = false;
+        currentSetNum = 1;
+        SetVirusButtonPosition(ACTIVE_POS);
+        wheelUI = GameObject.Find("WheelUI");
+        wheelUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -41,6 +61,16 @@ public class CameraManager : MonoBehaviour
     {
         //canvas0.transform.rotation = Camera.main.transform.rotation; //HPを真上からでも見えるようにする
         //canvas1.transform.rotation = Camera.main.transform.rotation; //HPを真上からでも見えるようにする
+
+        wheel = Input.GetAxis("Mouse ScrollWheel");
+        if (WheelPos())
+        {
+            wheelUI.SetActive(true);
+            wheelUI.transform.position = new Vector3(mousePos.x + 60.0f, mousePos.y + 60.0f, 0.0f);
+            if (wheel != 0.0f) StartCoroutine("sample");
+        }
+        else
+            wheelUI.SetActive(false);
 
         ChangePerspective();
 
@@ -65,28 +95,31 @@ public class CameraManager : MonoBehaviour
     /// </summary>
     public void PushChangeButton()
     {
+        if (actV.isGrabbedVirus) return;
+
         pos = ChangeTransformCamera(pos, CAM_POS, CAM_P_POS); //位置を変更
         rot = ChangeTransformCamera(rot, CAM_ROT, CAM_P_ROT); //角度を変更
-        VirusMenuSetActive(pVirusButton); //メニューの状態を変更
+        VirusMenuSetActive(); //メニューの状態を変更
         isPerChange = true; //フラグをtrue
     }
 
     /// <summary>
     /// ウイルスメニューのアクティブ状態を管理
     /// </summary>
-    /// <param name="obj">ゲームオブジェクト</param>
-    private void VirusMenuSetActive(GameObject obj)
+    private void VirusMenuSetActive()
     {
         if(isActiveButton){
             //非アクティブ状態に
-            obj.transform.localPosition = NON_ACTIVE_POS;
+            SetVirusButtonPosition(NON_ACTIVE_POS);
             isActiveButton = false;
+            subCam.SetActive(false);
         }
         else
         {
             //アクティブ状態に
-            obj.transform.localPosition = ACTIVE_POS;
+            SetVirusButtonPosition(ACTIVE_POS);
             isActiveButton = true;
+            subCam.SetActive(true);
         }
     }
 
@@ -110,5 +143,30 @@ public class CameraManager : MonoBehaviour
         changeButton.onClick.AddListener(PushChangeButton);
         isSetButton = true;
         yield return null; //関数から抜ける
+    }
+
+    IEnumerator sample()
+    {
+        isWheel = true;
+        yield return new WaitForSeconds(0.8f);
+
+        if (isWheel)
+        {
+            SetVirusButtonPosition(NON_ACTIVE_POS);
+            currentSetNum = currentSetNum == 2 ? 0 : ++currentSetNum;
+            SetVirusButtonPosition(ACTIVE_POS);
+            Debug.Log("確認" + currentSetNum);
+        }
+        isWheel = false;
+    }
+
+    private void SetVirusButtonPosition(Vector3 pos)
+    {
+        pVirusButton.transform.GetChild(currentSetNum).transform.localPosition = pos;
+    }
+
+    private bool WheelPos()
+    {
+        return mousePos.x >= 1600.0f && mousePos.y <= 350.0f;
     }
 }

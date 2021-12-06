@@ -24,6 +24,8 @@ public class EnemyHealth : MonoBehaviour
     public bool isInfection; //Š´õ‚µ‚½‚©‚Ç‚¤‚©
     public bool isDead; //Ž€‚ñ‚¾‚©‚Ç‚¤‚©
 
+    [SerializeField] private Material mat;
+
     void Start()
     {   
         slider.value = 1; //Slider‚ð–žƒ^ƒ“
@@ -34,6 +36,8 @@ public class EnemyHealth : MonoBehaviour
         impactEffect.Stop();
         bloodEffect = Instantiate(bloodPs);
         bloodEffect.Stop();
+
+        ChangeBodyColor(mat, gameObject);
     }
 
     void Update()
@@ -77,5 +81,17 @@ public class EnemyHealth : MonoBehaviour
         uint d1 = ((damage & 0b0010) >> 1) * (uint)force[1].x; //
         uint d2 = ((damage & 0b0100) >> 2) * (uint)force[2].x; //
         return (int)(d0 + d1 + d2);
+    }
+
+    private void ChangeBodyColor(Material mat, GameObject obj)
+    {
+        foreach(Renderer renderer in obj.GetComponents<Renderer>())
+        {
+            
+        }
+
+        for(int i = 0; i < obj.transform.childCount; i++){
+            ChangeBodyColor(mat, obj.transform.GetChild(i).gameObject);
+        }
     }
 }

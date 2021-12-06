@@ -69,6 +69,7 @@ public class EnemyCollision : MonoBehaviour
 
         if (cCount <= ACTIVE_COUNT) return; //
 
+
         this.gameObject.transform.parent.gameObject.SetActive(false); //範囲を非アクティブ状態に
         cCount = 0; //衝突カウントをリセット
         isCollision = false; //衝突状態をfalse
@@ -114,8 +115,8 @@ public class EnemyCollision : MonoBehaviour
     private void ChangeVirusEffect(GameObject obj)
     {
         var ps = obj.GetComponentsInChildren<ParticleSystem>(); //範囲に入った敵のパーティクルを取得
-        var renderer = obj.GetComponentsInChildren<ParticleSystemRenderer>(); // //範囲に入った敵のパーティクルレンダラーを取得
-        renderer[GetVirusNumber()].material = virusMat[GetVirusNumber()]; //マテリアルをウイルスの種類によって変更
-        ps[GetVirusNumber()].Play(); //パーティクル発生 
+        //var renderer = obj.GetComponentsInChildren<ParticleSystemRenderer>(); // //範囲に入った敵のパーティクルレンダラーを取得
+        //renderer[GetVirusNumber()].material = virusMat[GetVirusNumber()]; //マテリアルをウイルスの種類によって変更
+        ps[0].Play(); //パーティクル発生
     }
 }
