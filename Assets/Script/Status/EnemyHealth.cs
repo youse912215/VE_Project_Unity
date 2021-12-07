@@ -1,73 +1,70 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 using static Call.ConstantValue;
+using static Call.CommonFunction;
 using static Call.VirusData;
+using static RAND.CreateRandom;
 using static WarriorData;
 
 public class EnemyHealth : MonoBehaviour
 {
-    /* private */ 
-    //最大HPと現在のHP。
-    private float maxHp = 2000;
-    private float currentHp;
-    
+    /* private */
     [SerializeField] private Slider slider; //スライダー
     [SerializeField] private ParticleSystem impactPs; //衝撃波のパーティクルシステム
     [SerializeField] private ParticleSystem bloodPs; //血しぶきのパーティクルシステム
+    [SerializeField] private ParticleSystem steamPs; //steamのパーティクルシステム
+    [SerializeField] private Material mat;
+
     private ParticleSystem impactEffect; //衝撃波のエフェクト
     private ParticleSystem bloodEffect; //衝撃波のエフェクト
+    private ParticleSystem steamEffect;
 
-    /* public */ 
+    private float currentHp; //現在のHP
+    private float maxHp; //最大HP
+    private const float INIT_HEALTH = 0.5f;
+    private const float ATTACK_DAMAGE = 1.5f; //攻撃力
+    private bool isImpactSet; //衝撃エフェクトをセットしたかどうか
+    private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
+    private const float EFFECT_HEIGHT = 250.0f; //エフェクト高さ
+    private const int ENEMEY1_LAYER = 7; //敵1のレイヤ番号
+    private readonly Vector3 STEAM_POS = new Vector3(-65.0f, 145.0f, -180.0f);
+
+    /* public */
     public uint takenDamage; //被ダメージ
     public float totalDamage; //合計ダメージ
     public bool isInfection; //感染したかどうか
     public bool isDead; //死んだかどうか
 
-    [SerializeField] private Material mat;
-
     void Start()
-    {   
+    {
         slider.value = 1; //Sliderを満タン
+        maxHp = Integerization(rand) * INIT_HEALTH; //最大HPをランダムで取得
         currentHp = maxHp; //現在のHPに最大HPを代入
         takenDamage = 0b0000;
         totalDamage = 0.0f;
-        impactEffect = Instantiate(impactPs);
-        impactEffect.Stop();
-        bloodEffect = Instantiate(bloodPs);
-        bloodEffect.Stop();
-
-        ChangeBodyColor(mat, gameObject);
+        isImpactSet = false;
+        impactEffect = Instantiate(impactPs); //エフェクト生成
+        impactEffect.Stop(); //エフェクト停止
+        bloodEffect = Instantiate(bloodPs); //エフェクト生成
+        bloodEffect.Stop(); //エフェクト停止
+        
+        if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
+        steamEffect = Instantiate(steamPs); //エフェクト生成
+        steamEffect.Play(); //エフェクト開始
     }
 
     void Update()
     {
-        if (transform.position.z <= TARGET_POS)
-        {
-            ColonyHealth.currentHp -= 0.5f;
-            impactEffect.transform.position = new Vector3(
-                transform.position.x,
-                transform.position.y + 250.0f,
-                transform.position.z - 170.0f);
-            impactEffect.Play();
-            //GetComponent<AudioSource>().Play();
-        }
+        UpdateSteamEffect(); //スチームエフェクト更新
+        AttackAction(); //攻撃時行動
 
-        if (!isInfection) return;
+        if (!isInfection) return; //感染時以外は、処理をスキップ
+        InfectionAction(); //ウイルス感染時行動
 
-        currentHp -= totalDamage;
-        slider.value = currentHp / maxHp;
-
-        if (currentHp > 0.0f) return;
-        deadCount++;
-        impactEffect.Stop();
-        bloodEffect.transform.position = new Vector3(
-                transform.position.x,
-                transform.position.y + 250.0f,
-                transform.position.z);
-        bloodEffect.Play();
-        
-        Destroy(gameObject);
+        if (currentHp > 0.0f) return; //生きている間は、処理をスキップ
+        DeadAction(); //死亡時行動
     }
 
     /// <summary>
@@ -83,15 +80,66 @@ public class EnemyHealth : MonoBehaviour
         return (int)(d0 + d1 + d2);
     }
 
-    private void ChangeBodyColor(Material mat, GameObject obj)
+    /// <summary>
+    /// 攻撃時行動
+    /// </summary>
+    private void AttackAction()
     {
-        foreach(Renderer renderer in obj.GetComponents<Renderer>())
+        if (transform.position.z <= TARGET_POS)
         {
-            
-        }
+            ColonyHealth.currentHp -= Integerization(rand) % ATTACK_DAMAGE; //コロニーへの攻撃
 
-        for(int i = 0; i < obj.transform.childCount; i++){
-            ChangeBodyColor(mat, obj.transform.GetChild(i).gameObject);
+            if (isImpactSet) return; //衝撃波をセットしているなら、処理をスキップ
+
+            SetEffectPos(impactEffect, IMPACT_POS_Z); //エフェクトの位置をセット
+            impactEffect.Play(); //衝撃波エフェクト
+            isImpactSet = true; //セットフラグをtrue
+            //GetComponent<AudioSource>().Play();
         }
+    }
+
+    /// <summary>
+    /// ウイルス感染時行動
+    /// </summary>
+    private void InfectionAction()
+    {
+        currentHp -= totalDamage; //ウイルスの合計ダメージ分、HPを減らす
+        slider.value = currentHp / maxHp; //HPバーの計算
+    }
+
+    /// <summary>
+    /// 死亡時行動
+    /// </summary>
+    private void DeadAction()
+    {
+        deadCount++; //累計の死亡数をカウント
+        Destroy(impactEffect); //衝撃波エフェクトを削除
+        SetEffectPos(bloodEffect); //エフェクトの位置をセット
+        Destroy(steamEffect); //steamエフェクトを削除
+        bloodEffect.Play(); //血のエフェクト
+        Destroy(gameObject); //オブジェクトを削除
+    }
+
+    /// <summary>
+    /// エフェクトの位置をセットする
+    /// </summary>
+    /// <param name="effect"></param>
+    /// <param name="diffZ"></param>
+    private void SetEffectPos(ParticleSystem effect, float diffZ = 0.0f)
+    {
+        var effectPos = new Vector3(
+                transform.position.x,
+                transform.position.y + EFFECT_HEIGHT,
+                transform.position.z + diffZ);
+        effect.transform.position = effectPos;
+    }
+
+    /// <summary>
+    /// スチームエフェクト更新
+    /// </summary>
+    private void UpdateSteamEffect()
+    {
+        if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
+        steamEffect.transform.position = transform.position + STEAM_POS; //更新
     }
 }
