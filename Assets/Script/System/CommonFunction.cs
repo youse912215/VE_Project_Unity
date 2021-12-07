@@ -16,6 +16,10 @@ namespace Call
             return !flag ? true : false;
         }
 
+        public static float Integerization(int n)
+        {
+            return (n <= -1) ? n * -1.0f : n * 1.0f;
+        }
         /// <summary>
         /// 他のオブジェクトのマテリアルを指定のマテリアルカラーに変える
         /// </summary>

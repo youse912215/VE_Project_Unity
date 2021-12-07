@@ -4,13 +4,15 @@ using UnityEngine;
 
 using static WarriorData;
 using static Call.ConstantValue;
+using static Call.CommonFunction;
+using static RAND.CreateRandom;
 
 public class MoveEnemy : MonoBehaviour
 {
     private float speed; //速度
     public bool isStart;
 
-    private const float INIT_ACCELE = 0.3f; //加速度の初期値
+    private const float INIT_ACCELE = 0.8f; //加速度の初期値
     private const int MIN_RAND = 10; //乱数最小値
     private const int MAX_RAND = 50; //乱数最大値
 
@@ -41,8 +43,7 @@ public class MoveEnemy : MonoBehaviour
     private float GetMoveSpeed()
     {
         //乱数値と加速度と速度で計算
-        float r = (float)Random.Range(MIN_RAND, MAX_RAND) * INIT_ACCELE * MOVE_SPEED;
-        return r;
+        return (Integerization(rand) % MAX_RAND) * INIT_ACCELE * MOVE_SPEED;
     }
 
     void OnTriggerStay(Collider other) {

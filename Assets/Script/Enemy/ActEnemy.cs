@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using static Call.CommonFunction;
 using static WarriorData;
-
+using static RAND.CreateRandom;
 
 public class ActEnemy : MonoBehaviour
 {
@@ -16,23 +17,24 @@ public class ActEnemy : MonoBehaviour
     private WarriorChildren[,] eChildren = new WarriorChildren[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
     public GameObject[,] eObject = new GameObject[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
 
+    private int type;
+
     // Start is called before the first frame update
     void Start()
     {
         for (int i = 0; i < E_CATEGORY; ++i)
             InitTransform(eParents, eChildren, i); //敵の初期化
-        Random.InitState(100);
         spawnTime = 0;
         
-        
+        type = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         spawnTime++; //出現時間経過
-        if (spawnTime < SPAWN_INTERVAL) return;
-        SpawnEnemy();
+        if (spawnTime < SPAWN_INTERVAL) return; //出現間隔未満なら、処理をスキップ
+        SpawnEnemy(); //敵を出現させる
     }
 
     private void CreateEnemy(int n)
@@ -43,21 +45,21 @@ public class ActEnemy : MonoBehaviour
         eChildren[n, eParents[n].survivalCount].isActivity = true; //生存状態をtrue     
         ePrefab = GameObject.Find(EnemyHeadName + n.ToString()); //プレファブを取得
         eObject[n, eParents[n].survivalCount] = Instantiate(ePrefab); //クローンを生成
-        SPAWN_POS.x = (float)Random.Range(-400, 600);
+        SPAWN_POS.x = rand / 2.0f; //-500 ~ 500の範囲
         eObject[n, eParents[n].survivalCount].transform.position = SPAWN_POS; //スポーン位置を取得
         eObject[n, eParents[n].survivalCount].SetActive(true); //ゲームオブジェクトをアクティブにする
 
-        MoveEnemy mE;
-        mE = eObject[n, eParents[n].survivalCount].GetComponent<MoveEnemy>();
+        var mE = eObject[n, eParents[n].survivalCount].GetComponent<MoveEnemy>();
         mE.isStart = true;
         eParents[n].survivalCount++; //最後に一体追加
     }
 
     private int GetSpawnRandom()
     {
-        int r = Random.Range(0, SPAWN_RAND);
-        r = r == SPAWN_RAND - 1 ? 1 : 0;
-        return r;
+        type = rand % SPAWN_RAND;
+        type = (int)Integerization(type);
+        type = (type == 0) ? 1 : 0;
+        return type;
     }
 
     private void SpawnEnemy()
