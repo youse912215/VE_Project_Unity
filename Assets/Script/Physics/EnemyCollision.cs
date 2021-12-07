@@ -20,12 +20,17 @@ public class EnemyCollision : MonoBehaviour
     private bool isCollision; //衝突状態
     private const float ACTIVE_COUNT = 10.0f; //アクティブカウント
 
+    public static bool cool;
+    public static float cooldown;
+
     // Start is called before the first frame update
     void Start()
     {
         actV = GetOtherScriptObject<ActVirus>(obj); //ActVirusスクリプトを取得
-        cCount = 0; //衝突カウントを0に
+        cCount = 0.0f; //衝突カウントを0に
         isCollision = false; //衝突状態をfalse
+        cool = false;
+        cooldown = 0.0f;
     }
 
     // Update is called once per frame
@@ -39,9 +44,10 @@ public class EnemyCollision : MonoBehaviour
     /// 範囲に入っている間
     /// </summary>
     /// <param name="other">他のオブジェクト</param>
-    void OnTriggerStay(Collider other) {
+    void OnTriggerStay(Collider other)
+    {
         if (actV.isGrabbedVirus) return; //ウイルスを持っているときは、処理をスキップ
-		if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
+        if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
 
         ChangeMaterialColor(this.gameObject, rangeMat[3]); //マテリアルカラーを変更
         enemyObj = other.gameObject; //範囲に入ったオブジェクトを格納
@@ -54,11 +60,10 @@ public class EnemyCollision : MonoBehaviour
     /// 範囲から離れたとき
     /// </summary>
     /// <param name="other">他のオブジェクト</param>
-    void OnTriggerExit(Collider other) {
+    void OnTriggerExit(Collider other)
+    {
         if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
-
         ChangeMaterialColor(this.gameObject, rangeMat[0]); //マテリアルカラーを変更
-        
     }
 
     /// <summary>
@@ -66,7 +71,7 @@ public class EnemyCollision : MonoBehaviour
     /// </summary>
     private void CountCollisionTime()
     {
-        cCount += 0.1f; //カウント開始
+        StartCoroutine(CountRangeTime());
 
         if (cCount <= ACTIVE_COUNT) return; //
 
@@ -74,8 +79,9 @@ public class EnemyCollision : MonoBehaviour
         actV.ExplosionVirus(pObject.transform.position); //ウイルス装置を爆発させる
         Destroy(pObject);
         //pObject.SetActive(false); //範囲を非アクティブ状態に
-        cCount = 0; //衝突カウントをリセット
         isCollision = false; //衝突状態をfalse
+        cCount = 0; //衝突カウントをリセット
+        if (cooldown == 0.0f) cool = true;
     }
 
     /// <summary>
@@ -94,7 +100,7 @@ public class EnemyCollision : MonoBehaviour
                 n = index; //要素番号を格納
                 break; //ループを抜け出す
             }
-        }        
+        }
         return n;
     }
 
@@ -124,5 +130,11 @@ public class EnemyCollision : MonoBehaviour
         ps[0].Play(); //パーティクル発生
         renderer[1].material = actV.defaultPs; //マテリアルをウイルスの種類によって変更
         ps[1].Play();
+    }
+
+    private IEnumerator CountRangeTime()
+    {
+        yield return new WaitForSeconds(0.5f);
+        cCount += 0.1f; //カウント開始   
     }
 }

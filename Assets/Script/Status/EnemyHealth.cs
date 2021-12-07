@@ -7,6 +7,7 @@ using static Call.CommonFunction;
 using static Call.VirusData;
 using static RAND.CreateRandom;
 using static WarriorData;
+using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -37,6 +38,9 @@ public class EnemyHealth : MonoBehaviour
     public bool isInfection; //感染したかどうか
     public bool isDead; //死んだかどうか
 
+    private MoveEnemy mE;
+    private Vector3 newPos;
+
     void Start()
     {
         slider.value = 1; //Sliderを満タン
@@ -49,10 +53,16 @@ public class EnemyHealth : MonoBehaviour
         impactEffect.Stop(); //エフェクト停止
         bloodEffect = Instantiate(bloodPs); //エフェクト生成
         bloodEffect.Stop(); //エフェクト停止
-        
+
+        mE = this.gameObject.GetComponent<MoveEnemy>();
+
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
         steamEffect = Instantiate(steamPs); //エフェクト生成
         steamEffect.Play(); //エフェクト開始
+
+        steamEffect.transform.rotation =
+                Quaternion.Euler(new Vector3(180.0f, QUARTER_CIRCLE * mE.startPos, 0.0f));
+        newPos = new Vector3(-150.0f * mE.startPos, 0, 0);
     }
 
     void Update()
@@ -89,8 +99,8 @@ public class EnemyHealth : MonoBehaviour
         {
             ColonyHealth.currentHp -= Integerization(rand) % ATTACK_DAMAGE; //コロニーへの攻撃
 
-            if (isImpactSet) return; //衝撃波をセットしているなら、処理をスキップ
-
+            if (isImpactSet) return; //衝撃波をセットしているなら、処理をスキップ            
+            if (mE.startPos != 0) StartCoroutine("RotationBody");
             SetEffectPos(impactEffect, IMPACT_POS_Z); //エフェクトの位置をセット
             impactEffect.Play(); //衝撃波エフェクト
             isImpactSet = true; //セットフラグをtrue
@@ -140,6 +150,24 @@ public class EnemyHealth : MonoBehaviour
     private void UpdateSteamEffect()
     {
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
-        steamEffect.transform.position = transform.position + STEAM_POS; //更新
+        steamEffect.transform.position = transform.position + STEAM_POS
+            + newPos; //更新
+    }
+
+    private IEnumerator RotationBody()
+    {
+        while ((mE.startPos == -1 && this.gameObject.transform.rotation.y <= 0.01f)
+            || (mE.startPos == 1 && this.gameObject.transform.rotation.y >= -0.01f))
+        {
+            yield return new WaitForSeconds(0.1f);
+            
+            if (this.gameObject.layer == ENEMEY1_LAYER)
+            {
+                newPos += new Vector3(mE.startPos * 15.0f, 0, 0);
+                steamEffect.transform.Rotate(0, mE.startPos * 5.0f, 0);
+            }
+
+            this.gameObject.transform.Rotate(0, mE.startPos * -5.0f, 0);
+        }
     }
 }

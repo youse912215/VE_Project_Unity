@@ -15,7 +15,7 @@ namespace Call
         public const float BUTTON_HEIGHT = 120.0f;
 
         //炎
-        public static readonly Vector3 FIRE_POS = new Vector3(-7423.0f, -40.0f, -3673.0f);
+        public static readonly Vector3 FIRE_POS = new Vector3(154.0f, -2431.0f, 234.0f);
         public static readonly Vector3 FIRE_ROT = new Vector3(-90.0f, 0.0f, 0.0f);
 
         //マウスとの差分座標

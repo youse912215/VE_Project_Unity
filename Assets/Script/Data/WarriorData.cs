@@ -34,6 +34,9 @@ public class WarriorData : MonoBehaviour
 
     public static int deadCount;
 
+    public const float SPAWN_A = 6000.0f;
+    public const float SPAWN_B = 4000.0f;
+
     public static int CulcEnemyCount(WarriorParents[] wP)
     {
         int total = 0;

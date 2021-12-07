@@ -18,6 +18,7 @@ public class ActEnemy : MonoBehaviour
     public GameObject[,] eObject = new GameObject[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
 
     private int type;
+    private int day;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,7 @@ public class ActEnemy : MonoBehaviour
         spawnTime = 0;
         
         type = 0;
+        day = 0;
     }
 
     // Update is called once per frame
@@ -45,11 +47,12 @@ public class ActEnemy : MonoBehaviour
         eChildren[n, eParents[n].survivalCount].isActivity = true; //生存状態をtrue     
         ePrefab = GameObject.Find(EnemyHeadName + n.ToString()); //プレファブを取得
         eObject[n, eParents[n].survivalCount] = Instantiate(ePrefab); //クローンを生成
-        SPAWN_POS.x = rand / 2.0f; //-500 ~ 500の範囲
-        eObject[n, eParents[n].survivalCount].transform.position = SPAWN_POS; //スポーン位置を取得
-        eObject[n, eParents[n].survivalCount].SetActive(true); //ゲームオブジェクトをアクティブにする
 
         var mE = eObject[n, eParents[n].survivalCount].GetComponent<MoveEnemy>();
+
+        mE.startPos = GetPattern(); //出現パターンを取得
+        eObject[n, eParents[n].survivalCount].transform.position = GetSpawnPos(mE.startPos); //スポーン位置を取得
+        eObject[n, eParents[n].survivalCount].SetActive(true); //ゲームオブジェクトをアクティブにする
         mE.isStart = true;
         eParents[n].survivalCount++; //最後に一体追加
     }
@@ -66,5 +69,43 @@ public class ActEnemy : MonoBehaviour
     {
         CreateEnemy(GetSpawnRandom());
         spawnTime = 0.0f;
+    }
+
+    private int GetPattern()
+    {
+        var pattarn = 0;
+
+        switch(Integerization(rand) % 3.0f)
+        {
+            case 0.0f: pattarn = -1;
+                break;
+            case 1.0f: pattarn = 0;
+                break;
+            case 2.0f: pattarn = 1;
+                break;
+            default: break;
+        }
+
+        return pattarn;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sPos">出現開始位置</param>
+    /// <returns></returns>
+    private Vector3 GetSpawnPos(int sPos)
+    {
+        SPAWN_POS.x = rand / 2.0f + 4000.0f * sPos; //-500 ~ 500の範囲
+        
+        switch (sPos)
+        {
+            case -1:
+            case 1: SPAWN_POS.z = SPAWN_B;
+                break;
+            case 0: SPAWN_POS.z = SPAWN_A;
+                break;
+        }
+        return SPAWN_POS;
     }
 }
