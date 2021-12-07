@@ -97,17 +97,16 @@ public class VirusMaterialData : MonoBehaviour
     {
         tmp.RemoveRange(0, 4);
 
+        //一度リストに保存
         for(int i = 0; i < 4; ++i)
             tmp.Add(vMatOwned[(int)list[(int)c, i]]);
+    }
 
+    public static void ResetOwnedVirusMaterial(MATERIAL_CODE[,] list, List<int> tmp, VIRUS_NUM c)
+    {
         //配列の行数分繰り返す
         for (int i = 0; i < 4; ++i)
             vMatOwned[(int)list[(int)c, i]] = tmp[i];
-
-        //DebugFunc(vMatOwned[(int)list[(int)c, 0]]);
-        //DebugFunc(vMatOwned[(int)list[(int)c, 1]]);
-        //DebugFunc(vMatOwned[(int)list[(int)c, 2]]);
-        //DebugFunc(vMatOwned[(int)list[(int)c, 3]]);
     }
 
     /// <summary>

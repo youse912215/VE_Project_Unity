@@ -55,6 +55,12 @@ public class SynthesizeVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("tmp" + tmpList[0] + "::" + tmpList[1] + "::" + tmpList[2] + "::" + tmpList[3]);
+        Debug.Log("0::" + vMatOwned[0]);
+        Debug.Log("1::" + vMatOwned[1]);
+        Debug.Log("2::" + vMatOwned[2]);
+        Debug.Log("17::" + vMatOwned[17]);
+
         ShowCurrentCounts();
 
         if (initFlag) return; //初期化フラグがtrueのとき、処理をスキップ
@@ -67,7 +73,11 @@ public class SynthesizeVirus : MonoBehaviour
     /// <param name="code">現在のコード</param>
     public void PushVirusButton(int code)
     {
-        GetSelectPosition(code);
+        UpdateSelectPosition(code); //選択位置更新
+
+        if (creationArray[(int)currentCode] != 0)
+            ResetOwnedVirusMaterial(matCompositList, tmpList, currentCode);
+
         creationArray[(int)currentCode] = 0; //作成数をリセット
         currentCode = (VIRUS_NUM)code; //現在のコードを保存
         isCreate[(int)currentCode] = CheckMaterialCount(matCompositList, currentCode); //必要個数に達しているか確認
@@ -184,14 +194,14 @@ public class SynthesizeVirus : MonoBehaviour
     private void ShowCurrentCounts()
     {
         if (currentCode == CODE_NONE) return;
-        vCount[0].text = "×" + vCreationCount[0].ToString();
-        vCount[1].text = "×" + vCreationCount[1].ToString();
-        vCount[2].text = "×" + vCreationCount[2].ToString();
-        vCount[3].text = "×" + vCreationCount[3].ToString();
-        vCount[4].text = "×" + vCreationCount[4].ToString();
-        vCount[5].text = "×" + vCreationCount[5].ToString();
-        vCount[6].text = "×" + vCreationCount[6].ToString();
-        vCount[7].text = "×" + vCreationCount[7].ToString();
+        vCount[0].text = vCreationCount[0].ToString();
+        vCount[1].text = vCreationCount[1].ToString();
+        vCount[2].text = vCreationCount[2].ToString();
+        vCount[3].text = vCreationCount[3].ToString();
+        vCount[4].text = vCreationCount[4].ToString();
+        vCount[5].text = vCreationCount[5].ToString();
+        vCount[6].text = vCreationCount[6].ToString();
+        vCount[7].text = vCreationCount[7].ToString();
         vArray.text = creationArray[(int)currentCode].ToString();
     }
 
@@ -199,7 +209,7 @@ public class SynthesizeVirus : MonoBehaviour
     /// 選択UIの位置を取得
     /// </summary>
     /// <param name="code">ウイルスコード</param>
-    private void GetSelectPosition(int code)
+    private void UpdateSelectPosition(int code)
     {
         selRect.localPosition = new Vector3(
             SELECT_UI_POS.x,

@@ -11,7 +11,7 @@ namespace Call
 
         public const float TARGET_POS = 400.0f;
 
-        public static readonly Vector3 SELECT_UI_POS = new Vector3(-830, 250, 0); //‘I‘ðUI
+        public static readonly Vector3 SELECT_UI_POS = new Vector3(-560, 250, 0); //‘I‘ðUI
         public const float BUTTON_HEIGHT = 120.0f;
 
         //‰Š
