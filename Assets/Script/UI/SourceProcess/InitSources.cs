@@ -12,6 +12,6 @@ public class InitSources : MonoBehaviour
     void Start()
     {
         for (int i = 0; i < infoSp.Length; ++i)
-            infoSp[i] = Resources.Load<Sprite>("Image/Information" + i.ToString());
+            infoSp[i] = Resources.Load<Sprite>("Image/Info/Information" + i.ToString());
     }
 }
