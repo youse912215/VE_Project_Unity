@@ -50,6 +50,7 @@ public class VirusMaterialData : MonoBehaviour
     public static int vMatNam = System.Enum.GetNames(typeof(MATERIAL_CODE)).Length - 1; //ウイルス素材数
     public static int[] vMatOwned = new int[vMatNam]; //各種素材の保有数
     public static int[] vCreationCount = new int[8];
+    public const int MATERIAL_LIST_NUM = 4;
 
     /// <summary>
     /// 現在の保有数の初期化

@@ -12,6 +12,10 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] private GameObject prepareCanvas;
     [SerializeField] private GameObject suppliesCanvas;
     [SerializeField] private GameObject currentCountCanvas;
+    [SerializeField] private GameObject optionCanvas;
+    [SerializeField] private GameObject manualImageCanvas;
+    [SerializeField] private GameObject manualButtonCanvas;
+    [SerializeField] private GameObject simulationCanvas;
 
     GameObject obj;
     SynthesizeVirus syV;
@@ -21,6 +25,8 @@ public class CanvasManager : MonoBehaviour
        CREATE_MODE,
        PREPARE_MODE,
        SUPPLIES_MODE,
+       OPTION_MODE,
+       MANUAL_MODE,
        TOWER_DEFENCE_MODE,
     }
 
@@ -37,6 +43,10 @@ public class CanvasManager : MonoBehaviour
         prepareCanvas.transform.localPosition = BACK_POS;
         suppliesCanvas.transform.localPosition = BACK_POS;
         currentCountCanvas.transform.localPosition = Vector3.zero;
+        optionCanvas.transform.localPosition = BACK_POS;
+        manualImageCanvas.transform.localPosition = BACK_POS;
+        manualButtonCanvas.transform.localPosition = BACK_POS;
+        simulationCanvas.transform.localPosition = Vector3.zero;
     }
 
     /// <summary>
@@ -50,6 +60,10 @@ public class CanvasManager : MonoBehaviour
         prepareCanvas.transform.localPosition = BACK_POS;
         suppliesCanvas.transform.localPosition = BACK_POS;
         currentCountCanvas.transform.localPosition = Vector3.zero;
+        optionCanvas.transform.localPosition = BACK_POS;
+        manualImageCanvas.transform.localPosition = BACK_POS;
+        manualButtonCanvas.transform.localPosition = BACK_POS;
+        simulationCanvas.transform.localPosition = Vector3.zero;
     }
 
     /// <summary>
@@ -63,6 +77,10 @@ public class CanvasManager : MonoBehaviour
         prepareCanvas.transform.localPosition = Vector3.zero;
         suppliesCanvas.transform.localPosition = BACK_POS;
         currentCountCanvas.transform.localPosition = Vector3.zero;
+        optionCanvas.transform.localPosition = BACK_POS;
+        manualImageCanvas.transform.localPosition = BACK_POS;
+        manualButtonCanvas.transform.localPosition = BACK_POS;
+        simulationCanvas.transform.localPosition = Vector3.zero;
     }
 
     /// <summary>
@@ -76,6 +94,36 @@ public class CanvasManager : MonoBehaviour
         prepareCanvas.transform.localPosition = BACK_POS;
         suppliesCanvas.transform.localPosition = Vector3.zero;
         currentCountCanvas.transform.localPosition = BACK_POS;
+        optionCanvas.transform.localPosition = BACK_POS;
+        manualImageCanvas.transform.localPosition = BACK_POS;
+        manualButtonCanvas.transform.localPosition = BACK_POS;
+        simulationCanvas.transform.localPosition = Vector3.zero;
     }
 
+    public void PushOptionButton()
+    {
+        syV.PushVirusButton((int)currentCode);
+        canvasMode = CANVAS_MODE.OPTION_MODE;
+        createCanvas.transform.localPosition = BACK_POS;
+        prepareCanvas.transform.localPosition = BACK_POS;
+        suppliesCanvas.transform.localPosition = BACK_POS;
+        currentCountCanvas.transform.localPosition = BACK_POS;
+        optionCanvas.transform.localPosition = Vector3.zero;
+        manualImageCanvas.transform.localPosition = BACK_POS;
+        manualButtonCanvas.transform.localPosition = BACK_POS;
+        simulationCanvas.transform.localPosition = Vector3.zero;
+    }
+
+    public void PushManualButton()
+    {
+        canvasMode = CANVAS_MODE.MANUAL_MODE;
+        createCanvas.transform.localPosition = BACK_POS;
+        prepareCanvas.transform.localPosition = BACK_POS;
+        suppliesCanvas.transform.localPosition = BACK_POS;
+        currentCountCanvas.transform.localPosition = BACK_POS;
+        optionCanvas.transform.localPosition = BACK_POS;
+        manualImageCanvas.transform.localPosition = Vector3.zero;
+        manualButtonCanvas.transform.localPosition = Vector3.zero;
+        simulationCanvas.transform.localPosition = BACK_POS;
+    }
 }

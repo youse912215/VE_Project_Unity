@@ -6,6 +6,7 @@ using static Call.ConstantValue;
 using static Call.CommonFunction;
 using static ShowMenu;
 using static TowerDefenceButtonManager;
+using static PrepareVirus;
 
 public class CameraManager : MonoBehaviour
 {
