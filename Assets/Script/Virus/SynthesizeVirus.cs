@@ -16,6 +16,7 @@ public class SynthesizeVirus : MonoBehaviour
     public static VIRUS_NUM currentCode; //現在選択しているウイルスコード
 
     private bool initFlag;
+    private bool isPushing; //ウイルスボタンを押したか
     private bool[] isCreate = new bool[8]; //ウイルスを作れるか
     private int[] creationArray = new int[9]; //作成数配列
     private List<int> tmpList = new List<int> { 0, 0, 0, 0 }; //一旦、素材を保存するリスト
@@ -36,32 +37,42 @@ public class SynthesizeVirus : MonoBehaviour
         { ULX_PROTEIN, ERYTHROCYTE_AGGLUTININ, ENVELOPE, BLOOD_POTION },
     };
 
+    //現在のウイルス保有量テキスト
     private Text[] vCount = new Text[V_CATEGORY];
-    private Text vArray;
-    private GameObject[] countText = new GameObject[V_CATEGORY];
-    private GameObject arrayText;
+    private Text[] vArray = new Text[1];
+    private GameObject[] vCountText = new GameObject[V_CATEGORY];
+    private GameObject[] vArrayText = new GameObject[1];
+
+    //現在のウイルス作成素材保有量テキスト
+    private Text[] vMCount = new Text[4];
+    private GameObject[] vMCountText = new GameObject[4];
 
     // Start is called before the first frame update
     void Start()
     {
+        isPushing = false;
+
         currentCode = CODE_CLD; //現在のコードなし
         creationArray = Enumerable.Repeat(0, creationArray.Length).ToArray(); //0個で配列を初期化
         InitOwnedVirus(); //現在の保有数の初期化
 
-        InitText(); //テキストの初期化
+        InitText(V_CATEGORY, "vCount", vCountText, vCount); //テキストの初期化
+        InitText(1, "cArray", vArrayText, vArray);
+        InitText(tmpList.Count(), "vMCount", vMCountText, vMCount);
+
         InitUI(); //UIの初期化
+
+        PushVirusButton((int)currentCode);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("tmp" + tmpList[0] + "::" + tmpList[1] + "::" + tmpList[2] + "::" + tmpList[3]);
-        Debug.Log("0::" + vMatOwned[0]);
-        Debug.Log("1::" + vMatOwned[1]);
-        Debug.Log("2::" + vMatOwned[2]);
-        Debug.Log("17::" + vMatOwned[17]);
+        
 
-        ShowCurrentCounts();
+        if (!isPushing) return;
+        UpdateCountText(); //現在のカウントテキストを更新
+        isPushing = false; //ボタン処理をoff
 
         if (initFlag) return; //初期化フラグがtrueのとき、処理をスキップ
         StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
@@ -73,6 +84,8 @@ public class SynthesizeVirus : MonoBehaviour
     /// <param name="code">現在のコード</param>
     public void PushVirusButton(int code)
     {
+        isPushing = true;
+
         UpdateSelectPosition(code); //選択位置更新
 
         if (creationArray[(int)currentCode] != 0)
@@ -88,6 +101,8 @@ public class SynthesizeVirus : MonoBehaviour
     /// </summary>
     public void PushCreateButton()
     {
+        isPushing = true;
+
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
         if (creationArray[(int)currentCode] <= 0) return; //作成数が0以下のとき、処理をスキップ
@@ -104,6 +119,7 @@ public class SynthesizeVirus : MonoBehaviour
     {
         //GameObject ob = buttons[0].transform.parent.gameObject;
         //ob.SetActive(false);
+        isPushing = true;
 
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
@@ -121,6 +137,8 @@ public class SynthesizeVirus : MonoBehaviour
     /// <param name="sign"></param>
     public void PushSubButton(int sign)
     {
+        isPushing = true;
+
         if (currentCode == CODE_NONE) return; //コードがないとき、処理をスキップ
 
         if (creationArray[(int)currentCode] == 0)
@@ -167,15 +185,15 @@ public class SynthesizeVirus : MonoBehaviour
     /// <summary>
     /// テキストオブジェクトの初期化
     /// </summary>
-    private void InitText()
+    private void InitText(int n, string name, GameObject[] obj, Text[] text)
     {
-        for (int i = 0; i < V_CATEGORY; ++i)
+        for (int i = 0; i < n; ++i)
         {
-            countText[i] = GameObject.Find("vCount" + i.ToString());
-            vCount[i] = countText[i].GetComponent<Text>();
+            obj[i] = GameObject.Find(name + i.ToString());
+            text[i] = obj[i].GetComponent<Text>();
         }
-        arrayText = GameObject.Find("cArray");
-        vArray = arrayText.GetComponent<Text>();
+        //vArrayText = GameObject.Find("cArray");
+        //vArray = vArrayText.GetComponent<Text>();
     }
 
     /// <summary>
@@ -189,20 +207,24 @@ public class SynthesizeVirus : MonoBehaviour
     }
 
     /// <summary>
-    /// 現在の作成数等を表示
+    /// 現在のカウントテキスト等を更新
     /// </summary>
-    private void ShowCurrentCounts()
+    private void UpdateCountText()
     {
         if (currentCode == CODE_NONE) return;
-        vCount[0].text = vCreationCount[0].ToString();
-        vCount[1].text = vCreationCount[1].ToString();
-        vCount[2].text = vCreationCount[2].ToString();
-        vCount[3].text = vCreationCount[3].ToString();
-        vCount[4].text = vCreationCount[4].ToString();
-        vCount[5].text = vCreationCount[5].ToString();
-        vCount[6].text = vCreationCount[6].ToString();
-        vCount[7].text = vCreationCount[7].ToString();
-        vArray.text = creationArray[(int)currentCode].ToString();
+
+        for (int i = 0; i < V_CATEGORY; ++i) vCount[i].text = vCreationCount[i].ToString(); //ウイルス保有数テキスト
+        vArray[0].text = creationArray[(int)currentCode].ToString(); //合計作成数テキスト
+
+        for (int i = 0; i < tmpList.Count(); ++i)
+        {
+            vMCount[i].text = vMatOwned[(int)matCompositList[(int)currentCode, i]].ToString(); //素材保有数テキスト
+
+            //素材保有数が、必要数より多いとき
+            if (requiredMaterials[(int)currentCode, i] <= vMatOwned[(int)matCompositList[(int)currentCode, i]])
+                vMCount[i].color = Color.black; //黒
+            else vMCount[i].color = Color.red; //それ以外は赤
+        }
     }
 
     /// <summary>
@@ -225,29 +247,5 @@ public class SynthesizeVirus : MonoBehaviour
     private float CulculationSelectPos(int code)
     {
         return code == (int)CODE_ULT ? BUTTON_HEIGHT * 5.0f : (BUTTON_HEIGHT * code);
-    }
-
-    /// <summary>
-    /// Pushing create screen button
-    /// </summary>
-    private void PushCreateScreenButton()
-    {
-
-    }
-
-    /// <summary>
-    /// Pushing prepare screen button
-    /// </summary>
-    private void PushPrepareScreenButton()
-    {
-
-    }
-
-    /// <summary>
-    /// Pushing supplies screen button
-    /// </summary>
-    private void PushSuppliesScreenButton()
-    {
-
     }
 }

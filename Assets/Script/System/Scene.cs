@@ -15,7 +15,6 @@ public class Scene : MonoBehaviour
     {
         Screen.SetResolution(1920, 1080, false); //âÊñ ÉTÉCÉY
         Application.targetFrameRate = 60; //FPSå≈íË
-       // img.SetActive(false);
     }
 
     // Update is called once per frame

@@ -35,6 +35,9 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private Material activeMat;
     Renderer waterRenderer;
 
+    private const float WHEEL_INTERVAL = 0.3f; //ホイールの間隔時間
+    private readonly Vector2 CLICK_POS = new Vector2(1600.0f, 350.0f); //クリックできる位置
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,7 +78,7 @@ public class CameraManager : MonoBehaviour
             wheelUI.SetActive(true);
             wheelUI.transform.position = new Vector3(mousePos.x + 55.0f, mousePos.y + 55.0f, 0.0f);
             waterRenderer.material = activeMat;
-            if (wheel != 0.0f) StartCoroutine("sample");
+            if (wheel != 0.0f) StartCoroutine("ChangeVirusSets");
         }
         else
         {
@@ -156,10 +159,10 @@ public class CameraManager : MonoBehaviour
         yield return null; //関数から抜ける
     }
 
-    IEnumerator sample()
+    IEnumerator ChangeVirusSets()
     {
         isWheel = true;
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(WHEEL_INTERVAL);
 
         if (isWheel)
         {
@@ -177,6 +180,6 @@ public class CameraManager : MonoBehaviour
 
     private bool WheelPos()
     {
-        return mousePos.x >= 1600.0f && mousePos.y <= 350.0f;
+        return mousePos.x >= CLICK_POS.x && mousePos.y <= CLICK_POS.y;
     }
 }

@@ -19,7 +19,7 @@ public class DamageScreen : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKey(KeyCode.Space)) ColonyHealth.currentHp += 500.0f;
+		//if (Input.GetKey(KeyCode.Space)) ColonyHealth.currentHp += 500.0f;
 
 		//DEAD_HEALTHˆÈ‰º‚È‚ç‰æ–Ê‚ğ™X‚ÉÔ‚­‚·‚é
 		if (ColonyHealth.currentHp <= DEAD_HEALTH)
