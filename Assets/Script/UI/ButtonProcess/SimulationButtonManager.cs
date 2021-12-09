@@ -17,9 +17,5 @@ public class SimulationButtonManager : MonoBehaviour
         //ボタンオブジェクトを取得
         for (int i = 0; i < buttons.Length; ++i)
             buttons[i] = GameObject.Find("Button (" + i.ToString() + ")").GetComponent<Button>();
-
-        buttons[8].image.color = Color.grey;
-        buttons[9].image.color = Color.gray;
-        buttons[10].image.color = Color.grey;
     }
 }
