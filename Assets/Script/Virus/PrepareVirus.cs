@@ -60,5 +60,11 @@ public class PrepareVirus : MonoBehaviour
     public void PushTypeButton(int n)
     {
         typeSetList[n % 10] = n / 10;
+
+        if (typeSetList[n % 10] == 1)
+        prepareButton.transform.GetChild(n % 10).GetComponent<Image>().color =
+            new Color(0.7f, 0.5f, 0.5f, 0.95f);
+        else prepareButton.transform.GetChild(n % 10).GetComponent<Image>().color =
+            new Color(0.5f, 0.5f, 0.7f, 0.95f);
     }
 }

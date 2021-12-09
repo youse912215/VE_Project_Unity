@@ -50,6 +50,9 @@ public class SynthesizeVirus : MonoBehaviour
     private Text[] vPCount = new Text[V_CATEGORY];
     private GameObject[] vPCountText = new GameObject[V_CATEGORY];
 
+    public static Text[] sup = new Text[V_CATEGORY];
+    public static GameObject[] supText = new GameObject[V_CATEGORY];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +66,7 @@ public class SynthesizeVirus : MonoBehaviour
         InitText(1, "cArray", vArrayText, vArray);
         InitText(tmpList.Count(), "vMCount", vMCountText, vMCount);
         InitText(V_CATEGORY, "vPCount", vPCountText, vPCount);
+        InitText(V_CATEGORY, "supText", supText, sup);
 
         InitUI(); //UIの初期化
 
@@ -230,7 +234,7 @@ public class SynthesizeVirus : MonoBehaviour
             else vMCount[i].color = Color.red; //それ以外は赤
         }
 
-        for (int i = 0; i < V_CATEGORY; ++i) vPCount[i].text = vCreationCount[i].ToString(); //ウイルス保有数テキスト
+        for (int i = 0; i < V_CATEGORY; ++i) vPCount[i].text = vCreationCount[i].ToString(); //テキスト
     }
 
     /// <summary>
