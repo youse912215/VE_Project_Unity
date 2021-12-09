@@ -8,6 +8,8 @@ using static Call.CommonFunction;
 using static RAND.CreateRandom;
 using static EnemyCollision;
 
+using static CanvasManager;
+
 public class MoveEnemy : MonoBehaviour
 {
     private float speed; //速度
@@ -33,6 +35,9 @@ public class MoveEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //キャンバスモードがTowerDefense以外なら、処理をスキップ
+        if (canvasMode != CANVAS_MODE.TOWER_DEFENCE_MODE) return;
+
         if (!isStart) return;
         if (transform.position.z <= TARGET_POS) return;
 
