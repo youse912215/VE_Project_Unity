@@ -4,7 +4,12 @@ using UnityEngine;
 
 using static SynthesizeVirus;
 using static Call.CommonFunction;
+using static Call.ConstantValue;
 using static SuppliesVirus;
+using static VirusMaterialData;
+
+using static PrepareVirus;
+using static CameraManager;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -19,8 +24,14 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] private GameObject simulationCanvas;
     [SerializeField] private GameObject mainCanvas;
 
+    [SerializeField] private GameObject subCamera1;
+    [SerializeField] private GameObject subCamera2;
+
     GameObject obj;
     SynthesizeVirus syV;
+
+    GameObject act;
+    ActVirus actV;
 
     public enum CANVAS_MODE : int
     {
@@ -39,6 +50,7 @@ public class CanvasManager : MonoBehaviour
     private void Start()
     {
         syV = GetOtherScriptObject<SynthesizeVirus>(obj);
+        actV = GetOtherScriptObject<ActVirus>(act);
 
         //èâä˙à íu
         createCanvas.transform.localPosition = Vector3.zero;
@@ -50,6 +62,9 @@ public class CanvasManager : MonoBehaviour
         manualButtonCanvas.transform.localPosition = BACK_POS;
         simulationCanvas.transform.localPosition = Vector3.zero;
         mainCanvas.transform.localPosition = BACK_POS;
+
+        subCamera1.SetActive(false);
+        subCamera2.SetActive(false);
     }
 
     /// <summary>
@@ -120,6 +135,11 @@ public class CanvasManager : MonoBehaviour
         manualButtonCanvas.transform.localPosition = BACK_POS;
         simulationCanvas.transform.localPosition = Vector3.zero;
         mainCanvas.transform.localPosition = BACK_POS;
+
+        subCamera1.SetActive(false);
+        subCamera2.SetActive(false);
+
+        SetVirusButtonPosition(NON_ACTIVE_POS);
     }
 
     public void PushManualButton()
@@ -148,5 +168,16 @@ public class CanvasManager : MonoBehaviour
         manualButtonCanvas.transform.localPosition = BACK_POS;
         simulationCanvas.transform.localPosition = BACK_POS;
         mainCanvas.transform.localPosition = Vector3.zero;
+
+        subCamera1.SetActive(true);
+        subCamera2.SetActive(true);
+        
+        currentSetNum = 0;
+        SetVirusButtonPosition(ACTIVE_POS);
+
+        for (int i = 0; i < 8; ++i)
+        {
+            actV.vParents[i].creationCount = vCreationCount[i];
+        }   
     }
 }

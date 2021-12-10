@@ -9,6 +9,8 @@ using static Call.CommonFunction;
 using static ShowMenu;
 using static MouseCollision;
 using static DebugManager;
+using static VirusMaterialData;
+using static CameraManager;
 
 public class ActVirus : MonoBehaviour
 {
@@ -43,7 +45,7 @@ public class ActVirus : MonoBehaviour
 
         for (int i = 0; i < V_CATEGORY; ++i){
             vParents[i].tag = VirusTagName[i]; //タグを保存
-            vParents[i].creationCount = 5;
+            
         }
         //vParents[0].creationCount = 5; //作成したウイルスを代入
         //vParents[1].creationCount = 5;
@@ -53,6 +55,10 @@ public class ActVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(vParents[0].setCount);
+        Debug.Log(vParents[1].creationCount);
+        Debug.Log(vParents[2].creationCount);
+
         worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換
 
         vParents[buttonMode].setCount = GameObject.FindGameObjectsWithTag(vParents[buttonMode].tag).Length - 1; //ウイルスの設置数を計算
@@ -72,7 +78,7 @@ public class ActVirus : MonoBehaviour
     /// <param name="n">ウイルスの種類（番号）</param>
     public void VirusButtonPush(int n)
     {
-        
+        if (vCreationCount[PrepareVirus.virusSetList[currentSetNum]] == 0) return; //ウイルスを持っていないとき、処理をスキップ
 
         if (isOpenMenu) return; //メニュー開いているときはスキップ
         if (isGrabbedVirus && buttonMode != n) return; //ウイルスを持っているときかつ、別のボタンの状態のときはスキップ

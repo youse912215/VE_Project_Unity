@@ -23,6 +23,8 @@ public class MoveEnemy : MonoBehaviour
     private ParticleSystem[] ps = new ParticleSystem[3];
     private Vector3 movement;
 
+    private const float COOL_DOWN = 50.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,14 +40,14 @@ public class MoveEnemy : MonoBehaviour
         //キャンバスモードがTowerDefense以外なら、処理をスキップ
         if (canvasMode != CANVAS_MODE.TOWER_DEFENCE_MODE) return;
 
-        if (!isStart) return;
+        if(!isStart) return;
         if (transform.position.z <= TARGET_POS) return;
 
-        if (cool) StartCoroutine(CooldownCount());
+        //if (cool) StartCoroutine(CooldownCount());
 
-        transform.position += (movement - CoolSpeed());
-        if (cooldown <= 100.0f) return;
-        cool = false;
+        transform.position += (movement/* - CoolSpeed()*/);
+        //if (cooldown <= COOL_DOWN) return;
+        StopCoroutine(CooldownCount());
     }
 
     /// <summary>

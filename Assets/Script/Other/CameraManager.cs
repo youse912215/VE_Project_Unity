@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using static Call.ConstantValue;
 using static Call.CommonFunction;
 using static ShowMenu;
 using static TowerDefenceButtonManager;
 using static PrepareVirus;
+using static VirusMaterialData;
 
 public class CameraManager : MonoBehaviour
 {
     private bool isSetButton;
     private bool isPerChange; //視点変更したか
     private GameObject pMenuButton;
-    private GameObject pVirusButton;
+    public static GameObject pVirusButton;
     public static bool isActiveButton;
 
     private Vector3 pos;
@@ -22,19 +24,22 @@ public class CameraManager : MonoBehaviour
     public Canvas canvas0;
     public Canvas canvas1;
 
-    GameObject subCam;
+    [SerializeField] private GameObject subCam1;
+    [SerializeField] private GameObject subCam2;
     GameObject obj;
     ActVirus actV;
 
     float wheel;
     bool isWheel;
-    int currentSetNum;
+    public static int currentSetNum;
     private GameObject wheelUI;
 
     [SerializeField] private GameObject water;
     [SerializeField] private Material nonActiveMat;
     [SerializeField] private Material activeMat;
     Renderer waterRenderer;
+
+    [SerializeField] private Text currentOwnedText;
 
     private const float WHEEL_INTERVAL = 0.3f; //ホイールの間隔時間
     private readonly Vector2 CLICK_POS = new Vector2(1600.0f, 350.0f); //クリックできる位置
@@ -54,13 +59,13 @@ public class CameraManager : MonoBehaviour
         isPerChange = false;
         isActiveButton = true;
 
-        subCam = GameObject.Find("SubCamera");
+        //subCam = GameObject.Find("SubCamera");
         actV = GetOtherScriptObject<ActVirus>(obj);
 
         wheel = 0.0f;
         isWheel = false;
-        currentSetNum = 1;
-        SetVirusButtonPosition(ACTIVE_POS);
+        //currentSetNum = 0;
+        //SetVirusButtonPosition(ACTIVE_POS);
         wheelUI = GameObject.Find("WheelUI");
         wheelUI.SetActive(false);
 
@@ -70,8 +75,10 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //canvas0.transform.rotation = Camera.main.transform.rotation; //HPを真上からでも見えるようにする
-        //canvas1.transform.rotation = Camera.main.transform.rotation; //HPを真上からでも見えるようにする
+        Debug.Log("現在の" + currentSetNum);
+        currentOwnedText.text = (
+            actV.vParents[virusSetList[currentSetNum]].creationCount -
+            actV.vParents[virusSetList[currentSetNum]].setCount).ToString();
 
         wheel = Input.GetAxis("Mouse ScrollWheel");
         if (WheelPos())
@@ -127,14 +134,16 @@ public class CameraManager : MonoBehaviour
             //非アクティブ状態に
             SetVirusButtonPosition(NON_ACTIVE_POS);
             isActiveButton = false;
-            subCam.SetActive(false);
+            subCam1.SetActive(false);
+            subCam2.SetActive(false);
         }
         else
         {
             //アクティブ状態に
             SetVirusButtonPosition(ACTIVE_POS);
             isActiveButton = true;
-            subCam.SetActive(true);
+            subCam1.SetActive(true);
+            subCam2.SetActive(true);
         }
     }
 
@@ -174,9 +183,9 @@ public class CameraManager : MonoBehaviour
         isWheel = false;
     }
 
-    private void SetVirusButtonPosition(Vector3 pos)
+    public static void SetVirusButtonPosition(Vector3 pos)
     {
-        pVirusButton.transform.GetChild(currentSetNum).transform.localPosition = pos;
+        pVirusButton.transform.GetChild(virusSetList[currentSetNum]).transform.localPosition = pos;
     }
 
     private bool WheelPos()

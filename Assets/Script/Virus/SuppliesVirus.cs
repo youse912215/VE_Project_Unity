@@ -44,11 +44,6 @@ public class SuppliesVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(suppliesItemList[0] + "::" + suppliesItemList[1] + "::" + suppliesItemList[2] + "::" + suppliesItemList[3]);
-        Debug.Log(getItemNumList[0] + "::" + getItemNumList[1] + "::" + getItemNumList[2] + "::" + getItemNumList[3]);
-
-        Debug.Log("DayCount" + dayCount);
-
         sup[0].text = VIRUS_NAME[suppliesItemList[0]];
         sup[1].text = VIRUS_NAME[suppliesItemList[1]];
         sup[2].text = VIRUS_NAME[suppliesItemList[2]];
