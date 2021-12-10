@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OptionProcess : MonoBehaviour
 {
-    private const int IMAGE_NUM = 4;
+    private const int IMAGE_NUM = 3;
     [SerializeField] private GameObject[] img = new GameObject[IMAGE_NUM];
 
     private int selectImageNum;
@@ -18,7 +18,7 @@ public class OptionProcess : MonoBehaviour
 
     public void PushNextButton()
     {
-        if (selectImageNum <= 3)
+        if (selectImageNum <= 2)
         {
             TurnThePage(); //ƒy[ƒW‚ð‚ß‚­‚é
             selectImageNum++; //‰ÁŽZ

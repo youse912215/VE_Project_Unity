@@ -33,7 +33,7 @@ public class ColonyHealth : MonoBehaviour
         GetFireEffect(); //炎エフェクトを取得
 
         if (currentHp > 0.0f) return;
-            SceneManager.LoadScene("End"); //ゲームオーバー
+            SceneManager.LoadScene("LOSE"); //ゲームオーバー
     }
 
     /// <summary>
