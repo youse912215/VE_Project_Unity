@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WarriorData : MonoBehaviour
@@ -25,18 +23,21 @@ public class WarriorData : MonoBehaviour
     public static readonly string[] EnemyTags = {"meleeEnemy", "protectiveEnemy", "rangedEnemy"};
     public static readonly Vector3 E_SIZE = new Vector3(10.0f, 10.0f, 10.0f);
     public static Vector3 SPAWN_POS = new Vector3(40.0f, -2800.0f, 6000.0f);
+    public static int deadCount; //死亡数
 
-    public const int ALL_ENEMEY_MAX = 10;
-    public const int E_CATEGORY = 2;
-    public const string EnemyHeadName = "Enemy";
-    public const float SPAWN_INTERVAL = 10.0f;
-    public const float MOVE_SPEED = -0.5f;
+    public const int ALL_ENEMEY_MAX = 3; //最大数
+    public const int E_CATEGORY = 2; //カテゴリー数
+    public const string ENEMY_HEAD_NAME = "Enemy"; //敵の名前
+    public const float SPAWN_INTERVAL = 10.0f; //出現間隔
+    public const float MOVE_SPEED = -0.5f; //移動速度
+    public const float SPAWN_A = 6000.0f; //出現地点A
+    public const float SPAWN_B = 4000.0f; //出現地点B
 
-    public static int deadCount;
-
-    public const float SPAWN_A = 6000.0f;
-    public const float SPAWN_B = 4000.0f;
-
+    /// <summary>
+    /// 敵の数を計算する
+    /// </summary>
+    /// <param name="wP"></param>
+    /// <returns></returns>
     public static int CulcEnemyCount(WarriorParents[] wP)
     {
         int total = 0;

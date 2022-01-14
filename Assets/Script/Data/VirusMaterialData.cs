@@ -81,6 +81,15 @@ public class VirusMaterialData : MonoBehaviour
         
     }
 
+    public static string[] VIRUS_NAME = {
+        "V1.protein", "V2.protein", "V3.protein", "V24.protein",
+        "V40.protein", "S.protein", "N.protein", "FEN1.protein",
+        "ULX.protein", "F1.antigen", "V.antigen", "H.agglutinin",
+        "Protease", "Neuraminidase", "Envelope", "Nucleoccapsid",
+        "Polymerase", "B.portion", "R.portion", "Y.portion",
+        "Bl.portion",
+    };
+
     /// <summary>
     /// 保有しているウイルスの個数を計算する
     /// </summary>

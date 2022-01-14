@@ -47,6 +47,9 @@ public class EnemyHealth : MonoBehaviour
     private MoveEnemy mE;
     private Vector3 newPos;
 
+    /// <summary>
+    /// 開始処理
+    /// </summary>
     void Start()
     {
         slider.value = 1; //Sliderを満タン
@@ -71,6 +74,9 @@ public class EnemyHealth : MonoBehaviour
         newPos = new Vector3(-150.0f * mE.startPos, 0, 0);
     }
 
+    /// <summary>
+    /// 更新処理
+    /// </summary>
     void Update()
     {
         UpdateSteamEffect(); //スチームエフェクト更新
@@ -172,7 +178,8 @@ public class EnemyHealth : MonoBehaviour
             || (mE.startPos == 1 && this.gameObject.transform.rotation.y >= -0.01f))
         {
             yield return new WaitForSeconds(0.1f); //0.1f待つ
-                                                   //
+            
+            //対象が敵1レイヤーのとき
             if (this.gameObject.layer == ENEMEY1_LAYER)
             {
                 newPos += new Vector3(mE.startPos * 15.0f, 0, 0); //座標を更新
@@ -185,8 +192,9 @@ public class EnemyHealth : MonoBehaviour
     //アイテムを落とす処理
     private void DropMaterial()
     {
-        getCount = rand % MAX_DROP + 1; //1~MAX_DROP個取得
-        getMaterial = rand % vMatNam; //素材番号を取得
+        getCount = (int)Integerization(rand) % MAX_DROP + 1; //1~MAX_DROP個取得
+        getMaterial = (int)Integerization(rand) % vMatNam; //素材番号を取得
         vMatOwned[getMaterial] += getCount; //所持素材リストに加える
+        Debug.Log(VIRUS_NAME[getMaterial] + "を" + getCount + "個入手");
     }
 }

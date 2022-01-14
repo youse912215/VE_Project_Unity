@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Linq;
 
 using static VirusMaterialData;
 using static RAND.CreateRandom;
 using static Call.CommonFunction;
 using static Scene;
-using System.Linq;
-using UnityEngine.UI;
 using static SynthesizeVirus;
 
 public class SuppliesVirus : MonoBehaviour
@@ -19,19 +19,7 @@ public class SuppliesVirus : MonoBehaviour
     private List<int> getItemNumList = new List<int> { 99, 99, 99, 99 };
 
     private const int MAX_GET_NUM = 5;
-
     private int dayCount;
-
-    int[] list2 = new int[4];
-
-    private string[] VIRUS_NAME = {
-        "V1.protein", "V2.protein", "V3.protein", "V24.protein",
-        "V40.protein", "S.protein", "N.protein", "FEN1.protein",
-        "ULX.protein", "F1.antigen", "V.antigen", "H.agglutinin",
-        "Protease", "Neuraminidase", "Envelope", "Nucleoccapsid",
-        "Polymerase", "B.portion", "R.portion", "Y.portion",
-        "Bl.portion",
-        };
 
     // Start is called before the first frame update
     void Start()

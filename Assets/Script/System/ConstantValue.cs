@@ -6,6 +6,8 @@ namespace Call
 {
     public class ConstantValue : MonoBehaviour
     {
+        public static readonly Vector2 WINDOW_SIZE = new Vector2(1920, 1080); 
+
         public const float HALF_CIRCLE = 90.0f;
         public const float QUARTER_CIRCLE = HALF_CIRCLE / 2.0f;
 

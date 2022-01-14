@@ -10,6 +10,7 @@ using static VirusMaterialData;
 
 using static PrepareVirus;
 using static CameraManager;
+using static PhotoManager;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -178,6 +179,9 @@ public class CanvasManager : MonoBehaviour
         for (int i = 0; i < 8; ++i)
         {
             actV.vParents[i].creationCount = vCreationCount[i];
-        }   
+        }
+        
+        if (ImageObj == null) return;
+        ImageObj.SetActive(true);
     }
 }

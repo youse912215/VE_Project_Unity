@@ -45,7 +45,7 @@ public class ActEnemy : MonoBehaviour
         if (CulcEnemyCount(eParents) >= ALL_ENEMEY_MAX * E_CATEGORY) return;
 
         eChildren[n, eParents[n].survivalCount].isActivity = true; //生存状態をtrue     
-        ePrefab = GameObject.Find(EnemyHeadName + n.ToString()); //プレファブを取得
+        ePrefab = GameObject.Find(ENEMY_HEAD_NAME + n.ToString()); //プレファブを取得
         eObject[n, eParents[n].survivalCount] = Instantiate(ePrefab); //クローンを生成
 
         var mE = eObject[n, eParents[n].survivalCount].GetComponent<MoveEnemy>();
