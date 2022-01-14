@@ -75,7 +75,6 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("åªç›ÇÃ" + currentSetNum);
         currentOwnedText.text = (
             actV.vParents[virusSetList[currentSetNum]].creationCount -
             actV.vParents[virusSetList[currentSetNum]].setCount).ToString();

@@ -6,7 +6,10 @@ using static Call.ConstantValue;
 using static Call.CommonFunction;
 using static Call.VirusData;
 using static RAND.CreateRandom;
+using static VirusMaterialData;
 using static WarriorData;
+using static PrepareVirus;
+using static CameraManager;
 using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
@@ -24,13 +27,16 @@ public class EnemyHealth : MonoBehaviour
 
     private float currentHp; //現在のHP
     private float maxHp; //最大HP
-    private const float INIT_HEALTH = 0.5f;
+    private const float INIT_HEALTH = 2.5f;
     private const float ATTACK_DAMAGE = 1.5f; //攻撃力
     private bool isImpactSet; //衝撃エフェクトをセットしたかどうか
     private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
     private const float EFFECT_HEIGHT = 250.0f; //エフェクト高さ
     private const int ENEMEY1_LAYER = 7; //敵1のレイヤ番号
     private readonly Vector3 STEAM_POS = new Vector3(-65.0f, 145.0f, -180.0f);
+    private int getCount = 0;
+    private int getMaterial = 99;
+    private const int MAX_DROP = 5;
 
     /* public */
     public uint takenDamage; //被ダメージ
@@ -74,6 +80,7 @@ public class EnemyHealth : MonoBehaviour
         InfectionAction(); //ウイルス感染時行動
 
         if (currentHp > 0.0f) return; //生きている間は、処理をスキップ
+        DropMaterial(); //素材をドロップ
         DeadAction(); //死亡時行動
     }
 
@@ -84,9 +91,9 @@ public class EnemyHealth : MonoBehaviour
     /// <returns></returns>
     public int CulculationHealth(uint damage)
     {
-        uint d0 = ((damage & 0b0001) >> 0) * (uint)force[0].x; //
-        uint d1 = ((damage & 0b0010) >> 1) * (uint)force[1].x; //
-        uint d2 = ((damage & 0b0100) >> 2) * (uint)force[2].x; //
+        uint d0 = ((damage & 0b11111111) >> 0) * (uint)force[virusSetList[currentSetNum]].x; //
+        uint d1 = ((damage & 0b11111111) >> 1) * (uint)force[virusSetList[currentSetNum]].x; //
+        uint d2 = ((damage & 0b11111111) >> 2) * (uint)force[virusSetList[currentSetNum]].x; //
         return (int)(d0 + d1 + d2);
     }
 
@@ -154,20 +161,32 @@ public class EnemyHealth : MonoBehaviour
             + newPos; //更新
     }
 
+    /// <summary>
+    /// 体を回転する
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator RotationBody()
     {
+        //条件時の間繰り返す
         while ((mE.startPos == -1 && this.gameObject.transform.rotation.y <= 0.01f)
             || (mE.startPos == 1 && this.gameObject.transform.rotation.y >= -0.01f))
         {
-            yield return new WaitForSeconds(0.1f);
-            
+            yield return new WaitForSeconds(0.1f); //0.1f待つ
+                                                   //
             if (this.gameObject.layer == ENEMEY1_LAYER)
             {
-                newPos += new Vector3(mE.startPos * 15.0f, 0, 0);
-                steamEffect.transform.Rotate(0, mE.startPos * 5.0f, 0);
+                newPos += new Vector3(mE.startPos * 15.0f, 0, 0); //座標を更新
+                steamEffect.transform.Rotate(0, mE.startPos * 5.0f, 0); //スチームエフェクトを回転
             }
-
-            this.gameObject.transform.Rotate(0, mE.startPos * -5.0f, 0);
+            this.gameObject.transform.Rotate(0, mE.startPos * -5.0f, 0); //敵オブジェクトを回転
         }
+    }
+
+    //アイテムを落とす処理
+    private void DropMaterial()
+    {
+        getCount = rand % MAX_DROP + 1; //1~MAX_DROP個取得
+        getMaterial = rand % vMatNam; //素材番号を取得
+        vMatOwned[getMaterial] += getCount; //所持素材リストに加える
     }
 }
