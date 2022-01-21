@@ -11,7 +11,7 @@ public class Scene : MonoBehaviour
 {
     public static int sceneName; //ƒV[ƒ“”Ô†
 
-    public static int DAY = 0;
+    public static int DAY = 1; //1“ú–Ú
 
     // Start is called before the first frame update
     void Start()

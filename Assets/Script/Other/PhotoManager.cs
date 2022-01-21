@@ -10,7 +10,7 @@ public class PhotoManager : MonoBehaviour
     [SerializeField] private GameObject obj; //格納用オブジェクト
     [SerializeField] private Canvas canvas; //格納用キャンバス
     private WebCamTexture webCameraTexture = null; //Webカメラテクスチャ
-    private readonly Vector3 IMAGE_POS = new Vector3(-720, 405, 0); //イメージの位置
+    private readonly Vector3 IMAGE_POS = new Vector3(-735, 455, 0); //イメージの位置
 
     public static GameObject ImageObj = null; //イメージオブジェクト
 

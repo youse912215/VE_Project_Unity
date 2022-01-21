@@ -11,7 +11,7 @@ public class ColonyHealth : MonoBehaviour
     private float maxHp = 5000.0f; //最大HP
     public static float currentHp; //現在のHP
     
-    [SerializeField] private Slider slider; //Sliderを入れる
+    [SerializeField] private Slider slider; //Slider格納
     [SerializeField] private ParticleSystem fire; //炎パーティクル
     private ParticleSystem fireEffect; //炎エフェクト
     private bool isFire; //炎エフェクトフラグ

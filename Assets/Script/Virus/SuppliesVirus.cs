@@ -24,7 +24,7 @@ public class SuppliesVirus : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dayCount = 0;
+        dayCount = 1;
         isGetItem = false;
         isSupplies = false;
     }
@@ -46,6 +46,10 @@ public class SuppliesVirus : MonoBehaviour
         StartCoroutine(GetRandomInformation());
         suppliesItemList.RemoveRange(0, MATERIAL_LIST_NUM);
         getItemNumList.RemoveRange(0, MATERIAL_LIST_NUM);
+
+        supText[0].transform.parent.gameObject.transform.localPosition = Vector3.zero;
+
+        isGetItem = false;
         isSupplies = false;
         dayCount++;
         StopCoroutine(GetRandomInformation());
@@ -59,7 +63,8 @@ public class SuppliesVirus : MonoBehaviour
         StopCoroutine(GetRandomItem()); //í‚é~
         isGetItem = true;
 
-        supText[0].transform.parent.gameObject.transform.localPosition = new Vector3(1000, 1000, 1000);
+        supText[0].transform.parent.gameObject.transform.localPosition =
+            new Vector3(1000, 1000, 1000);
     }
 
     private void GetItem(List<int> list, int n)

@@ -141,6 +141,10 @@ public class CanvasManager : MonoBehaviour
         subCamera2.SetActive(false);
 
         SetVirusButtonPosition(NON_ACTIVE_POS);
+
+        if (WaveGauge.currentDay == Scene.DAY) return;
+        Scene.DAY++;
+        Debug.Log("[DAY " + Scene.DAY + " ]");
     }
 
     public void PushManualButton()

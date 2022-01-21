@@ -7,7 +7,6 @@ using static Call.ConstantValue;
 using static Call.CommonFunction;
 using static RAND.CreateRandom;
 using static EnemyCollision;
-
 using static CanvasManager;
 
 public class MoveEnemy : MonoBehaviour

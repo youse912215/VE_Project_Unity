@@ -19,15 +19,17 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private ParticleSystem impactPs; //衝撃波のパーティクルシステム
     [SerializeField] private ParticleSystem bloodPs; //血しぶきのパーティクルシステム
     [SerializeField] private ParticleSystem steamPs; //steamのパーティクルシステム
+    [SerializeField] private ParticleSystem jewelPs; //宝石のパーティクルシステム
     [SerializeField] private Material mat;
 
     private ParticleSystem impactEffect; //衝撃波のエフェクト
     private ParticleSystem bloodEffect; //衝撃波のエフェクト
-    private ParticleSystem steamEffect;
+    private ParticleSystem steamEffect; //スチームのエフェクト
+    private ParticleSystem jewelEffect; //宝石のエフェクト
 
     private float currentHp; //現在のHP
     private float maxHp; //最大HP
-    private const float INIT_HEALTH = 2.5f;
+    private const float INIT_HEALTH = 2.5f; //初期HP固定値
     private const float ATTACK_DAMAGE = 1.5f; //攻撃力
     private bool isImpactSet; //衝撃エフェクトをセットしたかどうか
     private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
@@ -62,6 +64,8 @@ public class EnemyHealth : MonoBehaviour
         impactEffect.Stop(); //エフェクト停止
         bloodEffect = Instantiate(bloodPs); //エフェクト生成
         bloodEffect.Stop(); //エフェクト停止
+        jewelEffect = Instantiate(jewelPs); //エフェクト生成
+        jewelEffect.Stop(); //エフェクト停止
 
         mE = this.gameObject.GetComponent<MoveEnemy>();
 
@@ -137,9 +141,11 @@ public class EnemyHealth : MonoBehaviour
     {
         deadCount++; //累計の死亡数をカウント
         Destroy(impactEffect); //衝撃波エフェクトを削除
-        SetEffectPos(bloodEffect); //エフェクトの位置をセット
         Destroy(steamEffect); //steamエフェクトを削除
-        bloodEffect.Play(); //血のエフェクト
+        SetEffectPos(bloodEffect); //血エフェクトの位置をセット
+        SetEffectPos(jewelEffect); //宝石エフェクトの位置をセット
+        bloodEffect.Play(); //血のエフェクト発生
+        jewelEffect.Play(); //宝石のエフェクト発生
         Destroy(gameObject); //オブジェクトを削除
     }
 
