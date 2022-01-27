@@ -52,9 +52,6 @@ public class ActVirus : MonoBehaviour
             vParents[i].tag = VirusTagName[i]; //タグを保存
             
         }
-        //vParents[0].creationCount = 5; //作成したウイルスを代入
-        //vParents[1].creationCount = 5;
-        //vParents[2].creationCount = 5;
 
         comCanvas.SetActive(true);
         subCamera.SetActive(false);

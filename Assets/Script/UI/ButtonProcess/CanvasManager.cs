@@ -60,14 +60,6 @@ public class CanvasManager : MonoBehaviour
         manualButtonCanvas.transform.localPosition = BACK_POS;
         simulationCanvas.transform.localPosition = Vector3.zero;
         mainCanvas.transform.localPosition = BACK_POS;
-
-        //UIï\é¶èÛë‘
-        //actV.SetUIActivity(false);
-        //actV.comCanvas.SetActive(true);
-        //actV.subCamera.SetActive(false);
-        //actV.mainScreenUI.SetActive(false);
-        //subCamera1.SetActive(false);
-        //subCamera2.SetActive(false);
     }
 
     /// <summary>
@@ -141,8 +133,6 @@ public class CanvasManager : MonoBehaviour
 
         actV.SetUIActivity(false);
         actV.comCanvas.SetActive(true);
-        //subCamera1.SetActive(false);
-        //subCamera2.SetActive(false);
 
         SetVirusButtonPosition(NON_ACTIVE_POS);
 
@@ -179,8 +169,6 @@ public class CanvasManager : MonoBehaviour
         mainCanvas.transform.localPosition = Vector3.zero;
 
         actV.SetUIActivity(true);
-        //subCamera1.SetActive(true);
-        //subCamera2.SetActive(true);
         
         currentSetNum = 0;
         SetVirusButtonPosition(ACTIVE_POS);
