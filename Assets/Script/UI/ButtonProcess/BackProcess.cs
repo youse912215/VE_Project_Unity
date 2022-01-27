@@ -24,6 +24,7 @@ public class BackProcess : MonoBehaviour
     {
         ReverseMenuFlag(BACK); //メニューを閉じる
         actV.isOpenMenu = false; //メニューフラグをfalse
+        //actV.SetUIActivity(true);
 
         if (menuMode) return; //ボタン状態がtrueのとき、処理をスキップ
         actV.vChildren[actV.column, actV.row].isActivity = true; //再びアクティブ状態に

@@ -32,7 +32,7 @@ public class CameraManager : MonoBehaviour
     float wheel;
     bool isWheel;
     public static int currentSetNum;
-    private GameObject wheelUI;
+    [SerializeField] private GameObject wheelUI;
 
     [SerializeField] private GameObject water;
     [SerializeField] private Material nonActiveMat;
@@ -66,7 +66,7 @@ public class CameraManager : MonoBehaviour
         isWheel = false;
         //currentSetNum = 0;
         //SetVirusButtonPosition(ACTIVE_POS);
-        wheelUI = GameObject.Find("WheelUI");
+        //wheelUI = GameObject.Find("WheelUI");
         wheelUI.SetActive(false);
 
         waterRenderer = water.GetComponent<Renderer>();

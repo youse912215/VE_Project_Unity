@@ -20,6 +20,7 @@ public class ActVirus : MonoBehaviour
     private int element; //要素格納変数
     [SerializeField] private ParticleSystem explosion;
     [SerializeField] public Material defaultPs;
+    
 
     /* public */
     public VirusParents[] vParents = new VirusParents[V_CATEGORY]; //親ウイルス構造体配列
@@ -30,6 +31,10 @@ public class ActVirus : MonoBehaviour
     public int buttonMode; //ボタンの状態（ウイルスの種類）
     public int column; //列（ウイルス種類）
     public int row; //行（ウイルス保有番号）
+    [SerializeField] public GameObject comCanvas;
+    [SerializeField] public GameObject subCamera;
+    [SerializeField] public GameObject vButton;
+    [SerializeField] public GameObject mainScreenUI;
    
     // Start is called before the first frame update
     void Start()
@@ -50,6 +55,10 @@ public class ActVirus : MonoBehaviour
         //vParents[0].creationCount = 5; //作成したウイルスを代入
         //vParents[1].creationCount = 5;
         //vParents[2].creationCount = 5;
+
+        comCanvas.SetActive(true);
+        subCamera.SetActive(false);
+        mainScreenUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -81,6 +90,7 @@ public class ActVirus : MonoBehaviour
         if (isLimitCapacity[n]) return; //例外処理ならスキップ
 
         isGrabbedVirus = ReverseFlag(isGrabbedVirus); //フラグを反転して、更新する
+        SetUIActivity(false);
 
         if (isGrabbedVirus) CreateVirus(n); //ウイルスを作成する
         else Destroy(vObject[buttonMode, vParents[buttonMode].setCount - 1]); //ゲームオブジェクトを削除 // ウイルスを削除する
@@ -124,6 +134,7 @@ public class ActVirus : MonoBehaviour
         //右クリック時
         if (Input.GetMouseButtonDown(1))
         {
+            SetUIActivity(false);
             OpenBeforeMenu(); //メニューを開く
             SaveVirusPosition(vChildren, column, row, vObject, worldPos); //設置したウイルス座標を保存
             isOpenMenu = true; //メニューフラグをtrue
@@ -138,7 +149,10 @@ public class ActVirus : MonoBehaviour
         if (!isMouseCollider) return; //マウスポインタがウイルスの範囲に重なっていないとき、処理をスキップ
         if (isGrabbedVirus) return; //ウイルスを掴んでいるとき、処理をスキップ
         
-        if (Input.GetMouseButtonDown(1)){
+        //右クリック時
+        if (Input.GetMouseButtonDown(1))
+        {
+            SetUIActivity(false);
             OpenAfterMenu(); //設置後メニューを開く
             isOpenMenu = true; //メニューフラグをtrue
             SearchVirusArray(); //ウイルス配列を検索する
@@ -175,9 +189,22 @@ public class ActVirus : MonoBehaviour
         buttonMode = column; //ボタンの状態を更新
     }
 
+    /// <summary>
+    /// ウイルス爆発エフェクト
+    /// </summary>
+    /// <param name="pos"></param>
     public void ExplosionVirus(Vector3 pos)
     {
         explosion.transform.position = pos;
         explosion.Play();
+    }
+
+    //UI状態の設定
+    public void SetUIActivity(bool state)
+    {
+        comCanvas.SetActive(state);
+        subCamera.SetActive(state);
+        vButton.SetActive(state);
+        mainScreenUI.SetActive(state);
     }
 }

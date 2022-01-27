@@ -25,9 +25,6 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] private GameObject simulationCanvas;
     [SerializeField] private GameObject mainCanvas;
 
-    [SerializeField] private GameObject subCamera1;
-    [SerializeField] private GameObject subCamera2;
-
     GameObject obj;
     SynthesizeVirus syV;
 
@@ -64,8 +61,13 @@ public class CanvasManager : MonoBehaviour
         simulationCanvas.transform.localPosition = Vector3.zero;
         mainCanvas.transform.localPosition = BACK_POS;
 
-        subCamera1.SetActive(false);
-        subCamera2.SetActive(false);
+        //UIï\é¶èÛë‘
+        //actV.SetUIActivity(false);
+        //actV.comCanvas.SetActive(true);
+        //actV.subCamera.SetActive(false);
+        //actV.mainScreenUI.SetActive(false);
+        //subCamera1.SetActive(false);
+        //subCamera2.SetActive(false);
     }
 
     /// <summary>
@@ -137,8 +139,10 @@ public class CanvasManager : MonoBehaviour
         simulationCanvas.transform.localPosition = Vector3.zero;
         mainCanvas.transform.localPosition = BACK_POS;
 
-        subCamera1.SetActive(false);
-        subCamera2.SetActive(false);
+        actV.SetUIActivity(false);
+        actV.comCanvas.SetActive(true);
+        //subCamera1.SetActive(false);
+        //subCamera2.SetActive(false);
 
         SetVirusButtonPosition(NON_ACTIVE_POS);
 
@@ -174,8 +178,9 @@ public class CanvasManager : MonoBehaviour
         simulationCanvas.transform.localPosition = BACK_POS;
         mainCanvas.transform.localPosition = Vector3.zero;
 
-        subCamera1.SetActive(true);
-        subCamera2.SetActive(true);
+        actV.SetUIActivity(true);
+        //subCamera1.SetActive(true);
+        //subCamera2.SetActive(true);
         
         currentSetNum = 0;
         SetVirusButtonPosition(ACTIVE_POS);

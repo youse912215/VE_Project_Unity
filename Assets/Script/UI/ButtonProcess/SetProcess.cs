@@ -34,5 +34,6 @@ public class SetProcess : MonoBehaviour
     {
         GetVirus(script.vParents, script.buttonMode); //ウイルスをアクティブにする
         script.isGrabbedVirus = false; //ボタン操作をfalse
+        script.SetUIActivity(true);
     }
 }

@@ -25,6 +25,7 @@ public class DeleteProcess : MonoBehaviour
     public void DeleteButtonPush()
     {
         int mode = actV.buttonMode;
+        actV.SetUIActivity(true);
 
         if (!menuMode)
         {

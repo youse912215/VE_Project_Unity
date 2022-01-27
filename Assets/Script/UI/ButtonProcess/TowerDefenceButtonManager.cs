@@ -10,12 +10,12 @@ using static MaterialManager;
 public class TowerDefenceButtonManager : MonoBehaviour
 {
     public static Button changeButton;
+    [SerializeField] private GameObject cButton;
 
     // Start is called before the first frame update
     void Start()
     {
-        changeButton = GameObject.Find("ChangeButton").GetComponent<Button>();
-        
+        changeButton = cButton.GetComponent<Button>();
     }
 
     // Update is called once per frame
