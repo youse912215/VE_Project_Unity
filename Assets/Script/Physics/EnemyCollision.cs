@@ -9,12 +9,14 @@ using static ActVirus;
 using static WarriorData;
 using static Call.VirusData;
 using static BlinkingEnemy;
+using static DeleteProcess;
 
 public class EnemyCollision : MonoBehaviour
 {
     private GameObject enemyObj; //敵オブジェクト格納用
 
     private GameObject obj; //オブジェクト
+    private GameObject delObj;
     private ActVirus actV; //スクリプト
     private float cCount; //衝突カウント
     private bool isCollision; //衝突状態
@@ -115,9 +117,6 @@ public class EnemyCollision : MonoBehaviour
         eH.isInfection = true; //感染状態をtrue
         eH.takenDamage |= (uint)(0b0001 << GetVirusNumber()); //取得したウイルス番号分、シフトしてからORで代入演算
         eH.totalDamage = (float)eH.CulculationHealth(eH.takenDamage); //計算したダメージをトータル値として格納
-
-        Debug.Log("TAKEN" + eH.takenDamage);
-        Debug.Log("トータル" + eH.CulculationHealth(eH.takenDamage));
     }
 
     /// <summary>

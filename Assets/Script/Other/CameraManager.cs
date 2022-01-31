@@ -79,6 +79,9 @@ public class CameraManager : MonoBehaviour
             actV.vParents[virusSetList[currentSetNum]].creationCount -
             actV.vParents[virusSetList[currentSetNum]].setCount).ToString();
 
+        Debug.Log("Set" + actV.vParents[virusSetList[currentSetNum]].setCount);
+        Debug.Log("Creation" + actV.vParents[virusSetList[currentSetNum]].creationCount);
+
         wheel = Input.GetAxis("Mouse ScrollWheel");
         if (WheelPos())
         {
@@ -135,6 +138,7 @@ public class CameraManager : MonoBehaviour
             isActiveButton = false;
             subCam1.SetActive(false);
             subCam2.SetActive(false);
+            currentOwnedText.enabled = false;
         }
         else
         {
@@ -143,6 +147,7 @@ public class CameraManager : MonoBehaviour
             isActiveButton = true;
             subCam1.SetActive(true);
             subCam2.SetActive(true);
+            currentOwnedText.enabled = true;
         }
     }
 

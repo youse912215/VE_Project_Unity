@@ -57,7 +57,7 @@ public class DeleteProcess : MonoBehaviour
     /// <summary>
     /// ウイルス配列をソートする
     /// </summary>
-    private void SortVirusArray(int column, int row, ActVirus act)
+    public void SortVirusArray(int column, int row, ActVirus act)
     {
         var list1 = new List<VirusChildren>(); //リスト定義
         var list2 = new List<GameObject>(); //リスト定義
