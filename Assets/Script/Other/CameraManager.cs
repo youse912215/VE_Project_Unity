@@ -43,6 +43,7 @@ public class CameraManager : MonoBehaviour
 
     private const float WHEEL_INTERVAL = 0.3f; //ホイールの間隔時間
     private readonly Vector2 CLICK_POS = new Vector2(1600.0f, 350.0f); //クリックできる位置
+    private const float MOUSE_DIFF_POS = 55.0f; //マウスの差分座標
 
     // Start is called before the first frame update
     void Start()
@@ -77,29 +78,37 @@ public class CameraManager : MonoBehaviour
     {
         currentOwnedText.text = (
             actV.vParents[virusSetList[currentSetNum]].creationCount -
-            actV.vParents[virusSetList[currentSetNum]].setCount).ToString();
+            actV.vParents[virusSetList[currentSetNum]].setCount).ToString(); //現在の保有ウイルス数UIを更新
 
         Debug.Log("Set" + actV.vParents[virusSetList[currentSetNum]].setCount);
         Debug.Log("Creation" + actV.vParents[virusSetList[currentSetNum]].creationCount);
 
-        wheel = Input.GetAxis("Mouse ScrollWheel");
-        if (WheelPos())
-        {
-            wheelUI.SetActive(true);
-            wheelUI.transform.position = new Vector3(mousePos.x + 55.0f, mousePos.y + 55.0f, 0.0f);
-            waterRenderer.material = activeMat;
-            if (wheel != 0.0f) StartCoroutine("ChangeVirusSets");
-        }
-        else
-        {
-            wheelUI.SetActive(false);
-            waterRenderer.material = nonActiveMat;
-        }
-
-        ChangePerspective();
+        wheel = Input.GetAxis("Mouse ScrollWheel"); //ホイールを取得
+        ChangeWheelUIActivity(); //ホイールUIのアクティブ状態の変更
+        ChangePerspective(); //視点変更
 
         if (isSetButton) return;
         StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
+    }
+
+    /// <summary>
+    /// ホイールUIのアクティブ状態の変更
+    /// </summary>
+    private void ChangeWheelUIActivity()
+    {
+        if (currentOwnedText.enabled && WheelPos())
+        {
+            wheelUI.SetActive(true); //ホイールをアクティブに
+            wheelUI.transform.position =
+                new Vector3(mousePos.x + MOUSE_DIFF_POS, mousePos.y + MOUSE_DIFF_POS, 0.0f); //マウスの差分座標を加算
+            waterRenderer.material = activeMat; //マテリアルをアクティブに
+            if (wheel != 0.0f) StartCoroutine("ChangeVirusSets"); //ウイルスUIを切替
+        }
+        else
+        {
+            wheelUI.SetActive(false); //ホイールを非アクティブに
+            waterRenderer.material = nonActiveMat; //マテリアルを非アクティブに
+        }
     }
 
     /// <summary>
@@ -138,7 +147,8 @@ public class CameraManager : MonoBehaviour
             isActiveButton = false;
             subCam1.SetActive(false);
             subCam2.SetActive(false);
-            currentOwnedText.enabled = false;
+            actV.comCanvas.SetActive(false);
+            currentOwnedText.enabled = false;        
         }
         else
         {
@@ -147,6 +157,7 @@ public class CameraManager : MonoBehaviour
             isActiveButton = true;
             subCam1.SetActive(true);
             subCam2.SetActive(true);
+            actV.comCanvas.SetActive(true);
             currentOwnedText.enabled = true;
         }
     }
@@ -173,6 +184,11 @@ public class CameraManager : MonoBehaviour
         yield return null; //関数から抜ける
     }
 
+    /// <summary>
+    /// ウイルスUI切替
+    /// 切替時のタイミングを調整するコルーチン
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ChangeVirusSets()
     {
         isWheel = true;
@@ -187,11 +203,19 @@ public class CameraManager : MonoBehaviour
         isWheel = false;
     }
 
+    /// <summary>
+    /// ウイルスボタンの位置をセット
+    /// </summary>
+    /// <param name="pos"></param>
     public static void SetVirusButtonPosition(Vector3 pos)
     {
         pVirusButton.transform.GetChild(virusSetList[currentSetNum]).transform.localPosition = pos;
     }
 
+    /// <summary>
+    /// ホイールの座標とクリック可能座標の位置関係を返す
+    /// </summary>
+    /// <returns></returns>
     private bool WheelPos()
     {
         return mousePos.x >= CLICK_POS.x && mousePos.y <= CLICK_POS.y;
