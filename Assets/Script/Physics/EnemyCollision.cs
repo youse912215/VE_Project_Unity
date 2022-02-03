@@ -5,41 +5,32 @@ using System.Linq;
 
 using static Call.CommonFunction;
 using static MaterialManager;
-using static ActVirus;
-using static WarriorData;
 using static Call.VirusData;
 using static BlinkingEnemy;
-using static DeleteProcess;
+using static VirusMaterialData;
 
 public class EnemyCollision : MonoBehaviour
 {
-    private GameObject enemyObj; //敵オブジェクト格納用
-
+    private GameObject opponent; //相手（敵）オブジェクト格納用
     private GameObject obj; //オブジェクト
-    private GameObject delObj;
     private ActVirus actV; //スクリプト
-    private float cCount; //衝突カウント
-    private bool isCollision; //衝突状態
+    private float rangeActiveTime; //衝突カウント  
     private const float ACTIVE_COUNT = 10.0f; //アクティブカウント
+    private const float WAIT_FOR_SECONDS = 0.5f; //待機時間
+    private const float INCREASED_SECONDS = 0.1f; //増加時間
 
-    public static bool cool;
-    public static float cooldown;
+    public static bool cool; //クールダウン
+    public static float cooldown; //クールダウンタイム
+    public static bool isEnemyCollision; //衝突状態
 
     // Start is called before the first frame update
     void Start()
     {
         actV = GetOtherScriptObject<ActVirus>(obj); //ActVirusスクリプトを取得
-        cCount = 0.0f; //衝突カウントを0に
-        isCollision = false; //衝突状態をfalse
+        rangeActiveTime = 0.0f; //衝突カウントを0に
+        isEnemyCollision = false; //衝突状態をfalse
         cool = false;
         cooldown = 0.0f;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!isCollision) return;
-        CountCollisionTime();
     }
 
     /// <summary>
@@ -52,10 +43,37 @@ public class EnemyCollision : MonoBehaviour
         if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
 
         ChangeMaterialColor(this.gameObject, rangeMat[3]); //マテリアルカラーを変更
-        enemyObj = other.gameObject; //範囲に入ったオブジェクトを格納
-        isCollision = true; //衝突状態をtrue
-        GetEnemyDamage(enemyObj); //敵のダメージを取得
-        ChangeVirusEffect(enemyObj); //ウイルスのエフェクトを変更
+        opponent = other.gameObject; //範囲に入ったオブジェクトを格納
+        isEnemyCollision = true; //衝突状態をtrue
+        GetEnemyDamage(opponent); //敵のダメージを取得
+        ChangeVirusEffect(opponent); //ウイルスのエフェクトを変更
+        StartCoroutine(CountRangeTime()); //衝突時間をカウント
+
+        if (rangeActiveTime <= ACTIVE_COUNT) return;
+        var pObject = this.gameObject.transform.parent.gameObject; //親オブジェクトを格納
+        actV.ExplosionVirus(gameObject.transform.parent.gameObject.transform.position); //ウイルス装置を爆発させる
+        DecreaseCountVirus(pObject); //ウイルス数を減らす
+        Destroy(pObject); //親オブジェクトを削除
+        isEnemyCollision = false; //衝突状態をfalse
+        rangeActiveTime = 0; //衝突カウントをリセット
+        if (cooldown == 0.0f) cool = true; //クールダウン状態
+    }
+
+    /// <summary>
+    /// ウイルス数を減らす
+    /// </summary>
+    /// <param name="pObject"></param>
+    void DecreaseCountVirus(GameObject pObject)
+    {
+        if (!pObject) return; //例外はスキップ
+        vSetCount[GetVirusNumber()]--; //設置数を減らす
+
+        //タグが一致したとき
+        if (pObject.tag == VirusTagName[GetVirusNumber()])
+        {
+            vCreationCount[GetVirusNumber()]--; //作成数を減らす
+            isLimitCapacity[GetVirusNumber()] = false; //容量の限界状態を解除
+        }
     }
 
     /// <summary>
@@ -66,24 +84,6 @@ public class EnemyCollision : MonoBehaviour
     {
         if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
         ChangeMaterialColor(this.gameObject, rangeMat[0]); //マテリアルカラーを変更
-    }
-
-    /// <summary>
-    /// 衝突カウントを計算し、ウイルスを消す
-    /// </summary>
-    private void CountCollisionTime()
-    {
-        StartCoroutine(CountRangeTime());
-
-        if (cCount <= ACTIVE_COUNT) return; //
-
-        var pObject = this.gameObject.transform.parent.gameObject; //親オブジェクトを格納
-        actV.ExplosionVirus(pObject.transform.position); //ウイルス装置を爆発させる
-        Destroy(pObject);
-        //pObject.SetActive(false); //範囲を非アクティブ状態に
-        isCollision = false; //衝突状態をfalse
-        cCount = 0; //衝突カウントをリセット
-        if (cooldown == 0.0f) cool = true;
     }
 
     /// <summary>
@@ -134,9 +134,13 @@ public class EnemyCollision : MonoBehaviour
         ps[1].Play();
     }
 
+    /// <summary>
+    /// 範囲効果時間をカウント
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator CountRangeTime()
     {
-        yield return new WaitForSeconds(0.5f);
-        cCount += 0.1f; //カウント開始   
+        yield return new WaitForSeconds(WAIT_FOR_SECONDS);
+        rangeActiveTime += INCREASED_SECONDS; //カウント開始   
     }
 }

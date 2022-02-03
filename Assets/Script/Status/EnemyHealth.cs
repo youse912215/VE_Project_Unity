@@ -201,6 +201,6 @@ public class EnemyHealth : MonoBehaviour
         getCount = (int)Integerization(rand) % MAX_DROP + 1; //1~MAX_DROPŒÂæ“¾
         getMaterial = (int)Integerization(rand) % vMatNam; //‘fŞ”Ô†‚ğæ“¾
         vMatOwned[getMaterial] += getCount; //Š‘fŞƒŠƒXƒg‚É‰Á‚¦‚é
-        Debug.Log(VIRUS_NAME[getMaterial] + "‚ğ" + getCount + "ŒÂ“üè");
+        //Debug.Log(VIRUS_NAME[getMaterial] + "‚ğ" + getCount + "ŒÂ“üè");
     }
 }

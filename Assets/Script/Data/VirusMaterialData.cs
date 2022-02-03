@@ -49,7 +49,9 @@ public class VirusMaterialData : MonoBehaviour
 
     public static int vMatNam = System.Enum.GetNames(typeof(MATERIAL_CODE)).Length - 1; //ƒEƒCƒ‹ƒX‘fŞ”
     public static int[] vMatOwned = new int[vMatNam]; //Šeí‘fŞ‚Ì•Û—L”
-    public static int[] vCreationCount = new int[8];
+    public static int[] vCreationCount = new int[8]; //ì¬”
+    public static int[] vDestroyCount = new int[8]; //”j‰ó”
+    public static int[] vSetCount = new int[8];
     public const int MATERIAL_LIST_NUM = 4;
 
     /// <summary>

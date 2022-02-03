@@ -45,6 +45,8 @@ public class CameraManager : MonoBehaviour
     private readonly Vector2 CLICK_POS = new Vector2(1600.0f, 350.0f); //クリックできる位置
     private const float MOUSE_DIFF_POS = 55.0f; //マウスの差分座標
 
+    public int owned = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,19 +78,28 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentOwnedText.text = (
-            actV.vParents[virusSetList[currentSetNum]].creationCount -
-            actV.vParents[virusSetList[currentSetNum]].setCount).ToString(); //現在の保有ウイルス数UIを更新
+        /* 使用可能ウイルス数を更新 */
+        owned = vCreationCount[currentSetNum] - vSetCount[currentSetNum]; //現在の保有ウイルス数UIを更新
+        FixedOutOfRange(); //範囲外の数値を修正
+        currentOwnedText.text = owned.ToString(); //現在の保有ウイルス数UIを更新
 
-        Debug.Log("Set" + actV.vParents[virusSetList[currentSetNum]].setCount);
-        Debug.Log("Creation" + actV.vParents[virusSetList[currentSetNum]].creationCount);
-
+        /* ホイール更新処理 */
         wheel = Input.GetAxis("Mouse ScrollWheel"); //ホイールを取得
         ChangeWheelUIActivity(); //ホイールUIのアクティブ状態の変更
         ChangePerspective(); //視点変更
 
+        /* ボタン初期化処理 */
         if (isSetButton) return;
         StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
+    }
+
+    /// <summary>
+    /// 範囲外の数値を修正
+    /// </summary>
+    void FixedOutOfRange()
+    {
+        if (owned > -1) return;
+        owned = 0;
     }
 
     /// <summary>

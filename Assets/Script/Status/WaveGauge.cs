@@ -22,7 +22,7 @@ public class WaveGauge : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(currentDay);
+        //Debug.Log(currentDay);
 
         //キャンバスモードがTowerDefense以外なら、処理をスキップ
         if (canvasMode != CANVAS_MODE.TOWER_DEFENCE_MODE) return;

@@ -8,7 +8,7 @@ using static Call.VirusData.VIRUS_NUM;
 using static Call.CommonFunction;
 using static ShowMenu;
 using static MouseCollision;
-using static DebugManager;
+using static EnemyCollision;
 using static VirusMaterialData;
 using static CameraManager;
 
@@ -50,9 +50,9 @@ public class ActVirus : MonoBehaviour
 
         for (int i = 0; i < V_CATEGORY; ++i){
             vParents[i].tag = VirusTagName[i]; //タグを保存
-            
         }
 
+        //キャンバス上のUIの初期化
         comCanvas.SetActive(true);
         subCamera.SetActive(false);
         mainScreenUI.SetActive(false);
@@ -61,8 +61,6 @@ public class ActVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(column + "::" + row);
-
         worldPos = ReturnOnScreenMousePos(); //スクリーン→ワールド変換
 
         vParents[buttonMode].setCount = GameObject.FindGameObjectsWithTag(vParents[buttonMode].tag).Length - 1; //ウイルスの設置数を計算
@@ -82,8 +80,8 @@ public class ActVirus : MonoBehaviour
     /// <param name="n">ウイルスの種類（番号）</param>
     public void VirusButtonPush(int n)
     {
-        if (vCreationCount[PrepareVirus.virusSetList[currentSetNum]] == 0) return; //ウイルスを持っていないとき、処理をスキップ
-
+        //if (vCreationCount[PrepareVirus.virusSetList[currentSetNum]] == 0) return; //ウイルスを持っていないとき、処理をスキップ
+        if (vCreationCount[n] == vSetCount[n]) return;
         if (isOpenMenu) return; //メニュー開いているときはスキップ
         if (isGrabbedVirus && buttonMode != n) return; //ウイルスを持っているときかつ、別のボタンの状態のときはスキップ
         if (isLimitCapacity[n]) return; //例外処理ならスキップ
@@ -96,8 +94,6 @@ public class ActVirus : MonoBehaviour
 
         column = buttonMode; //列（ウイルス種類）
         row = vParents[buttonMode].setCount; //行（ウイルス保有番号）
-        
-
     }
 
     /// <summary>
@@ -114,6 +110,7 @@ public class ActVirus : MonoBehaviour
             vRange * vChildren[n, vParents[n].setCount].force.y; //範囲を取得
         vObject[n, vParents[n].setCount].SetActive(true); //アクティブ状態にする
         buttonMode = n; //現在のボタンの状態を更新
+        vSetCount[n]++;
     }
 
     //掴んでいるウイルスの位置を更新
@@ -147,6 +144,7 @@ public class ActVirus : MonoBehaviour
     private void AfterMenuAction()
     {
         if (!isMouseCollider) return; //マウスポインタがウイルスの範囲に重なっていないとき、処理をスキップ
+        if (isEnemyCollision) return;
         if (isGrabbedVirus) return; //ウイルスを掴んでいるとき、処理をスキップ
         
         //右クリック時

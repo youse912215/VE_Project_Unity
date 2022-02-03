@@ -6,6 +6,8 @@ using System.Linq;
 using static Call.CommonFunction;
 using static Call.VirusData;
 using static Call.ConstantValue.MENU_TYPE;
+using static VirusMaterialData;
+using static CameraManager;
 using static ShowMenu;
 
 public class DeleteProcess : MonoBehaviour
@@ -26,6 +28,7 @@ public class DeleteProcess : MonoBehaviour
     {
         int mode = actV.buttonMode;
         actV.SetUIActivity(true);
+        vSetCount[actV.buttonMode]--;
 
         if (!menuMode)
         {
