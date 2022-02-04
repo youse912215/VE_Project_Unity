@@ -79,7 +79,8 @@ public class CameraManager : MonoBehaviour
     void Update()
     {
         /* 使用可能ウイルス数を更新 */
-        owned = vCreationCount[currentSetNum] - vSetCount[currentSetNum]; //現在の保有ウイルス数UIを更新
+        owned = vCreationCount[virusSetList[currentSetNum]]
+            - vSetCount[virusSetList[currentSetNum]]; //現在の保有ウイルス数UIを更新
         FixedOutOfRange(); //範囲外の数値を修正
         currentOwnedText.text = owned.ToString(); //現在の保有ウイルス数UIを更新
 

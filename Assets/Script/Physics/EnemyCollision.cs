@@ -17,7 +17,7 @@ public class EnemyCollision : MonoBehaviour
     private float rangeActiveTime; //衝突カウント  
     private const float ACTIVE_COUNT = 10.0f; //アクティブカウント
     private const float WAIT_FOR_SECONDS = 0.5f; //待機時間
-    private const float INCREASED_SECONDS = 0.1f; //増加時間
+    private const float INCREASED_SECONDS = 0.1f; //増加時間 
 
     public static bool cool; //クールダウン
     public static float cooldown; //クールダウンタイム
