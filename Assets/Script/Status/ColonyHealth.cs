@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Playables;
 
 using static Call.ConstantValue;
 
@@ -12,7 +13,11 @@ public class ColonyHealth : MonoBehaviour
     public static float currentHp; //現在のHP
     public static int colonyLevel = 0; //コロニーレベル
     public static float exp = 0.0f; //現在の経験値
-    
+
+    [SerializeField] private PlayableDirector playableDirector;
+    [SerializeField] private GameObject levelUpTimeline;
+    [SerializeField] private GameObject levelupText;
+
     [SerializeField] private Slider slider; //Slider格納
     [SerializeField] private ParticleSystem fire; //炎パーティクル
     private ParticleSystem fireEffect; //炎エフェクト
@@ -36,12 +41,21 @@ public class ColonyHealth : MonoBehaviour
         3.40f, 3.60f, 3.90f, 4.40f, 5.00f,
     };
 
+    private void Awake()
+    {
+        levelUpTimeline.SetActive(false);
+        levelupText.SetActive(false);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         slider.value = 1; //Sliderを満タン
         currentHp = maxHp; //現在のHPに最大HPを代入
         isFire = false;
+
+        playableDirector = GetComponent<PlayableDirector>();
+
     }
 
     // Update is called once per frame
@@ -57,7 +71,7 @@ public class ColonyHealth : MonoBehaviour
         GetFireEffect(); //炎エフェクトを取得
 
         if (currentHp > 0.0f) return;
-            SceneManager.LoadScene("LOSE"); //ゲームオーバー
+        SceneManager.LoadScene("LOSE"); //ゲームオーバー
     }
 
     /// <summary>
@@ -87,8 +101,10 @@ public class ColonyHealth : MonoBehaviour
     private void StartLevelEffect()
     {
         if (!isLevelUp) return;
+        levelUpTimeline.SetActive(true);
+        levelupText.SetActive(true);
 
-        //
+        playableDirector.Play();
         isLevelUp = false; //フラグを戻す
     }
 }

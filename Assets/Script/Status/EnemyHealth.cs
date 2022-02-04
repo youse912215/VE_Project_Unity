@@ -108,7 +108,6 @@ public class EnemyHealth : MonoBehaviour
     /// <summary>
     /// 体力を計算する
     /// </summary>
-    /// <param name="damage">ダメージ</param>
     /// <returns></returns>
     public float CulculationHealth(int type)
     {
