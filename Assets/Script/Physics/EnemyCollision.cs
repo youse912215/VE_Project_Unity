@@ -117,7 +117,6 @@ public class EnemyCollision : MonoBehaviour
         eH.isInfection = true; //感染状態をtrue
         //eH.takenDamage |= (uint)(/*0b0001 << */GetVirusNumber()); //取得したウイルス番号分、シフトしてからORで代入演算
         eH.totalDamage = eH.CulculationHealth(GetVirusNumber()); //計算したダメージをトータル値として格納
-        Debug.Log("damage::" + eH.totalDamage);
     }
 
     /// <summary>

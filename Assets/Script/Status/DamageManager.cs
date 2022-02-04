@@ -21,7 +21,7 @@ public class DamageManager : MonoBehaviour
     /// <returns></returns>
     public float GetExp(int enemyRank)
     {
-        return LOWER_LIMIT + Integerization(rand) % (AVAILABLE_MAX_EXP * enemyRank);
+        return LOWER_LIMIT + Integerization(rand) % (AVAILABLE_MAX_EXP * (enemyRank + 1));
     }
 
     /// <summary>

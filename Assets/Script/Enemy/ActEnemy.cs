@@ -18,7 +18,6 @@ public class ActEnemy : MonoBehaviour
     public GameObject[,] eObject = new GameObject[E_CATEGORY, ALL_ENEMEY_MAX * E_CATEGORY];
 
     private int type;
-    private int day;
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +27,6 @@ public class ActEnemy : MonoBehaviour
         spawnTime = 0;
         
         type = 0;
-        day = 0;
     }
 
     // Update is called once per frame
