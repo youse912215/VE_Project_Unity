@@ -28,6 +28,8 @@ public class EnemyHealth : MonoBehaviour
     private ParticleSystem steamEffect; //スチームのエフェクト
     private ParticleSystem jewelEffect; //宝石のエフェクト
 
+    private int enemyRank; //階級
+    private const int MAX_RANK = 5; //最大階級
     private float currentHp; //現在のHP
     private float maxHp; //最大HP
     private const float INIT_HEALTH = 2.5f; //初期HP固定値
@@ -39,8 +41,10 @@ public class EnemyHealth : MonoBehaviour
     private readonly Vector3 STEAM_POS = new Vector3(-65.0f, 145.0f, -180.0f);
     private int getCount = 0;
     private int getMaterial = 99;
-    private const int MAX_DROP = 5;
+    private const int MAX_DROP = 5; //最大ドロップ数
     private List<bool> isVirusDamage = new List<bool> { false, false, false };
+    private readonly List<float> PENETRATION_DEFENCE_LIST = new List<float> {0.0f, 1.5f, 3.0f, 4.5f, 6.0f}; //貫通防御リスト
+    private float pDefence = 0.0f; //貫通防御
 
     /* public */
     public uint takenDamage; //被ダメージ
@@ -72,6 +76,9 @@ public class EnemyHealth : MonoBehaviour
 
         mE = this.gameObject.GetComponent<MoveEnemy>();
         dM = this.gameObject.GetComponent<DamageManager>();
+
+        enemyRank = (int)Integerization(rand) % MAX_RANK; //階級を取得
+        pDefence = PENETRATION_DEFENCE_LIST[enemyRank]; //リストから貫通防御を取得
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
         steamEffect = Instantiate(steamPs); //エフェクト生成
@@ -151,9 +158,10 @@ public class EnemyHealth : MonoBehaviour
     private void DeadAction()
     {
         if (!gameObject) return;
-        //Debug.Log("死亡");
-        exp += dM.GetExp(mE.enemyRank); //経験値取得
+        exp += dM.GetExp(enemyRank); //経験値取得
         colonyLevel += dM.CulculationColonyLevel(); //コロニーレベルを計算
+        Debug.Log("経験値::" + exp);
+        Debug.Log("レベル::" + colonyLevel);
         deadCount++; //累計の死亡数をカウント
         Destroy(impactEffect); //衝撃波エフェクトを削除
         Destroy(steamEffect); //steamエフェクトを削除
