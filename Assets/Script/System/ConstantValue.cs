@@ -16,6 +16,8 @@ namespace Call
         public static readonly Vector3 SELECT_UI_POS = new Vector3(-560, 250, 0); //選択UI
         public const float BUTTON_HEIGHT = 120.0f;
 
+        public const int SET_LIST_COUNT = 3; //設置リスト数
+
         //炎
         public static readonly Vector3 FIRE_POS = new Vector3(154.0f, -2431.0f, 234.0f);
         public static readonly Vector3 FIRE_ROT = new Vector3(-90.0f, 0.0f, 0.0f);

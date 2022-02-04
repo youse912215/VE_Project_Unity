@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PrepareVirus : MonoBehaviour
 {
-    private const int SET_LIST_COUNT = 3;
     public static List<int> virusSetList = new List<int>{0, 1, 2};
     public static List<int> typeSetList = new List<int>{1, 1, 1};
     private int selectSetNumber;

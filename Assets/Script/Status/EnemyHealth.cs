@@ -40,6 +40,7 @@ public class EnemyHealth : MonoBehaviour
     private int getCount = 0;
     private int getMaterial = 99;
     private const int MAX_DROP = 5;
+    private List<bool> isVirusDamage = new List<bool> { false, false, false };
 
     /* public */
     public uint takenDamage; //被ダメージ
@@ -102,12 +103,19 @@ public class EnemyHealth : MonoBehaviour
     /// </summary>
     /// <param name="damage">ダメージ</param>
     /// <returns></returns>
-    public int CulculationHealth(uint damage)
+    public float CulculationHealth(int type)
     {
-        uint d0 = ((damage & 0b11111111) >> 0) * (uint)force[virusSetList[currentSetNum]].x; //
-        uint d1 = ((damage & 0b11111111) >> 1) * (uint)force[virusSetList[currentSetNum]].x; //
-        uint d2 = ((damage & 0b11111111) >> 2) * (uint)force[virusSetList[currentSetNum]].x; //
-        return (int)(d0 + d1 + d2);
+        var d = new float[SET_LIST_COUNT];
+        //0
+        isVirusDamage[virusSetList[0]] = (type == virusSetList[0]) ? true : false;
+        d[0] = isVirusDamage[virusSetList[0]] ? FORCE_WEIGHT[colonyLevel] * force[virusSetList[0]].x : 0.0f;
+        //1
+        isVirusDamage[virusSetList[1]] = (type == virusSetList[1]) ? true : false;
+        d[1] = isVirusDamage[virusSetList[1]] ? FORCE_WEIGHT[colonyLevel] * force[virusSetList[1]].x : 0.0f;
+        //2
+        isVirusDamage[virusSetList[2]] = (type == virusSetList[2]) ? true : false;
+        d[2] = isVirusDamage[virusSetList[2]] ? FORCE_WEIGHT[colonyLevel] * force[virusSetList[2]].x : 0.0f;
+        return d[0] + d[1] + d[2];
     }
 
     /// <summary>
@@ -146,8 +154,6 @@ public class EnemyHealth : MonoBehaviour
         //Debug.Log("死亡");
         exp += dM.GetExp(mE.enemyRank); //経験値取得
         colonyLevel += dM.CulculationColonyLevel(); //コロニーレベルを計算
-        Debug.Log("経験値" + exp);
-        Debug.Log("LEVEL" + colonyLevel);
         deadCount++; //累計の死亡数をカウント
         Destroy(impactEffect); //衝撃波エフェクトを削除
         Destroy(steamEffect); //steamエフェクトを削除
