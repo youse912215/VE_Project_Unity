@@ -10,6 +10,7 @@ using static VirusMaterialData;
 using static WarriorData;
 using static PrepareVirus;
 using static CameraManager;
+using static ColonyHealth;
 using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
@@ -47,6 +48,7 @@ public class EnemyHealth : MonoBehaviour
     public bool isDead; //死んだかどうか
 
     private MoveEnemy mE;
+    private DamageManager dM;
     private Vector3 newPos;
 
     /// <summary>
@@ -68,6 +70,7 @@ public class EnemyHealth : MonoBehaviour
         jewelEffect.Stop(); //エフェクト停止
 
         mE = this.gameObject.GetComponent<MoveEnemy>();
+        dM = this.gameObject.GetComponent<DamageManager>();
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
         steamEffect = Instantiate(steamPs); //エフェクト生成
@@ -139,6 +142,12 @@ public class EnemyHealth : MonoBehaviour
     /// </summary>
     private void DeadAction()
     {
+        if (!gameObject) return;
+        //Debug.Log("死亡");
+        exp += dM.GetExp(mE.enemyRank); //経験値取得
+        colonyLevel += dM.CulculationColonyLevel(); //コロニーレベルを計算
+        Debug.Log("経験値" + exp);
+        Debug.Log("LEVEL" + colonyLevel);
         deadCount++; //累計の死亡数をカウント
         Destroy(impactEffect); //衝撃波エフェクトを削除
         Destroy(steamEffect); //steamエフェクトを削除
@@ -184,7 +193,7 @@ public class EnemyHealth : MonoBehaviour
             || (mE.startPos == 1 && this.gameObject.transform.rotation.y >= -0.01f))
         {
             yield return new WaitForSeconds(0.1f); //0.1f待つ
-            
+
             //対象が敵1レイヤーのとき
             if (this.gameObject.layer == ENEMEY1_LAYER)
             {

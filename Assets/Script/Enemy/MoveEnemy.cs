@@ -14,6 +14,7 @@ public class MoveEnemy : MonoBehaviour
     private float speed; //速度
     public bool isStart;
     public int startPos;
+    public int enemyRank = 1;
 
     private const float INIT_ACCELE = 0.2f; //加速度の初期値
     private const float MIN_SPEED = 5.0f; //移動速度最小値
