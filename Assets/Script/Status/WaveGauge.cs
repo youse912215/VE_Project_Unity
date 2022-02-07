@@ -7,8 +7,8 @@ using static CanvasManager;
 
 public class WaveGauge : MonoBehaviour
 {
-    private const float DECREASE_AMOUNT = 50.0f;
-    private const float maxGauge = 10000.0f;
+    private const float DECREASE_AMOUNT = 5.0f;
+    private const float maxGauge = 1000000.0f;
     private float currentGauge = 0.0f;
     public static int currentDay = 1;
     

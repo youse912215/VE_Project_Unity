@@ -12,6 +12,7 @@ public class Scene : MonoBehaviour
     public static int sceneName; //シーン番号
 
     public static int DAY = 1; //1日目
+    private const int WIN_COUNT = 10000;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,7 @@ public class Scene : MonoBehaviour
     {
         sceneName = SceneManager.GetActiveScene().buildIndex; //現在のシーン番号を保存
 
-        if (deadCount <= 10) return;
+        if (deadCount <= WIN_COUNT) return;
         SceneManager.LoadScene("End");
     }
 

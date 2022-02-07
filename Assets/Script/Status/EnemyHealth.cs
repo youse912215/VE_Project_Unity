@@ -9,7 +9,6 @@ using static RAND.CreateRandom;
 using static VirusMaterialData;
 using static WarriorData;
 using static PrepareVirus;
-using static CameraManager;
 using static ColonyHealth;
 using System.Collections;
 
@@ -33,6 +32,7 @@ public class EnemyHealth : MonoBehaviour
     private float currentHp; //現在のHP
     private float maxHp; //最大HP
     private const float INIT_HEALTH = 300.0f; //初期HP固定値
+    private const float HEALTH_WEIGHT = 500.0f;
     private const float ATTACK_DAMAGE = 1.5f; //攻撃力
     private bool isImpactSet; //衝撃エフェクトをセットしたかどうか
     private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
@@ -76,7 +76,7 @@ public class EnemyHealth : MonoBehaviour
 
         enemyRank = (int)Integerization(rand) % MAX_RANK; //階級を取得
         pDefence = GetArmor(); //リストから貫通防御を取得
-        maxHp = INIT_HEALTH * (enemyRank + 1); //最大HPを取得
+        maxHp = INIT_HEALTH * (enemyRank + 1) + HEALTH_WEIGHT * WaveGauge.currentDay; //最大HPを取得
         currentHp = maxHp; //現在のHPに最大HPを代入
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
@@ -93,7 +93,6 @@ public class EnemyHealth : MonoBehaviour
     /// </summary>
     void Update()
     {
-        Debug.Log("HP::" + currentHp);
         UpdateSteamEffect(); //スチームエフェクト更新
         AttackAction(); //攻撃時行動
 

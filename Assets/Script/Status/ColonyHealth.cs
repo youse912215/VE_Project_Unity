@@ -10,7 +10,6 @@ using static Call.ConstantValue;
 public class ColonyHealth : MonoBehaviour
 {
     private float maxHp = 5000.0f; //最大HP
-    private const int COLONY_LEVEL_MAX = 19;
     public static float currentHp; //現在のHP
     public static int colonyLevel = 0; //コロニーレベル
     public static float exp = 0.0f; //現在の経験値
@@ -19,19 +18,20 @@ public class ColonyHealth : MonoBehaviour
     [SerializeField] private GameObject time;
     [SerializeField] private GameObject levelUpTimeline;
     [SerializeField] private GameObject levelupText;
-
+    [SerializeField] private GameObject levelTextObjcet;
     [SerializeField] private Slider slider; //Slider格納
     [SerializeField] private ParticleSystem fire; //炎パーティクル
     private ParticleSystem fireEffect; //炎エフェクト
+    private Text levelText;
     private bool isFire; //炎エフェクトフラグ
-    private bool isLevelUp = false;
+    public static bool isLevelUp = false;
 
     //レベルごとの経験値リスト（必要経験値）
     public static readonly List<float> EXP_LIST = new List<float>{
-        100, 250, 400, 600, 800,
-        1100, 1450, 1800, 2300, 3000,
-        4000, 5000, 6500, 8000, 10000,
-        12500, 15000, 20000, 25000, 35000,
+        100, 550, 1000, 2500, 4000,
+        6500, 9000, 12000, 15000, 18000,
+        22000, 27000, 33000, 40000, 50000,
+        60000, 70000, 80000, 90000, 100000,
         };
 
     //レベルごとの力の重み
@@ -56,12 +56,14 @@ public class ColonyHealth : MonoBehaviour
         slider.value = 1; //Sliderを満タン
         currentHp = maxHp; //現在のHPに最大HPを代入
         isFire = false;
+        levelText = levelTextObjcet.GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        LevelUpdate(); //レベル更新
+        Debug.Log("経験値" + exp);
+        levelText.text = colonyLevel.ToString(); //レベル表示
         StartLevelEffect(); //レベルアップエフェクト開始
 
         /* Health管理 */
@@ -72,18 +74,6 @@ public class ColonyHealth : MonoBehaviour
 
         if (currentHp > 0.0f) return;
         SceneManager.LoadScene("LOSE"); //ゲームオーバー
-    }
-
-    /// <summary>
-    /// レベル更新
-    /// </summary>
-    private void LevelUpdate()
-    {
-        if (colonyLevel == 0) return; //レベル0のとき、処理をスキップ
-        if (exp < EXP_LIST[colonyLevel - 1]) return; //必要経験値に達していないとき、処理をスキップ
-        if (colonyLevel == COLONY_LEVEL_MAX) return; //最大レベルに達しているき、処理をスキップ
-        exp = 0.0f; //経験値をリセット
-        isLevelUp = true; //レベルアップ
     }
 
     /// <summary>
