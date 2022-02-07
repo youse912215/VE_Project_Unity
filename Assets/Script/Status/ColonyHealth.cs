@@ -10,11 +10,13 @@ using static Call.ConstantValue;
 public class ColonyHealth : MonoBehaviour
 {
     private float maxHp = 5000.0f; //最大HP
+    private const int COLONY_LEVEL_MAX = 19;
     public static float currentHp; //現在のHP
     public static int colonyLevel = 0; //コロニーレベル
     public static float exp = 0.0f; //現在の経験値
 
-    [SerializeField] private PlayableDirector playableDirector;
+    private PlayableDirector playableDirector;
+    [SerializeField] private GameObject time;
     [SerializeField] private GameObject levelUpTimeline;
     [SerializeField] private GameObject levelupText;
 
@@ -43,6 +45,7 @@ public class ColonyHealth : MonoBehaviour
 
     private void Awake()
     {
+        playableDirector = time.GetComponent<PlayableDirector>();
         levelUpTimeline.SetActive(false);
         levelupText.SetActive(false);
     }
@@ -53,9 +56,6 @@ public class ColonyHealth : MonoBehaviour
         slider.value = 1; //Sliderを満タン
         currentHp = maxHp; //現在のHPに最大HPを代入
         isFire = false;
-
-        playableDirector = GetComponent<PlayableDirector>();
-
     }
 
     // Update is called once per frame
@@ -81,6 +81,7 @@ public class ColonyHealth : MonoBehaviour
     {
         if (colonyLevel == 0) return; //レベル0のとき、処理をスキップ
         if (exp < EXP_LIST[colonyLevel - 1]) return; //必要経験値に達していないとき、処理をスキップ
+        if (colonyLevel == COLONY_LEVEL_MAX) return; //最大レベルに達しているき、処理をスキップ
         exp = 0.0f; //経験値をリセット
         isLevelUp = true; //レベルアップ
     }

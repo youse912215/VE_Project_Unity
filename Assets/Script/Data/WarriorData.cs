@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class WarriorData : MonoBehaviour
 {
@@ -32,6 +33,19 @@ public class WarriorData : MonoBehaviour
     public const float MOVE_SPEED = -0.5f; //移動速度
     public const float SPAWN_A = 6000.0f; //出現地点A
     public const float SPAWN_B = 4000.0f; //出現地点B
+
+    //敵0
+    public static readonly List<float> PENETRATION_DEFENCE_LIST0 =
+        new List<float> {
+            0.0f, 1.0f, 1.5f, 2.0f, 2.5f,
+            3.0f, 3.5f, 4.0f, 4.5f, 5.0f
+        }; //貫通防御リスト0
+    //敵1
+    public static readonly List<float> PENETRATION_DEFENCE_LIST1 =
+        new List<float> {
+            1.0f, 1.5f, 2.0f, 2.5f, 3.0f,
+            3.5f, 4.0f, 5.0f, 7.5f, 10.0f
+        }; //貫通防御リスト1
 
     /// <summary>
     /// 敵の数を計算する

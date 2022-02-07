@@ -29,6 +29,8 @@ public class PrepareVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(virusSetList[0] + ":" + virusSetList[1] + ":" + virusSetList[2]);
+
         if (!isPreVirus) return;
         prepareButton.transform.GetChild(selectSetNumber).GetComponent<Image>().sprite =
             sprite[virusSetList[selectSetNumber]];

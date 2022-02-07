@@ -32,7 +32,7 @@ public class EnemyHealth : MonoBehaviour
     private const int MAX_RANK = 5; //最大階級
     private float currentHp; //現在のHP
     private float maxHp; //最大HP
-    private const float INIT_HEALTH = 2.5f; //初期HP固定値
+    private const float INIT_HEALTH = 300.0f; //初期HP固定値
     private const float ATTACK_DAMAGE = 1.5f; //攻撃力
     private bool isImpactSet; //衝撃エフェクトをセットしたかどうか
     private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
@@ -42,8 +42,7 @@ public class EnemyHealth : MonoBehaviour
     private int getCount = 0;
     private int getMaterial = 99;
     private const int MAX_DROP = 5; //最大ドロップ数
-    private List<bool> isVirusDamage = new List<bool> { false, false, false };
-    private readonly List<float> PENETRATION_DEFENCE_LIST = new List<float> {0.0f, 1.5f, 3.0f, 4.5f, 6.0f}; //貫通防御リスト
+    private List<bool> isVirusDamage = new List<bool> { false, false, false, false, false, false, false, false };
     private float pDefence = 0.0f; //貫通防御
 
     /* public */
@@ -62,8 +61,6 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         slider.value = 1; //Sliderを満タン
-        maxHp = Integerization(rand) * INIT_HEALTH; //最大HPをランダムで取得
-        currentHp = maxHp; //現在のHPに最大HPを代入
         takenDamage = 0b0000;
         totalDamage = 0.0f;
         isImpactSet = false;
@@ -78,7 +75,9 @@ public class EnemyHealth : MonoBehaviour
         dM = this.gameObject.GetComponent<DamageManager>();
 
         enemyRank = (int)Integerization(rand) % MAX_RANK; //階級を取得
-        pDefence = PENETRATION_DEFENCE_LIST[enemyRank]; //リストから貫通防御を取得
+        pDefence = GetArmor(); //リストから貫通防御を取得
+        maxHp = INIT_HEALTH * (enemyRank + 1); //最大HPを取得
+        currentHp = maxHp; //現在のHPに最大HPを代入
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
         steamEffect = Instantiate(steamPs); //エフェクト生成
@@ -94,6 +93,7 @@ public class EnemyHealth : MonoBehaviour
     /// </summary>
     void Update()
     {
+        Debug.Log("HP::" + currentHp);
         UpdateSteamEffect(); //スチームエフェクト更新
         AttackAction(); //攻撃時行動
 
@@ -103,6 +103,13 @@ public class EnemyHealth : MonoBehaviour
         if (currentHp > 0.0f) return; //生きている間は、処理をスキップ
         DropMaterial(); //素材をドロップ
         DeadAction(); //死亡時行動
+    }
+
+    private float GetArmor()
+    {
+        if (this.gameObject.layer == ENEMEY1_LAYER)
+            return PENETRATION_DEFENCE_LIST0[enemyRank];
+        return PENETRATION_DEFENCE_LIST1[enemyRank];
     }
 
     /// <summary>
@@ -159,8 +166,6 @@ public class EnemyHealth : MonoBehaviour
         if (!gameObject) return;
         exp += dM.GetExp(enemyRank); //経験値取得
         colonyLevel += dM.CulculationColonyLevel(); //コロニーレベルを計算
-        Debug.Log("経験値::" + exp);
-        Debug.Log("レベル::" + colonyLevel);
         deadCount++; //累計の死亡数をカウント
         Destroy(impactEffect); //衝撃波エフェクトを削除
         Destroy(steamEffect); //steamエフェクトを削除
