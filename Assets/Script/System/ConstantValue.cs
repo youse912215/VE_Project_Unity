@@ -8,7 +8,8 @@ namespace Call
     {
         public static readonly Vector2 WINDOW_SIZE = new Vector2(1920, 1080); 
 
-        public const float HALF_CIRCLE = 90.0f;
+        public const float ONE_CIRCLE = 180.0f;
+        public const float HALF_CIRCLE = ONE_CIRCLE / 2.0f;
         public const float QUARTER_CIRCLE = HALF_CIRCLE / 2.0f;
 
         public const float TARGET_POS = 400.0f;
