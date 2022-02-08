@@ -20,7 +20,6 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private ParticleSystem bloodPs; //血しぶきのパーティクルシステム
     [SerializeField] private ParticleSystem steamPs; //steamのパーティクルシステム
     [SerializeField] private ParticleSystem jewelPs; //宝石のパーティクルシステム
-    [SerializeField] private Material mat;
 
     private ParticleSystem impactEffect; //衝撃波のエフェクト
     private ParticleSystem bloodEffect; //衝撃波のエフェクト
@@ -66,10 +65,6 @@ public class EnemyHealth : MonoBehaviour
         isImpactSet = false;
         impactEffect = Instantiate(impactPs); //エフェクト生成
         impactEffect.Stop(); //エフェクト停止
-        bloodEffect = Instantiate(bloodPs); //エフェクト生成
-        bloodEffect.Stop(); //エフェクト停止
-        jewelEffect = Instantiate(jewelPs); //エフェクト生成
-        jewelEffect.Stop(); //エフェクト停止
 
         mE = this.gameObject.GetComponent<MoveEnemy>();
         dM = this.gameObject.GetComponent<DamageManager>();
@@ -166,13 +161,39 @@ public class EnemyHealth : MonoBehaviour
         exp += dM.GetExp(enemyRank); //経験値取得
         colonyLevel += dM.CulculationColonyLevel(); //コロニーレベルを計算
         deadCount++; //累計の死亡数をカウント
-        Destroy(impactEffect); //衝撃波エフェクトを削除
-        Destroy(steamEffect); //steamエフェクトを削除
-        SetEffectPos(bloodEffect); //血エフェクトの位置をセット
-        SetEffectPos(jewelEffect); //宝石エフェクトの位置をセット
-        bloodEffect.Play(); //血のエフェクト発生
-        jewelEffect.Play(); //宝石のエフェクト発生
-        Destroy(gameObject); //オブジェクトを削除
+        SetStopAction(impactEffect, true); //衝撃エフェクトを削除
+        if (this.gameObject.layer == ENEMEY1_LAYER)
+            SetStopAction(steamEffect, true); //敵1のみ、スチームエフェクトを削除  
+        DeadEffect(bloodPs, bloodEffect); //血エフェクト
+        DeadEffect(jewelPs, jewelEffect); //宝石エフェクト
+        Destroy(gameObject); //敵オブジェクトを削除
+    }
+
+    /// <summary>
+    /// エフェクトの停止設定
+    /// </summary>
+    /// <param name="effect"></param>
+    /// <param name="isLoop"></param>
+    private void SetStopAction(ParticleSystem effect, bool isLoop)
+    {
+        var iMain = effect.main;
+        iMain.loop = false;
+        iMain.stopAction = ParticleSystemStopAction.Destroy;
+        if (!isLoop) return;
+        effect.Stop();
+    }
+
+    /// <summary>
+    /// 死亡時エフェクト
+    /// </summary>
+    /// <param name="ps"></param>
+    /// <param name="effect"></param>
+    private void DeadEffect(ParticleSystem ps, ParticleSystem effect)
+    {
+        effect = Instantiate(ps); //エフェクト生成
+        SetEffectPos(effect); //位置をセット   
+        SetStopAction(effect, false);  
+        effect.Play(); //エフェクト発生
     }
 
     /// <summary>
