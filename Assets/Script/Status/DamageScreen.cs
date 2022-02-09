@@ -19,8 +19,6 @@ public class DamageScreen : MonoBehaviour
 
 	void Update()
 	{
-		//if (Input.GetKey(KeyCode.Space)) ColonyHealth.currentHp += 500.0f;
-
 		//DEAD_HEALTHˆÈ‰º‚È‚ç‰æ–Ê‚ğ™X‚ÉÔ‚­‚·‚é
 		if (ColonyHealth.currentHp <= DEAD_HEALTH)
 			this.img.color = Color.Lerp(this.img.color, ToColor, Time.deltaTime);
