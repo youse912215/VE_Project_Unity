@@ -55,6 +55,10 @@ public class ActEnemy : MonoBehaviour
         eParents[n].survivalCount++; //最後に一体追加
     }
 
+    /// <summary>
+    /// 敵0か1をランダムで生成
+    /// </summary>
+    /// <returns></returns>
     private int GetSpawnRandom()
     {
         type = rand % SPAWN_RAND;
@@ -63,12 +67,19 @@ public class ActEnemy : MonoBehaviour
         return type;
     }
 
+    /// <summary>
+    /// 敵を出現させる
+    /// </summary>
     private void SpawnEnemy()
     {
         CreateEnemy(GetSpawnRandom());
         spawnTime = 0.0f;
     }
 
+    /// <summary>
+    /// 出現位置のパターンを取得
+    /// </summary>
+    /// <returns></returns>
     private int GetPattern()
     {
         var pattarn = 0;
