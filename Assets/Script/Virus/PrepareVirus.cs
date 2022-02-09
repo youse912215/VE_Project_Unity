@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PrepareVirus : MonoBehaviour
 {
     public static List<int> virusSetList = new List<int>{0, 1, 2};
+    public static List<int> oldVirusSetList = new List<int>{0, 0, 0};
     public static List<int> typeSetList = new List<int>{1, 1, 1};
     private int selectSetNumber;
 
@@ -29,7 +30,8 @@ public class PrepareVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(virusSetList[0] + ":" + virusSetList[1] + ":" + virusSetList[2]);
+        //Debug.Log("v::" + virusSetList[0] + ":" + virusSetList[1] + ":" + virusSetList[2]);
+        //Debug.Log("ov::" + oldVirusSetList[0] + ":" + oldVirusSetList[1] + ":" + oldVirusSetList[2]);
 
         if (!isPreVirus) return;
         prepareButton.transform.GetChild(selectSetNumber).GetComponent<Image>().sprite =
