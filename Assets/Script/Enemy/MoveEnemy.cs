@@ -42,11 +42,7 @@ public class MoveEnemy : MonoBehaviour
         if(!isStart) return;
         if (transform.position.z <= TARGET_POS) return;
 
-        //if (cool) StartCoroutine(CooldownCount());
-
-        transform.position += (movement/* - CoolSpeed()*/);
-        //if (cooldown <= COOL_DOWN) return;
-        StopCoroutine(CooldownCount());
+        transform.position += (movement);
     }
 
     /// <summary>
@@ -76,18 +72,5 @@ public class MoveEnemy : MonoBehaviour
             this.gameObject.transform.rotation =
                 Quaternion.Euler(new Vector3(0.0f, QUARTER_CIRCLE * startPos, 0.0f));
         }
-    }
-
-    private IEnumerator CooldownCount()
-    {
-        yield return new WaitForSeconds(0.1f);
-        cooldown += 0.1f;
-    }
-
-    private Vector3 CoolSpeed()
-    {
-        if (!cool) return Vector3.zero;
-        if (startPos == 0) return new Vector3(0.0f, 0.0f, -5.0f);
-        return new Vector3(-3.0f * startPos, 0, -3.0f);
     }
 }
