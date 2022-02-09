@@ -8,6 +8,7 @@ using static MaterialManager;
 using static Call.VirusData;
 using static BlinkingEnemy;
 using static VirusMaterialData;
+using static PrepareVirus;
 
 public class EnemyCollision : MonoBehaviour
 {
@@ -17,10 +18,8 @@ public class EnemyCollision : MonoBehaviour
     private float rangeActiveTime; //衝突カウント  
     private const float ACTIVE_COUNT = 10.0f; //アクティブカウント
     private const float WAIT_FOR_SECONDS = 0.5f; //待機時間
-    private const float INCREASED_SECONDS = 0.1f; //増加時間 
+    private const float INCREASED_SECONDS = 0.1f; //増加時間
 
-    public static bool cool; //クールダウン
-    public static float cooldown; //クールダウンタイム
     public static bool isEnemyCollision; //衝突状態
 
     // Start is called before the first frame update
@@ -29,8 +28,6 @@ public class EnemyCollision : MonoBehaviour
         actV = GetOtherScriptObject<ActVirus>(obj); //ActVirusスクリプトを取得
         rangeActiveTime = 0.0f; //衝突カウントを0に
         isEnemyCollision = false; //衝突状態をfalse
-        cool = false;
-        cooldown = 0.0f;
     }
 
     /// <summary>
@@ -39,6 +36,9 @@ public class EnemyCollision : MonoBehaviour
     /// <param name="other">他のオブジェクト</param>
     void OnTriggerStay(Collider other)
     {
+        //キャンバスモードがTowerDefense以外のとき、処理をスキップ
+        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
+
         if (actV.isGrabbedVirus) return; //ウイルスを持っているときは、処理をスキップ
         if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
 
@@ -56,7 +56,6 @@ public class EnemyCollision : MonoBehaviour
         Destroy(pObject); //親オブジェクトを削除
         isEnemyCollision = false; //衝突状態をfalse
         rangeActiveTime = 0; //衝突カウントをリセット
-        if (cooldown == 0.0f) cool = true; //クールダウン状態
     }
 
     /// <summary>
@@ -112,11 +111,11 @@ public class EnemyCollision : MonoBehaviour
     /// <param name="obj">敵オブジェクト</param>
     private void GetEnemyDamage(GameObject obj)
     {
-        EnemyHealth eH; //EenemyHealthスクリプト
-        eH = obj.GetComponent<EnemyHealth>(); //スクリプトを取得
+        var eH = obj.GetComponent<EnemyHealth>(); //スクリプトを取得
         eH.isInfection = true; //感染状態をtrue
-        //eH.takenDamage |= (uint)(/*0b0001 << */GetVirusNumber()); //取得したウイルス番号分、シフトしてからORで代入演算
-        eH.totalDamage = eH.CulculationHealth(GetVirusNumber()); //計算したダメージをトータル値として格納
+        //eH.totalDamage = eH.CulculationHealth(GetVirusNumber()); //計算したダメージをトータル値として格納
+        eH.CulculationHealth(GetVirusNumber());
+        Debug.Log("ダメージ:" + eH.totalDamage);
     }
 
     /// <summary>

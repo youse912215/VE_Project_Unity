@@ -37,7 +37,7 @@ public class EnemyHealth : MonoBehaviour
     private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
     private const float EFFECT_HEIGHT = 250.0f; //エフェクト高さ
     private const int ENEMEY1_LAYER = 7; //敵1のレイヤ番号
-    private readonly Vector3 STEAM_POS = new Vector3(-65.0f, 145.0f, -180.0f);
+    private readonly Vector3 STEAM_POS = new Vector3(-65.0f, 145.0f, -ONE_CIRCLE);
     private int getCount = 0;
     private int getMaterial = 99;
     private const int MAX_DROP = 5; //最大ドロップ数
@@ -45,14 +45,14 @@ public class EnemyHealth : MonoBehaviour
     private float pDefence = 0.0f; //貫通防御
 
     /* public */
-    public uint takenDamage; //被ダメージ
-    public float totalDamage; //合計ダメージ
+    public float totalDamage = 0.0f; //合計ダメージ
+    private float takenDamage = 0.0f;
     public bool isInfection; //感染したかどうか
     public bool isDead; //死んだかどうか
 
     private MoveEnemy mE;
     private DamageManager dM;
-    private Vector3 newPos;
+    private Vector3 updatePos;
 
     /// <summary>
     /// 開始処理
@@ -60,12 +60,11 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         slider.value = 1; //Sliderを満タン
-        takenDamage = 0b0000;
-        totalDamage = 0.0f;
         isImpactSet = false;
         impactEffect = Instantiate(impactPs); //エフェクト生成
         impactEffect.Stop(); //エフェクト停止
 
+        //他スクリプト取得
         mE = this.gameObject.GetComponent<MoveEnemy>();
         dM = this.gameObject.GetComponent<DamageManager>();
 
@@ -79,8 +78,8 @@ public class EnemyHealth : MonoBehaviour
         steamEffect.Play(); //エフェクト開始
 
         steamEffect.transform.rotation =
-                Quaternion.Euler(new Vector3(180.0f, QUARTER_CIRCLE * mE.startPos, 0.0f));
-        newPos = new Vector3(-150.0f * mE.startPos, 0, 0);
+                Quaternion.Euler(new Vector3(ONE_CIRCLE, QUARTER_CIRCLE * mE.startPos, 0.0f));
+        updatePos = new Vector3(-150.0f * mE.startPos, 0, 0);
     }
 
     /// <summary>
@@ -88,6 +87,9 @@ public class EnemyHealth : MonoBehaviour
     /// </summary>
     void Update()
     {
+        //キャンバスモードがTowerDefense以外のとき、処理をスキップ
+        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
+
         UpdateSteamEffect(); //スチームエフェクト更新
         AttackAction(); //攻撃時行動
 
@@ -99,6 +101,10 @@ public class EnemyHealth : MonoBehaviour
         DeadAction(); //死亡時行動
     }
 
+    /// <summary>
+    /// 貫通シールドを取得
+    /// </summary>
+    /// <returns></returns>
     private float GetArmor()
     {
         if (this.gameObject.layer == ENEMEY1_LAYER)
@@ -109,20 +115,14 @@ public class EnemyHealth : MonoBehaviour
     /// <summary>
     /// 体力を計算する
     /// </summary>
-    /// <returns></returns>
-    public float CulculationHealth(int type)
+    public void CulculationHealth(int type)
     {
-        var d = new float[SET_LIST_COUNT];
-        //0
-        isVirusDamage[virusSetList[0]] = (type == virusSetList[0]) ? true : false;
-        d[0] = isVirusDamage[virusSetList[0]] ? FORCE_WEIGHT[colonyLevel] * force[virusSetList[0]].x : 0.0f;
-        //1
-        isVirusDamage[virusSetList[1]] = (type == virusSetList[1]) ? true : false;
-        d[1] = isVirusDamage[virusSetList[1]] ? FORCE_WEIGHT[colonyLevel] * force[virusSetList[1]].x : 0.0f;
-        //2
-        isVirusDamage[virusSetList[2]] = (type == virusSetList[2]) ? true : false;
-        d[2] = isVirusDamage[virusSetList[2]] ? FORCE_WEIGHT[colonyLevel] * force[virusSetList[2]].x : 0.0f;
-        return d[0] + d[1] + d[2];
+        if (isVirusDamage[type]) return;
+        isVirusDamage[type] = true;
+        totalDamage += (isVirusDamage[type]) ? FORCE_WEIGHT[colonyLevel] * force[type].x : 0.0f;
+
+        Debug.Log("isDamage::" + isVirusDamage[0] + ":" + isVirusDamage[1] + ":" + isVirusDamage[2] + ":" + isVirusDamage[3] + ":"
+             + isVirusDamage[4] + ":" + isVirusDamage[5] + ":" + isVirusDamage[6] + ":" + isVirusDamage[7] + ":");
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class EnemyHealth : MonoBehaviour
     {
         effect = Instantiate(ps); //エフェクト生成
         SetEffectPos(effect); //位置をセット   
-        SetStopAction(effect, false);  
+        SetStopAction(effect, false);
         effect.Play(); //エフェクト発生
     }
 
@@ -217,7 +217,7 @@ public class EnemyHealth : MonoBehaviour
     {
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
         steamEffect.transform.position = transform.position + STEAM_POS
-            + newPos; //更新
+            + updatePos; //更新
     }
 
     /// <summary>
@@ -235,7 +235,7 @@ public class EnemyHealth : MonoBehaviour
             //対象が敵1レイヤーのとき
             if (this.gameObject.layer == ENEMEY1_LAYER)
             {
-                newPos += new Vector3(mE.startPos * 15.0f, 0, 0); //座標を更新
+                updatePos += new Vector3(mE.startPos * 15.0f, 0, 0); //座標を更新
                 steamEffect.transform.Rotate(0, mE.startPos * 5.0f, 0); //スチームエフェクトを回転
             }
             this.gameObject.transform.Rotate(0, mE.startPos * -5.0f, 0); //敵オブジェクトを回転
