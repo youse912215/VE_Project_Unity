@@ -8,7 +8,6 @@ using static Call.VirusData;
 using static RAND.CreateRandom;
 using static VirusMaterialData;
 using static WarriorData;
-using static PrepareVirus;
 using static ColonyHealth;
 using System.Collections;
 
@@ -127,7 +126,7 @@ public class EnemyHealth : MonoBehaviour
     /// </summary>
     public void CulculationHealth(int type)
     {
-        Debug.Log("シールド量::" + pDefence);
+        //Debug.Log("シールド量::" + pDefence);
         if (isVirusDamage[type]) return; //受け取ったウイルスのダメージフラグがtrueのとき、処理をスキップ
 
         isVirusDamage[type] = true; //ダメージフラグをtrue
@@ -173,9 +172,10 @@ public class EnemyHealth : MonoBehaviour
         exp += dM.GetExp(enemyRank); //経験値取得
         colonyLevel += dM.CulculationColonyLevel(); //コロニーレベルを計算
         deadCount++; //累計の死亡数をカウント
+        GameObject.Find("GameManager").GetComponent<WaveGauge>().UpdateGauge(); //ゲージを更新
         SetStopAction(impactEffect, true); //衝撃エフェクトを削除
         if (this.gameObject.layer == ENEMEY1_LAYER)
-            SetStopAction(steamEffect, true); //敵1のみ、スチームエフェクトを削除  
+            SetStopAction(steamEffect, true); //敵1のみ、スチームエフェクトを削除
         DeadEffect(bloodPs, bloodEffect); //血エフェクト
         DeadEffect(jewelPs, jewelEffect); //宝石エフェクト
         Destroy(gameObject); //敵オブジェクトを削除
