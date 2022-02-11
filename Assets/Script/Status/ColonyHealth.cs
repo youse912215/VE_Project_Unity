@@ -13,6 +13,7 @@ public class ColonyHealth : MonoBehaviour
     public static float currentHp; //現在のHP
     public static int colonyLevel = 0; //コロニーレベル
     public static float exp = 0.0f; //現在の経験値
+    private const float DANGER_HEALTH = 1000.0f; //危険状態時のHP
 
     private PlayableDirector playableDirector;
     [SerializeField] private GameObject time;
@@ -71,7 +72,7 @@ public class ColonyHealth : MonoBehaviour
         /* Health管理 */
         slider.value = currentHp / maxHp; //HPスライダーを更新
 
-        if (currentHp > 1000.0f) return;
+        if (currentHp > DANGER_HEALTH) return;
         GetFireEffect(); //炎エフェクトを取得
 
         if (currentHp > 0.0f) return;
