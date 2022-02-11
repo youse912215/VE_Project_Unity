@@ -15,11 +15,11 @@ public class EnemyCollision : MonoBehaviour
     private GameObject opponent; //相手（敵）オブジェクト格納用
     private GameObject obj; //オブジェクト
     private ActVirus actV; //スクリプト
-    private float rangeActiveTime; //衝突カウント  
+    private float rangeActiveTime; //衝突カウント
+    private int thisType;
     private const float ACTIVE_COUNT = 10.0f; //アクティブカウント
     private const float WAIT_FOR_SECONDS = 0.5f; //待機時間
     private const float INCREASED_SECONDS = 0.1f; //増加時間
-
     public static bool isEnemyCollision; //衝突状態
 
     // Start is called before the first frame update
@@ -28,6 +28,7 @@ public class EnemyCollision : MonoBehaviour
         actV = GetOtherScriptObject<ActVirus>(obj); //ActVirusスクリプトを取得
         rangeActiveTime = 0.0f; //衝突カウントを0に
         isEnemyCollision = false; //衝突状態をfalse
+        thisType = GetVirusType(); //ウイルスタイプを取得
     }
 
     /// <summary>
@@ -42,10 +43,13 @@ public class EnemyCollision : MonoBehaviour
         if (actV.isGrabbedVirus) return; //ウイルスを持っているときは、処理をスキップ
         if (other.gameObject.tag != "Enemy") return; //敵以外は、処理をスキップ
 
-        ChangeMaterialColor(this.gameObject, rangeMat[3]); //マテリアルカラーを変更
         opponent = other.gameObject; //範囲に入ったオブジェクトを格納
+        var eH = opponent.GetComponent<EnemyHealth>(); //EnemyHealthスクリプトを取得
+        if (eH.InvalidVirus(thisType)) return; //ウイルスが無効なら、処理をスキップ
+
+        ChangeMaterialColor(this.gameObject, rangeMat[3]); //マテリアルカラーを変更    
         isEnemyCollision = true; //衝突状態をtrue
-        GetEnemyDamage(opponent); //敵のダメージを取得
+        GetEnemyDamage(eH); //敵のダメージを取得
         ChangeVirusEffect(opponent); //ウイルスのエフェクトを変更
         StartCoroutine(CountRangeTime()); //衝突時間をカウント
 
@@ -65,13 +69,13 @@ public class EnemyCollision : MonoBehaviour
     void DecreaseCountVirus(GameObject pObject)
     {
         if (!pObject) return; //例外はスキップ
-        vSetCount[GetVirusNumber()]--; //設置数を減らす
+        vSetCount[thisType]--; //設置数を減らす
 
         //タグが一致したとき
-        if (pObject.tag == VirusTagName[GetVirusNumber()])
+        if (pObject.tag == VirusTagName[thisType])
         {
-            vCreationCount[GetVirusNumber()]--; //作成数を減らす
-            isLimitCapacity[GetVirusNumber()] = false; //容量の限界状態を解除
+            vCreationCount[thisType]--; //作成数を減らす
+            isLimitCapacity[thisType] = false; //容量の限界状態を解除
         }
     }
 
@@ -89,7 +93,7 @@ public class EnemyCollision : MonoBehaviour
     /// ウイルスの種類を取得
     /// </summary>
     /// <returns></returns>
-    private int GetVirusNumber()
+    private int GetVirusType()
     {
         int n = 0; //格納用変数
         //ウイルスタグの値と要素番号を返し、繰り返す
@@ -109,13 +113,11 @@ public class EnemyCollision : MonoBehaviour
     /// 敵のダメージを取得
     /// </summary>
     /// <param name="obj">敵オブジェクト</param>
-    private void GetEnemyDamage(GameObject obj)
+    private void GetEnemyDamage(/*GameObject obj, */EnemyHealth eH)
     {
-        var eH = obj.GetComponent<EnemyHealth>(); //スクリプトを取得
         eH.isInfection = true; //感染状態をtrue
-        //eH.totalDamage = eH.CulculationHealth(GetVirusNumber()); //計算したダメージをトータル値として格納
-        eH.CulculationHealth(GetVirusNumber());
-        Debug.Log("ダメージ:" + eH.totalDamage);
+        eH.CulculationHealth(thisType); //敵の体力を計算
+        //Debug.Log("ダメージ:" + eH.totalDamage);
     }
 
     /// <summary>

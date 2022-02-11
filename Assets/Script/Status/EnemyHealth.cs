@@ -42,7 +42,7 @@ public class EnemyHealth : MonoBehaviour
     private int getMaterial = 99;
     private const int MAX_DROP = 5; //最大ドロップ数
     private List<bool> isVirusDamage = new List<bool> { false, false, false, false, false, false, false, false };
-    private float pDefence = 0.0f; //貫通防御
+    private float pDefence = 0.0f; //シールド量
 
     /* public */
     public float totalDamage = 0.0f; //合計ダメージ
@@ -69,7 +69,7 @@ public class EnemyHealth : MonoBehaviour
         dM = this.gameObject.GetComponent<DamageManager>();
 
         enemyRank = (int)Integerization(rand) % MAX_RANK; //階級を取得
-        pDefence = GetArmor(); //リストから貫通防御を取得
+        pDefence = GetArmor(); //リストからシールド量を取得
         maxHp = INIT_HEALTH * (enemyRank + 1) + HEALTH_WEIGHT * WaveGauge.currentDay; //最大HPを取得
         currentHp = maxHp; //現在のHPに最大HPを代入
 
@@ -104,12 +104,22 @@ public class EnemyHealth : MonoBehaviour
     /// <summary>
     /// 貫通シールドを取得
     /// </summary>
-    /// <returns></returns>
+    /// <returns>シールド量</returns>
     private float GetArmor()
     {
-        if (this.gameObject.layer == ENEMEY1_LAYER)
-            return PENETRATION_DEFENCE_LIST0[enemyRank];
-        return PENETRATION_DEFENCE_LIST1[enemyRank];
+        if (this.gameObject.layer != ENEMEY1_LAYER)
+            return PENETRATION_DEFENCE_LIST0[enemyRank]; //list0
+        return PENETRATION_DEFENCE_LIST1[enemyRank]; //list1
+    }
+
+    /// <summary>
+    /// ウイルスが無効かどうか
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public bool InvalidVirus(int type)
+    {
+        return pDefence > force[type].z; //シールド量が貫通力を上回っているか
     }
 
     /// <summary>
@@ -117,12 +127,14 @@ public class EnemyHealth : MonoBehaviour
     /// </summary>
     public void CulculationHealth(int type)
     {
-        if (isVirusDamage[type]) return;
-        isVirusDamage[type] = true;
-        totalDamage += (isVirusDamage[type]) ? FORCE_WEIGHT[colonyLevel] * force[type].x : 0.0f;
+        Debug.Log("シールド量::" + pDefence);
+        if (isVirusDamage[type]) return; //受け取ったウイルスのダメージフラグがtrueのとき、処理をスキップ
 
-        Debug.Log("isDamage::" + isVirusDamage[0] + ":" + isVirusDamage[1] + ":" + isVirusDamage[2] + ":" + isVirusDamage[3] + ":"
-             + isVirusDamage[4] + ":" + isVirusDamage[5] + ":" + isVirusDamage[6] + ":" + isVirusDamage[7] + ":");
+        isVirusDamage[type] = true; //ダメージフラグをtrue
+        totalDamage += (isVirusDamage[type]) ? FORCE_WEIGHT[colonyLevel] * force[type].x : 0.0f; //ダメージ計算
+
+        //Debug.Log("isDamage::" + isVirusDamage[0] + ":" + isVirusDamage[1] + ":" + isVirusDamage[2] + ":" + isVirusDamage[3] + ":"
+        //     + isVirusDamage[4] + ":" + isVirusDamage[5] + ":" + isVirusDamage[6] + ":" + isVirusDamage[7] + ":");
     }
 
     /// <summary>
