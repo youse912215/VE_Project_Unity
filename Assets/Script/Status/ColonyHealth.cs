@@ -9,7 +9,7 @@ using static Call.ConstantValue;
 
 public class ColonyHealth : MonoBehaviour
 {
-    private float maxHp = 500000.0f; //最大HP
+    private float maxHp = 5000.0f; //最大HP
     public static float currentHp; //現在のHP
     public static int colonyLevel = 0; //コロニーレベル
     public static float exp = 0.0f; //現在の経験値
@@ -20,7 +20,9 @@ public class ColonyHealth : MonoBehaviour
     [SerializeField] private GameObject levelUpTimeline;
     [SerializeField] private GameObject levelupText;
     [SerializeField] private GameObject levelTextObjcet;
-    [SerializeField] private Slider slider; //Slider格納
+
+    [SerializeField] private Slider hpSlider; //Slider格納
+    [SerializeField] private Slider expSlider; //Slider格納
     [SerializeField] private ParticleSystem fire; //炎パーティクル
     private ParticleSystem fireEffect; //炎エフェクト
     private Text levelText;
@@ -54,7 +56,7 @@ public class ColonyHealth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        slider.value = 1; //Sliderを満タン
+        hpSlider.value = 1; //Sliderを満タン
         currentHp = maxHp; //現在のHPに最大HPを代入
         isFire = false;
         levelText = levelTextObjcet.GetComponent<Text>();
@@ -66,11 +68,12 @@ public class ColonyHealth : MonoBehaviour
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
 
-        levelText.text = (colonyLevel + 1).ToString(); //レベル表示
+        levelText.text =  "Colony Lv " + (colonyLevel + 1).ToString(); //レベル表示
         StartLevelEffect(); //レベルアップエフェクト開始
 
         /* Health管理 */
-        slider.value = currentHp / maxHp; //HPスライダーを更新
+        hpSlider.value = currentHp / maxHp; //HPスライダーを更新
+        expSlider.value = exp / EXP_LIST[colonyLevel];
 
         if (currentHp > DANGER_HEALTH) return;
         GetFireEffect(); //炎エフェクトを取得

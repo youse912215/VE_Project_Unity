@@ -22,8 +22,13 @@ public class MouseCollision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //キャンバスモードがTowerDefense以外のとき、処理をスキップ
+        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
+
         Cursor.lockState = CursorLockMode.Confined;
         transform.position = ReturnOnScreenMousePos(); //スクリーン→ワールド変換
+
+        //Debug.Log("マウス ( " + transform.localPosition.x + ", " + transform.localPosition.z + " )");
     }
 
     /// <summary>
