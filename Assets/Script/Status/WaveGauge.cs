@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using static CanvasManager;
-
+using static WarriorData;
 
 public class WaveGauge : MonoBehaviour
 {
@@ -17,14 +17,14 @@ public class WaveGauge : MonoBehaviour
 
     private void Start()
     {
-        maxGauge = WarriorData.ENEMY_COUNTS_PER_WAVE[currentDay];
+        maxGauge = ENEMY_COUNTS_PER_WAVE[0];
         slider.value = 1; //Sliderを満タン
         currentGauge = maxGauge; //現在のHPに最大HPを代入
     }
 
     private void Update()
     {
-        Debug.Log(currentGauge);
+        Debug.Log("残りウェーブゲージ::" + currentGauge + " 現在::" + currentDay + " DAY::" + Scene.DAY);
 
         //キャンバスモードがTowerDefense以外なら、処理をスキップ
         if (canvasMode != CANVAS_MODE.TOWER_DEFENCE_MODE) return;
@@ -32,10 +32,10 @@ public class WaveGauge : MonoBehaviour
         slider.value = (float)currentGauge / maxGauge; //ゲージを更新
 
         if(currentDay != Scene.DAY) return;
-
         if(slider.value > 0) return; 
-        currentGauge = maxGauge; //WAVEゲージをリセット
+        
         currentDay++; //次のDAYへ移行
+        currentGauge = ENEMY_COUNTS_PER_WAVE[currentDay - 1]; //WAVEゲージをリセット
     }
 
     public void UpdateGauge()

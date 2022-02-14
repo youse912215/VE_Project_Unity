@@ -66,7 +66,7 @@ public class ColonyHealth : MonoBehaviour
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
 
-        levelText.text = colonyLevel.ToString(); //レベル表示
+        levelText.text = (colonyLevel + 1).ToString(); //レベル表示
         StartLevelEffect(); //レベルアップエフェクト開始
 
         /* Health管理 */

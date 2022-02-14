@@ -26,7 +26,7 @@ public class WarriorData : MonoBehaviour
     public static Vector3 SPAWN_POS = new Vector3(40.0f, -2800.0f, 6000.0f);
     public static int deadCount; //€–S”
 
-    public const int ALL_ENEMEY_MAX = 10; //Å‘å”
+    public const int ALL_ENEMEY_MAX = 50; //Å‘å”
     public const int E_CATEGORY = 2; //ƒJƒeƒSƒŠ[”
     public const string ENEMY_HEAD_NAME = "Enemy"; //“G‚Ì–¼‘O
     public const float SPAWN_INTERVAL = 10.0f; //oŒ»ŠÔŠu

@@ -59,27 +59,27 @@ public class VirusMaterialData : MonoBehaviour
     /// </summary>
     public static void InitOwnedVirus()
     {
-        vMatOwned[0] = 20;
-        vMatOwned[1] = 30;
-        vMatOwned[2] = 10;
-        vMatOwned[3] = 20;
-        vMatOwned[4] = 30;
-        vMatOwned[5] = 10;
-        vMatOwned[6] = 20;
-        vMatOwned[7] = 30;
-        vMatOwned[8] = 10;
-        vMatOwned[9] = 20;
-        vMatOwned[10] = 30;
-        vMatOwned[11] = 40;
-        vMatOwned[12] = 10;
-        vMatOwned[13] = 40;
-        vMatOwned[14] = 10;
-        vMatOwned[15] = 10;
-        vMatOwned[16] = 10;
-        vMatOwned[17] = 10;
-        vMatOwned[18] = 40;
-        vMatOwned[19] = 10;
-        vMatOwned[20] = 10;
+        vMatOwned[0] = 120;
+        vMatOwned[1] = 130;
+        vMatOwned[2] = 110;
+        vMatOwned[3] = 120;
+        vMatOwned[4] = 130;
+        vMatOwned[5] = 110;
+        vMatOwned[6] = 120;
+        vMatOwned[7] = 130;
+        vMatOwned[8] = 110;
+        vMatOwned[9] = 120;
+        vMatOwned[10] = 130;
+        vMatOwned[11] = 140;
+        vMatOwned[12] = 110;
+        vMatOwned[13] = 140;
+        vMatOwned[14] = 110;
+        vMatOwned[15] = 110;
+        vMatOwned[16] = 110;
+        vMatOwned[17] = 110;
+        vMatOwned[18] = 140;
+        vMatOwned[19] = 110;
+        vMatOwned[20] = 110;
         
     }
 
