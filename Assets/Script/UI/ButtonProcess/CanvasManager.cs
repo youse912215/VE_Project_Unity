@@ -41,7 +41,7 @@ public class CanvasManager : MonoBehaviour
        TOWER_DEFENCE_MODE,
     }
 
-    public static CANVAS_MODE canvasMode = CANVAS_MODE.CREATE_MODE;
+    public static CANVAS_MODE canvasMode = CANVAS_MODE.SUPPLIES_MODE;
 
     private readonly Vector3 BACK_POS = new Vector3(3000.0f, 0.0f, 0.0f);
 
@@ -51,15 +51,27 @@ public class CanvasManager : MonoBehaviour
         actV = GetOtherScriptObject<ActVirus>(act);
 
         //èâä˙à íu
-        createCanvas.transform.localPosition = Vector3.zero;
-        prepareCanvas.transform.localPosition = BACK_POS;
-        suppliesCanvas.transform.localPosition = BACK_POS;
-        currentCountCanvas.transform.localPosition = Vector3.zero;
-        optionCanvas.transform.localPosition = BACK_POS;
-        manualImageCanvas.transform.localPosition = BACK_POS;
-        manualButtonCanvas.transform.localPosition = BACK_POS;
-        simulationCanvas.transform.localPosition = Vector3.zero;
-        mainCanvas.transform.localPosition = BACK_POS;
+        isSupplies = true;
+        SetCanvas(false, false, true, false, false, false, false, true, false);
+    }
+
+    private Vector3 Vec3Pos(bool isActive)
+    {
+        return (isActive) ? Vector3.zero : BACK_POS;
+    }
+
+    private void SetCanvas(bool cre, bool pre, bool sup, bool cou, bool opt, bool img,
+        bool but, bool sim, bool main)
+    {
+        createCanvas.transform.localPosition = Vec3Pos(cre);
+        prepareCanvas.transform.localPosition = Vec3Pos(pre);
+        suppliesCanvas.transform.localPosition = Vec3Pos(sup);
+        currentCountCanvas.transform.localPosition = Vec3Pos(cou);
+        optionCanvas.transform.localPosition = Vec3Pos(opt);
+        manualImageCanvas.transform.localPosition = Vec3Pos(img);
+        manualButtonCanvas.transform.localPosition = Vec3Pos(but);
+        simulationCanvas.transform.localPosition = Vec3Pos(sim);
+        mainCanvas.transform.localPosition = Vec3Pos(main);
     }
 
     /// <summary>
@@ -69,15 +81,7 @@ public class CanvasManager : MonoBehaviour
     {
         syV.PushVirusButton((int)currentCode);
         canvasMode = CANVAS_MODE.CREATE_MODE;
-        createCanvas.transform.localPosition = Vector3.zero;
-        prepareCanvas.transform.localPosition = BACK_POS;
-        suppliesCanvas.transform.localPosition = BACK_POS;
-        currentCountCanvas.transform.localPosition = Vector3.zero;
-        optionCanvas.transform.localPosition = BACK_POS;
-        manualImageCanvas.transform.localPosition = BACK_POS;
-        manualButtonCanvas.transform.localPosition = BACK_POS;
-        simulationCanvas.transform.localPosition = Vector3.zero;
-        mainCanvas.transform.localPosition = BACK_POS;
+        SetCanvas(true, false, false, true, false, false, false, true, false);
     }
 
     /// <summary>
@@ -87,15 +91,7 @@ public class CanvasManager : MonoBehaviour
     {
         syV.PushVirusButton((int)currentCode);
         canvasMode = CANVAS_MODE.PREPARE_MODE;
-        createCanvas.transform.localPosition = BACK_POS;
-        prepareCanvas.transform.localPosition = Vector3.zero;
-        suppliesCanvas.transform.localPosition = BACK_POS;
-        currentCountCanvas.transform.localPosition = Vector3.zero;
-        optionCanvas.transform.localPosition = BACK_POS;
-        manualImageCanvas.transform.localPosition = BACK_POS;
-        manualButtonCanvas.transform.localPosition = BACK_POS;
-        simulationCanvas.transform.localPosition = Vector3.zero;
-        mainCanvas.transform.localPosition = BACK_POS;
+        SetCanvas(false, true, false, true, false, false, false, true, false);
     }
 
     /// <summary>
@@ -105,31 +101,15 @@ public class CanvasManager : MonoBehaviour
     {
         syV.PushVirusButton((int)currentCode);
         canvasMode = CANVAS_MODE.SUPPLIES_MODE;
-        createCanvas.transform.localPosition = BACK_POS;
-        prepareCanvas.transform.localPosition = BACK_POS;
-        suppliesCanvas.transform.localPosition = Vector3.zero;
-        currentCountCanvas.transform.localPosition = BACK_POS;
-        optionCanvas.transform.localPosition = BACK_POS;
-        manualImageCanvas.transform.localPosition = BACK_POS;
-        manualButtonCanvas.transform.localPosition = BACK_POS;
-        simulationCanvas.transform.localPosition = Vector3.zero;
-        mainCanvas.transform.localPosition = BACK_POS;
         isSupplies = true;
+        SetCanvas(false, false, true, false, false, false, false, true, false);
     }
 
     public void PushOptionButton()
     {
         syV.PushVirusButton((int)currentCode);
         canvasMode = CANVAS_MODE.OPTION_MODE;
-        createCanvas.transform.localPosition = BACK_POS;
-        prepareCanvas.transform.localPosition = BACK_POS;
-        suppliesCanvas.transform.localPosition = BACK_POS;
-        currentCountCanvas.transform.localPosition = BACK_POS;
-        optionCanvas.transform.localPosition = Vector3.zero;
-        manualImageCanvas.transform.localPosition = BACK_POS;
-        manualButtonCanvas.transform.localPosition = BACK_POS;
-        simulationCanvas.transform.localPosition = Vector3.zero;
-        mainCanvas.transform.localPosition = BACK_POS;
+        SetCanvas(false, false, false, false, true, false, false, true, false);
 
         actV.SetUIActivity(false);
         actV.comCanvas.SetActive(true);
@@ -144,29 +124,13 @@ public class CanvasManager : MonoBehaviour
     public void PushManualButton()
     {
         canvasMode = CANVAS_MODE.MANUAL_MODE;
-        createCanvas.transform.localPosition = BACK_POS;
-        prepareCanvas.transform.localPosition = BACK_POS;
-        suppliesCanvas.transform.localPosition = BACK_POS;
-        currentCountCanvas.transform.localPosition = BACK_POS;
-        optionCanvas.transform.localPosition = BACK_POS;
-        manualImageCanvas.transform.localPosition = Vector3.zero;
-        manualButtonCanvas.transform.localPosition = Vector3.zero;
-        simulationCanvas.transform.localPosition = BACK_POS;
-        mainCanvas.transform.localPosition = BACK_POS;
+        SetCanvas(false, false, false, false, false, true, true, false, false);
     }
 
     public void PushDefenceButton()
     {
         canvasMode = CANVAS_MODE.TOWER_DEFENCE_MODE;
-        createCanvas.transform.localPosition = BACK_POS;
-        prepareCanvas.transform.localPosition = BACK_POS;
-        suppliesCanvas.transform.localPosition = BACK_POS;
-        currentCountCanvas.transform.localPosition = BACK_POS;
-        optionCanvas.transform.localPosition = BACK_POS;
-        manualImageCanvas.transform.localPosition = BACK_POS;
-        manualButtonCanvas.transform.localPosition = BACK_POS;
-        simulationCanvas.transform.localPosition = BACK_POS;
-        mainCanvas.transform.localPosition = Vector3.zero;
+        SetCanvas(false, false, false, false, false, false, false, false, true);
 
         actV.SetUIActivity(true);
         
