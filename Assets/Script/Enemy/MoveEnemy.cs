@@ -27,7 +27,7 @@ public class MoveEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speed = GetMoveSpeed(); //ˆÚ“®‘¬“x‚ðŽæ“¾
+        speed = GetMoveSpeed() - MIN_SPEED; //ˆÚ“®‘¬“x‚ðŽæ“¾
         InitTransform();
         ps = GetComponentsInChildren<ParticleSystem>();
         for (int i = 0; i < ps.Length; ++i) ps[i].Stop();

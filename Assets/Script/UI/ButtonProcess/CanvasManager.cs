@@ -118,7 +118,6 @@ public class CanvasManager : MonoBehaviour
 
         if (WaveGauge.currentDay == Scene.DAY) return;
         Scene.DAY++;
-        Debug.Log("[DAY " + Scene.DAY + " ]");
     }
 
     public void PushManualButton()

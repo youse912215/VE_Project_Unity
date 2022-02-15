@@ -31,7 +31,8 @@ public class EnemyHealth : MonoBehaviour
     private float maxHp; //最大HP
     private const float INIT_HEALTH = 300.0f; //初期HP固定値
     private const float HEALTH_WEIGHT = 500.0f;
-    private const float ATTACK_DAMAGE = 1.5f; //攻撃力
+    private const float ATTACK_DAMAGE = 1.0f; //攻撃力
+    private float confirmDamage;
     private bool isImpactSet; //衝撃エフェクトをセットしたかどうか
     private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
     private const float EFFECT_HEIGHT = 250.0f; //エフェクト高さ
@@ -67,10 +68,11 @@ public class EnemyHealth : MonoBehaviour
         mE = this.gameObject.GetComponent<MoveEnemy>();
         dM = this.gameObject.GetComponent<DamageManager>();
 
-        enemyRank = (int)Integerization(rand) % MAX_RANK; //階級を取得
+        enemyRank = ((int)Integerization(rand) % MAX_RANK) + WaveGauge.currentDay; //階級を取得
         pDefence = GetArmor(); //リストからシールド量を取得
         maxHp = INIT_HEALTH * (enemyRank + 1) + HEALTH_WEIGHT * WaveGauge.currentDay; //最大HPを取得
         currentHp = maxHp; //現在のHPに最大HPを代入
+        confirmDamage = (Integerization(rand) % enemyRank) + ATTACK_DAMAGE;
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
         steamEffect = Instantiate(steamPs); //エフェクト生成
@@ -118,7 +120,7 @@ public class EnemyHealth : MonoBehaviour
     /// <returns></returns>
     public bool InvalidVirus(int type)
     {
-        return pDefence > force[type].z; //シールド量が貫通力を上回っているか
+        return pDefence > force[type].z + (1.1f * (colonyLevel - 1)); //シールド量が貫通力を上回っているか
     }
 
     /// <summary>
@@ -143,7 +145,7 @@ public class EnemyHealth : MonoBehaviour
     {
         if (transform.position.z <= TARGET_POS)
         {
-            ColonyHealth.currentHp -= Integerization(rand) % ATTACK_DAMAGE; //コロニーへの攻撃
+            ColonyHealth.currentHp -= confirmDamage; //コロニーへの攻撃
 
             if (isImpactSet) return; //衝撃波をセットしているなら、処理をスキップ            
             if (mE.startPos != 0) StartCoroutine("RotationBody");

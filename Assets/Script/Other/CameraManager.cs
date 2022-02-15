@@ -26,6 +26,7 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private GameObject subCam1;
     [SerializeField] private GameObject subCam2;
+    [SerializeField] private GameObject mousePointer;
     GameObject obj;
     ActVirus actV;
 
@@ -46,7 +47,6 @@ public class CameraManager : MonoBehaviour
     private const float MOUSE_DIFF_POS = 55.0f; //マウスの差分座標
 
     public int owned = 0;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -78,6 +78,10 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //キャンバスモードがTowerDefense以外のとき、処理をスキップ
+        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
+        MoveCamera();
+
         /* 使用可能ウイルス数を更新 */
         owned = vCreationCount[virusSetList[currentSetNum]]
             - vSetCount[virusSetList[currentSetNum]]; //現在の保有ウイルス数UIを更新
@@ -92,6 +96,14 @@ public class CameraManager : MonoBehaviour
         /* ボタン初期化処理 */
         if (isSetButton) return;
         StartCoroutine("InitSetButton"); //ボタンの初期化割り当て
+    }
+
+    private void MoveCamera()
+    {
+        //if (mousePointer.transform.localPosition.z >= 3252.0f
+        //    && transform.position.z < 4000.0f) transform.position += new Vector3(0, 0, 100.0f);
+        //if (mousePointer.transform.localPosition.z >= 3252.0f
+        //    && transform.position.z < 4000.0f) transform.position += new Vector3(0, 0, 100.0f);
     }
 
     /// <summary>

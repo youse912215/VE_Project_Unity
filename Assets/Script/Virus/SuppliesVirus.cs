@@ -9,6 +9,7 @@ using static RAND.CreateRandom;
 using static Call.CommonFunction;
 using static Scene;
 using static SynthesizeVirus;
+using static Call.VirusData;
 
 public class SuppliesVirus : MonoBehaviour
 {
@@ -18,19 +19,36 @@ public class SuppliesVirus : MonoBehaviour
     private List<int> suppliesItemList = new List<int> { 0, 0, 0, 0 };
     private List<int> getItemNumList = new List<int> { 99, 99, 99, 99 };
 
-    private const int MAX_GET_NUM = 5;
+    private const int MAX_GET_NUM = 4;
     private int dayCount;
+
+    public static Text[] sup = new Text[V_CATEGORY];
+    public static GameObject[] supText = new GameObject[V_CATEGORY];
 
     // Start is called before the first frame update
     void Start()
     {
+        this.GetComponent<SynthesizeVirus>().InitText(V_CATEGORY, "supText", supText, sup);
         dayCount = 1;
         isGetItem = false;
         isSupplies = false;
+        SetSuppliesMaterial();
     }
 
     // Update is called once per frame
     void Update()
+    {
+        //キャンバスモードがTowerDefense以外のとき、処理をスキップ
+        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.SUPPLIES_MODE) return;
+
+        UpdateText();
+
+        if (dayCount != DAY) return;
+        if (!isSupplies) return;
+        SetSuppliesMaterial();
+        Debug.Log("初期化");
+    }
+    private void UpdateText()
     {
         sup[0].text = VIRUS_NAME[suppliesItemList[0]];
         sup[1].text = VIRUS_NAME[suppliesItemList[1]];
@@ -40,12 +58,12 @@ public class SuppliesVirus : MonoBehaviour
         sup[5].text = "x" + getItemNumList[1].ToString();
         sup[6].text = "x" + getItemNumList[2].ToString();
         sup[7].text = "x" + getItemNumList[3].ToString();
+    }
 
-        if (dayCount != DAY) return;
-        if (!isSupplies) return;
+    private void SetSuppliesMaterial()
+    {
         StartCoroutine(GetRandomInformation());
-        suppliesItemList.RemoveRange(0, MATERIAL_LIST_NUM);
-        getItemNumList.RemoveRange(0, MATERIAL_LIST_NUM);
+        
 
         supText[0].transform.parent.gameObject.transform.localPosition = Vector3.zero;
 
@@ -53,6 +71,9 @@ public class SuppliesVirus : MonoBehaviour
         isSupplies = false;
         dayCount++;
         StopCoroutine(GetRandomInformation());
+        //suppliesItemList.RemoveRange(0, MATERIAL_LIST_NUM);
+        //getItemNumList.RemoveRange(0, MATERIAL_LIST_NUM);
+        
     }
 
     public void PushGetSuppliesButton()
@@ -67,9 +88,10 @@ public class SuppliesVirus : MonoBehaviour
             new Vector3(1000, 1000, 1000);
     }
 
-    private void GetItem(List<int> list, int n)
+    private void GetItem(List<int> list, int n, int i)
     {
-        list.Add((int)Integerization(rand % n));
+        //list.Add((int)Integerization(rand % n));
+        list[i] = ((int)Integerization(rand % n)) + 1;
 
         if (list != getItemNumList) return;
         if (list[list.Count() - 1] == 0) list[list.Count() - 1]++;
@@ -89,8 +111,8 @@ public class SuppliesVirus : MonoBehaviour
         for (int i = 0; i < MATERIAL_LIST_NUM; ++i)
         {
             yield return new WaitForSeconds(0.1f);
-            GetItem(suppliesItemList, vMatNam);
-            GetItem(getItemNumList, MAX_GET_NUM);
+            GetItem(suppliesItemList, vMatNam, i);
+            GetItem(getItemNumList, MAX_GET_NUM, i);
         }
     }
 }

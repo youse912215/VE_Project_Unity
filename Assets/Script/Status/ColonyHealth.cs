@@ -9,7 +9,7 @@ using static Call.ConstantValue;
 
 public class ColonyHealth : MonoBehaviour
 {
-    private float maxHp = 5000.0f; //最大HP
+    public static float maxHp = 5000.0f; //最大HP
     public static float currentHp; //現在のHP
     public static int colonyLevel = 0; //コロニーレベル
     public static float exp = 0.0f; //現在の経験値
@@ -28,6 +28,8 @@ public class ColonyHealth : MonoBehaviour
     private Text levelText;
     private bool isFire; //炎エフェクトフラグ
     public static bool isLevelUp = false;
+
+    [SerializeField] private GameObject redd;
 
     //レベルごとの経験値リスト（必要経験値）
     public static readonly List<float> EXP_LIST = new List<float>{
@@ -62,13 +64,20 @@ public class ColonyHealth : MonoBehaviour
         levelText = levelTextObjcet.GetComponent<Text>();
     }
 
+    
+
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("HP::" + currentHp + " / " + maxHp);
+
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
 
-        levelText.text =  "Colony Lv " + (colonyLevel + 1).ToString(); //レベル表示
+        if (Input.GetKeyDown(KeyCode.A))
+            redd.GetComponent<StrongEnemyEvent>().StartCoroutine("WarningCoroutine");
+
+        levelText.text = "Colony Lv " + (colonyLevel + 1).ToString(); //レベル表示
         StartLevelEffect(); //レベルアップエフェクト開始
 
         /* Health管理 */

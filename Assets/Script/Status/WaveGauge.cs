@@ -24,10 +24,12 @@ public class WaveGauge : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("残りウェーブゲージ::" + currentGauge + " 現在::" + currentDay + " DAY::" + Scene.DAY);
+        //Debug.Log("残りウェーブゲージ::" + currentGauge + " 現在::" + currentDay + " DAY::" + Scene.DAY);
 
         //キャンバスモードがTowerDefense以外なら、処理をスキップ
         if (canvasMode != CANVAS_MODE.TOWER_DEFENCE_MODE) return;
+
+        if (Input.GetKeyDown(KeyCode.A)) Destroy(GameObject.Find("YellowDamage"));
         
         slider.value = (float)currentGauge / maxGauge; //ゲージを更新
 
@@ -35,11 +37,18 @@ public class WaveGauge : MonoBehaviour
         if(slider.value > 0) return; 
         
         currentDay++; //次のDAYへ移行
-        currentGauge = ENEMY_COUNTS_PER_WAVE[currentDay - 1]; //WAVEゲージをリセット
+        maxGauge = ENEMY_COUNTS_PER_WAVE[currentDay - 1]; //WAVEゲージをリセット
+        currentGauge = maxGauge;
+        deadCount = 0;
+        this.GetComponent<ActEnemy>().ResetSurvivalCount();
+        this.GetComponent<CanvasManager>().PushSuppliesScreenButton();
+
+        Scene.DAY++;
+        //Debug.Log("[DAY " + Scene.DAY + " ]");
     }
 
     public void UpdateGauge()
     {
-        currentGauge = maxGauge - WarriorData.deadCount;
+        currentGauge = maxGauge - deadCount;
     }
 }

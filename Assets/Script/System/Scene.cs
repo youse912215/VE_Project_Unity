@@ -11,7 +11,7 @@ public class Scene : MonoBehaviour
 {
     public static int sceneName; //ƒV[ƒ“”Ô†
 
-    public static int DAY = 1; //1“ú–Ú
+    public static int DAY = 0; //1“ú–Ú
     private const int WIN_COUNT = 10000;
 
     // Start is called before the first frame update

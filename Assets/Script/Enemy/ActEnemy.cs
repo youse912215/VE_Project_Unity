@@ -32,6 +32,8 @@ public class ActEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log("敵の数" + CulcEnemyCount(eParents) + "  ウェーブの敵:" + ENEMY_COUNTS_PER_WAVE[WaveGauge.currentDay - 1]);
+
         spawnTime++; //出現時間経過
         if (spawnTime < SPAWN_INTERVAL) return; //出現間隔未満なら、処理をスキップ
         SpawnEnemy(); //敵を出現させる
@@ -40,7 +42,7 @@ public class ActEnemy : MonoBehaviour
     private void CreateEnemy(int n)
     {
         //合計生存数がALL_ENEMEY_MAX * E_CATEGORY以上なら、スキップを処理する
-        if (CulcEnemyCount(eParents) >= ALL_ENEMEY_MAX * E_CATEGORY) return;
+        if (CulcEnemyCount(eParents) >= /*ALL_ENEMEY_MAX * E_CATEGORY*/ENEMY_COUNTS_PER_WAVE[WaveGauge.currentDay - 1]) return;
 
         eChildren[n, eParents[n].survivalCount].isActivity = true; //生存状態をtrue     
         ePrefab = GameObject.Find(ENEMY_HEAD_NAME + n.ToString()); //プレファブを取得
@@ -53,6 +55,12 @@ public class ActEnemy : MonoBehaviour
         eObject[n, eParents[n].survivalCount].SetActive(true); //ゲームオブジェクトをアクティブにする
         mE.isStart = true;
         eParents[n].survivalCount++; //最後に一体追加
+    }
+
+    public void ResetSurvivalCount()
+    {
+        eParents[0].survivalCount = 0;
+        eParents[1].survivalCount = 0;
     }
 
     /// <summary>

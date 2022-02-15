@@ -16,9 +16,9 @@ public class StrongEnemyEvent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GetComponent<AudioSource>().Stop();
         image = GetComponent<Image>();
         this.image.enabled = false;
-        StartCoroutine("Warning");
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public class StrongEnemyEvent : MonoBehaviour
     /// <summary>
     /// Œx‚·‚éƒRƒ‹[ƒ`ƒ“
     /// </summary>
-    IEnumerator Warning()
+    public IEnumerator WarningCoroutine()
     {
         //‰Šú‰»
         GetComponent<AudioSource>().Play();

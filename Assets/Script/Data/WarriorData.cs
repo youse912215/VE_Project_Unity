@@ -38,13 +38,13 @@ public class WarriorData : MonoBehaviour
     public static readonly List<float> PENETRATION_DEFENCE_LIST0 =
         new List<float> {
             0.0f, 0.25f, 0.50f, 0.75f, 1.0f,
-            1.5f, 2.0f, 2.5f, 3.0f, 3.5f
+            1.5f, 2.0f, 2.5f, 3.0f, 3.5f, 4.0f, 4.5f
         }; //ä—í ñhå‰ÉäÉXÉg0
     //ìG1
     public static readonly List<float> PENETRATION_DEFENCE_LIST1 =
         new List<float> {
             1.25f, 1.50f, 1.75f, 2.00f, 2.25f,
-            2.50f, 3.0f, 3.75f, 4.5f, 5.0f
+            2.50f, 3.0f, 3.75f, 4.5f, 5.0f, 5.5f, 6.0f
         }; //ä—í ñhå‰ÉäÉXÉg1
 
     public static readonly List<int> ENEMY_COUNTS_PER_WAVE =

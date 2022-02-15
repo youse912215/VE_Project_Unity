@@ -35,6 +35,7 @@ public class ActVirus : MonoBehaviour
     [SerializeField] public GameObject subCamera;
     [SerializeField] public GameObject vButton;
     [SerializeField] public GameObject mainScreenUI;
+    [SerializeField] public GameObject healthUI;
    
     // Start is called before the first frame update
     void Start()
@@ -56,6 +57,7 @@ public class ActVirus : MonoBehaviour
         comCanvas.SetActive(true);
         subCamera.SetActive(false);
         mainScreenUI.SetActive(false);
+        healthUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -204,5 +206,6 @@ public class ActVirus : MonoBehaviour
         subCamera.SetActive(state);
         vButton.SetActive(state);
         mainScreenUI.SetActive(state);
+        healthUI.SetActive(state);
     }
 }
