@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class LoadingManager : MonoBehaviour
 {
-    private float count = 0.0f;
-    private bool isLoading = true;
+    private float count;
+    public bool isLoading;
 
     [SerializeField] private Image loadImage;
     [SerializeField] private Text hintText;
@@ -15,13 +15,14 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
-        
+        count = 0.0f;
+        isLoading = true;
     }
 
     // Start is called before the first frame update
     private void Update()
     {
-        hintText.text = "Day" + Scene.DAY + " end" + comma[(int)count];
+        hintText.text = "Day " + (Scene.DAY + 1).ToString() + comma[(int)count];
 
         if(isLoading) StartCoroutine(CountLoadTime());
 
@@ -40,7 +41,7 @@ public class LoadingManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f);
             loadImage.color += new Color(0.002f, 0.002f, 0.002f, 0);
-            count += 0.01f;
+            count += 0.005f;
         }
         
     }

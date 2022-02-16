@@ -20,7 +20,7 @@ public class DamageManager : MonoBehaviour
     /// <returns></returns>
     public float GetExp(int enemyRank)
     {
-        return  AVAILABLE_MAX_EXP * (enemyRank  + 1) * WaveGauge.currentDay * WaveGauge.currentDay;
+        return  AVAILABLE_MAX_EXP + (enemyRank  + 1) * WaveGauge.currentDay * WaveGauge.currentDay;
     }
 
     /// <summary>

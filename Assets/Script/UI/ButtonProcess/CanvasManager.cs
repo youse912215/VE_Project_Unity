@@ -47,7 +47,7 @@ public class CanvasManager : MonoBehaviour
         TOWER_DEFENCE_MODE,
     }
 
-    public static CANVAS_MODE canvasMode = CANVAS_MODE.SUPPLIES_MODE;
+    public static CANVAS_MODE canvasMode;
 
     private readonly Vector3 BACK_POS = new Vector3(3000.0f, 0.0f, 0.0f);
 
@@ -55,6 +55,8 @@ public class CanvasManager : MonoBehaviour
     {
         syV = GetOtherScriptObject<SynthesizeVirus>(obj);
         actV = GetOtherScriptObject<ActVirus>(act);
+
+        canvasMode = CANVAS_MODE.SUPPLIES_MODE;
 
         //èâä˙à íu
         isSupplies = true;
@@ -147,8 +149,8 @@ public class CanvasManager : MonoBehaviour
 
             PushCreateScreenButton();
 
-            if (WaveGauge.currentDay == Scene.DAY) return;
-            Scene.DAY++;
+            //if (WaveGauge.currentDay == Scene.DAY) return;
+            //Scene.DAY++;
         }
         else
         {
@@ -170,8 +172,12 @@ public class CanvasManager : MonoBehaviour
                 actV.vParents[i].creationCount = vCreationCount[i];
             }
 
+            if (WaveGauge.currentDay != Scene.DAY) Scene.DAY++;
+
             if (ImageObj == null) return;
             ImageObj.SetActive(true);
+
+            
         }
     }
 

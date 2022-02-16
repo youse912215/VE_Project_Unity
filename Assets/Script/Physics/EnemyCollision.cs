@@ -128,7 +128,7 @@ public class EnemyCollision : MonoBehaviour
     {
         var ps = obj.GetComponentsInChildren<ParticleSystem>(); //範囲に入った敵のパーティクルを取得
         var renderer = obj.GetComponentsInChildren<ParticleSystemRenderer>(); // //範囲に入った敵のパーティクルレンダラーを取得
-        SetMaterials(obj);
+        SetMaterials(obj, MaterialManager.poison);
         renderer[0].material = actV.defaultPs; //マテリアルをウイルスの種類によって変更
         ps[0].Play(); //パーティクル発生
         renderer[1].material = actV.defaultPs; //マテリアルをウイルスの種類によって変更

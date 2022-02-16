@@ -9,11 +9,11 @@ using static Call.ConstantValue;
 
 public class ColonyHealth : MonoBehaviour
 {
-    public static float maxHp = 5000.0f; //最大HP
+    public static float maxHp; //最大HP
     public static float currentHp; //現在のHP
-    public static int colonyLevel = 0; //コロニーレベル
-    public static float exp = 0.0f; //現在の経験値
-    private const float DANGER_HEALTH = 1000.0f; //危険状態時のHP
+    public static int colonyLevel; //コロニーレベル
+    public static float exp; //現在の経験値
+    private const float DANGER_HEALTH = 1500.0f; //危険状態時のHP
 
     private PlayableDirector playableDirector;
     [SerializeField] private GameObject time;
@@ -58,6 +58,9 @@ public class ColonyHealth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        exp = 0.0f;
+        colonyLevel = 0;
+        maxHp = 10000.0f;
         hpSlider.value = 1; //Sliderを満タン
         currentHp = maxHp; //現在のHPに最大HPを代入
         isFire = false;
@@ -69,7 +72,7 @@ public class ColonyHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("HP::" + currentHp + " / " + maxHp);
+        //Debug.Log("HP::" + currentHp + " / " + maxHp);
 
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;

@@ -37,8 +37,8 @@ public class WarriorData : MonoBehaviour
     //“G0
     public static readonly List<float> PENETRATION_DEFENCE_LIST0 =
         new List<float> {
-            0.0f, 0.25f, 0.50f, 0.75f, 1.0f,
-            1.5f, 2.0f, 2.5f, 3.0f, 3.5f, 4.0f, 4.5f
+            0.0f, 0.20f, 0.40f, 0.60f, 0.80f,
+            1.0f, 1.2f, 1.4f, 1.7f, 2.0f, 2.5f, 3.0f
         }; //ŠÑ’Ê–hŒäƒŠƒXƒg0
     //“G1
     public static readonly List<float> PENETRATION_DEFENCE_LIST1 =

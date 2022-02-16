@@ -21,34 +21,36 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private ParticleSystem steamPs; //steamのパーティクルシステム
     [SerializeField] private ParticleSystem jewelPs; //宝石のパーティクルシステム
 
+    [SerializeField] private GameObject[] body = new GameObject[5];
+    [SerializeField] private Material mate;
+
     private ParticleSystem impactEffect; //衝撃波のエフェクト
     private ParticleSystem impactEffect2; //衝撃波のエフェクト2
     private ParticleSystem bloodEffect; //衝撃波のエフェクト
     private ParticleSystem steamEffect; //スチームのエフェクト
     private ParticleSystem jewelEffect; //宝石のエフェクト
 
-    private int enemyRank; //階級
+    public int enemyRank; //階級
     private const int MAX_RANK = 5; //最大階級
     private float currentHp; //現在のHP
     private float maxHp; //最大HP
     private const float INIT_HEALTH = 300.0f; //初期HP固定値
     private const float HEALTH_WEIGHT = 500.0f;
-    private const float ATTACK_DAMAGE = 1.0f; //攻撃力
+    private const float ATTACK_DAMAGE = 0.5f; //攻撃力
     private float confirmDamage;
     private bool isImpactSet; //衝撃エフェクトをセットしたかどうか
     private const float IMPACT_POS_Z = -170.0f; //衝撃エフェクトのZ座標
     private const float EFFECT_HEIGHT = 250.0f; //エフェクト高さ
     private const int ENEMEY1_LAYER = 7; //敵1のレイヤ番号
     private readonly Vector3 STEAM_POS = new Vector3(-65.0f, 145.0f, -ONE_CIRCLE);
-    private int getCount = 0;
-    private int getMaterial = 99;
+    private int getCount;
+    private int getMaterial;
     private const int MAX_DROP = 5; //最大ドロップ数
     private List<bool> isVirusDamage = new List<bool> { false, false, false, false, false, false, false, false };
-    private float pDefence = 0.0f; //シールド量
+    private float pDefence; //シールド量
 
     /* public */
-    public float totalDamage = 0.0f; //合計ダメージ
-    private float takenDamage = 0.0f;
+    public float totalDamage; //合計ダメージ
     public bool isInfection; //感染したかどうか
     public bool isDead; //死んだかどうか
 
@@ -72,15 +74,24 @@ public class EnemyHealth : MonoBehaviour
         mE = this.gameObject.GetComponent<MoveEnemy>();
         dM = this.gameObject.GetComponent<DamageManager>();
 
+        getCount = 0;
+        getMaterial = 99;
+        pDefence = 0.0f;
+        totalDamage = 0.0f;
+
         enemyRank = ((int)Integerization(rand) % MAX_RANK) + WaveGauge.currentDay; //階級を取得
         pDefence = GetArmor(); //リストからシールド量を取得
         maxHp = INIT_HEALTH * (enemyRank + 1) + HEALTH_WEIGHT * WaveGauge.currentDay; //最大HPを取得
         currentHp = maxHp; //現在のHPに最大HPを代入
-        confirmDamage = (Integerization(rand) % enemyRank) + ATTACK_DAMAGE;
+        confirmDamage = (enemyRank * 0.5f) + ATTACK_DAMAGE;
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
+
+        if (enemyRank >= 0) {
+            for (int i = 0; i < 5; ++i) BlinkingEnemy.SetMaterials(body[i], mate);
+        }
         steamEffect = Instantiate(steamPs); //エフェクト生成
-        steamEffect.Play(); //エフェクト開始    
+        steamEffect.Play(); //エフェクト開始
 
         steamEffect.transform.rotation =
                 Quaternion.Euler(new Vector3(ONE_CIRCLE, QUARTER_CIRCLE * mE.startPos, 0.0f));
@@ -124,7 +135,7 @@ public class EnemyHealth : MonoBehaviour
     /// <returns></returns>
     public bool InvalidVirus(int type)
     {
-        return pDefence > force[type].z + (1.1f * (colonyLevel - 1)); //シールド量が貫通力を上回っているか
+        return pDefence > force[type].z + (1.1f * colonyLevel); //シールド量が貫通力を上回っているか
     }
 
     /// <summary>
@@ -178,10 +189,14 @@ public class EnemyHealth : MonoBehaviour
     private void DeadAction()
     {
         if (!gameObject) return;
+
+        var gM = GameObject.Find("GameManager");
+        gM.GetComponent<WaveGauge>().seBlood.PlayOneShot(gM.GetComponent<WaveGauge>().seBlood.clip);
+
         exp += dM.GetExp(enemyRank); //経験値取得
         colonyLevel += dM.CulculationColonyLevel(); //コロニーレベルを計算
         deadCount++; //累計の死亡数をカウント
-        GameObject.Find("GameManager").GetComponent<WaveGauge>().UpdateGauge(); //ゲージを更新
+        gM.GetComponent<WaveGauge>().UpdateGauge(); //ゲージを更新
         SetStopAction(impactEffect, true); //衝撃エフェクトを削除
         SetStopAction(impactEffect2, true); //衝撃エフェクトを削除
         if (this.gameObject.layer == ENEMEY1_LAYER)

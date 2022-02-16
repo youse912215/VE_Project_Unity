@@ -51,6 +51,8 @@ public class ActVirus : MonoBehaviour
 
         for (int i = 0; i < V_CATEGORY; ++i){
             vParents[i].tag = VirusTagName[i]; //タグを保存
+            vSetCount[i] = 0;
+            vCreationCount[i] = 0;
         }
 
         //キャンバス上のUIの初期化

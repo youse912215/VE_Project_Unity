@@ -46,10 +46,13 @@ public class CameraManager : MonoBehaviour
     private readonly Vector2 CLICK_POS = new Vector2(1600.0f, 350.0f); //クリックできる位置
     private const float MOUSE_DIFF_POS = 55.0f; //マウスの差分座標
 
-    public int owned = 0;
+    public int owned;
+
     // Start is called before the first frame update
     void Start()
     {
+        owned = 0;
+
         pMenuButton = GetHierarchyObject("ParentMenuButton");
         pVirusButton = GetHierarchyObject("ParentVirusButton");
 

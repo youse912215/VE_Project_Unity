@@ -39,13 +39,16 @@ public class SuppliesVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(dayCount);
+
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
-        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.SUPPLIES_MODE) return; 
+        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.SUPPLIES_MODE) return;
         UpdateText();
 
         if (dayCount != DAY) return;
         if (!isSupplies) return;
         SetSuppliesMaterial();
+        dayCount++;
     }
     private void UpdateText()
     {
@@ -116,7 +119,7 @@ public class SuppliesVirus : MonoBehaviour
                 isSupplies = false;
                 isGetItem = false;
                 endCoroutine = true;
-                dayCount++;
+                
             }
         }
     }

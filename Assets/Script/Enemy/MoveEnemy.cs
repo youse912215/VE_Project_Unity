@@ -22,8 +22,6 @@ public class MoveEnemy : MonoBehaviour
     private ParticleSystem[] ps = new ParticleSystem[3];
     private Vector3 movement;
 
-    private const float COOL_DOWN = 50.0f;
-
     // Start is called before the first frame update
     void Start()
     {
