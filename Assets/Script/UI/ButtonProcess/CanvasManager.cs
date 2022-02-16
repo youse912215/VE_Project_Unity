@@ -27,6 +27,10 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] private GameObject loadCanvas;
     [SerializeField] private GameObject backgroundCanvas;
 
+    [SerializeField] private AudioSource bgmSimulate;
+    [SerializeField] private AudioSource bgmTowerDefence;
+    [SerializeField] private AudioSource seClick;
+
     GameObject obj;
     SynthesizeVirus syV;
 
@@ -35,12 +39,12 @@ public class CanvasManager : MonoBehaviour
 
     public enum CANVAS_MODE : int
     {
-       CREATE_MODE,
-       PREPARE_MODE,
-       SUPPLIES_MODE,
-       OPTION_MODE,
-       MANUAL_MODE,
-       TOWER_DEFENCE_MODE,
+        CREATE_MODE,
+        PREPARE_MODE,
+        SUPPLIES_MODE,
+        OPTION_MODE,
+        MANUAL_MODE,
+        TOWER_DEFENCE_MODE,
     }
 
     public static CANVAS_MODE canvasMode = CANVAS_MODE.SUPPLIES_MODE;
@@ -55,6 +59,9 @@ public class CanvasManager : MonoBehaviour
         //èâä˙à íu
         isSupplies = true;
         SetCanvas(false, false, true, false, false, false, false, true, false);
+
+        bgmTowerDefence.Stop();
+        bgmSimulate.Play();
     }
 
     private Vector3 Vec3Pos(bool isActive)
@@ -111,6 +118,9 @@ public class CanvasManager : MonoBehaviour
     /// </summary>
     public void PushSuppliesScreenButton()
     {
+        bgmTowerDefence.Stop();
+        bgmSimulate.Play();
+
         syV.PushVirusButton((int)currentCode);
         canvasMode = CANVAS_MODE.SUPPLIES_MODE;
         isSupplies = true;
@@ -119,18 +129,50 @@ public class CanvasManager : MonoBehaviour
 
     public void PushOptionButton()
     {
-        syV.PushVirusButton((int)currentCode);
-        canvasMode = CANVAS_MODE.OPTION_MODE;
-        SetCanvas(false, false, false, false, true, false, false, true, false);
-        BackGroundEnabled(true);
+        if (canvasMode == CANVAS_MODE.TOWER_DEFENCE_MODE)
+        {
+            seClick.PlayOneShot(seClick.clip);
+            bgmTowerDefence.Stop();
+            bgmSimulate.Play();
 
-        actV.SetUIActivity(false);
-        actV.comCanvas.SetActive(true);
+            syV.PushVirusButton((int)currentCode);
+            canvasMode = CANVAS_MODE.OPTION_MODE;
+            SetCanvas(false, false, false, false, true, false, false, true, false);
+            BackGroundEnabled(true);
 
-        SetVirusButtonPosition(NON_ACTIVE_POS);
+            actV.SetUIActivity(false);
+            actV.comCanvas.SetActive(true);
 
-        if (WaveGauge.currentDay == Scene.DAY) return;
-        Scene.DAY++;
+            SetVirusButtonPosition(NON_ACTIVE_POS);
+
+            PushCreateScreenButton();
+
+            if (WaveGauge.currentDay == Scene.DAY) return;
+            Scene.DAY++;
+        }
+        else
+        {
+
+            seClick.PlayOneShot(seClick.clip);
+            bgmSimulate.Stop();
+            bgmTowerDefence.Play();
+            canvasMode = CANVAS_MODE.TOWER_DEFENCE_MODE;
+            SetCanvas(false, false, false, false, false, false, false, false, true);
+            BackGroundEnabled(false);
+
+            actV.SetUIActivity(true);
+
+            currentSetNum = 0;
+            SetVirusButtonPosition(ACTIVE_POS);
+
+            for (int i = 0; i < 8; ++i)
+            {
+                actV.vParents[i].creationCount = vCreationCount[i];
+            }
+
+            if (ImageObj == null) return;
+            ImageObj.SetActive(true);
+        }
     }
 
     public void PushManualButton()
@@ -141,21 +183,24 @@ public class CanvasManager : MonoBehaviour
 
     public void PushDefenceButton()
     {
-        canvasMode = CANVAS_MODE.TOWER_DEFENCE_MODE;
-        SetCanvas(false, false, false, false, false, false, false, false, true);
-        BackGroundEnabled(false);
+        //seClick.PlayOneShot(seClick.clip);
+        //bgmSimulate.Stop();
+        //bgmTowerDefence.Play();
+        //canvasMode = CANVAS_MODE.TOWER_DEFENCE_MODE;
+        //SetCanvas(false, false, false, false, false, false, false, false, true);
+        //BackGroundEnabled(false);
 
-        actV.SetUIActivity(true);
-        
-        currentSetNum = 0;
-        SetVirusButtonPosition(ACTIVE_POS);
+        //actV.SetUIActivity(true);
 
-        for (int i = 0; i < 8; ++i)
-        {
-            actV.vParents[i].creationCount = vCreationCount[i];
-        }
-        
-        if (ImageObj == null) return;
-        ImageObj.SetActive(true);
+        //currentSetNum = 0;
+        //SetVirusButtonPosition(ACTIVE_POS);
+
+        //for (int i = 0; i < 8; ++i)
+        //{
+        //    actV.vParents[i].creationCount = vCreationCount[i];
+        //}
+
+        //if (ImageObj == null) return;
+        //ImageObj.SetActive(true);
     }
 }

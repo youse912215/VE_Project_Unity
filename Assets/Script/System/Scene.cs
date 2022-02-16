@@ -19,7 +19,7 @@ public class Scene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Screen.SetResolution((int)WINDOW_SIZE.x, (int)WINDOW_SIZE.y, false); //画面サイズ
+        Screen.SetResolution((int)WINDOW_SIZE.x, (int)WINDOW_SIZE.y, true); //画面サイズ
         Application.targetFrameRate = 60; //FPS固定
     }
 
