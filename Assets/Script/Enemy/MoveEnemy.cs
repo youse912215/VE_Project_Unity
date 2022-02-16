@@ -17,7 +17,7 @@ public class MoveEnemy : MonoBehaviour
 
     private const float INIT_ACCELE = 0.2f; //加速度の初期値
     private const float MIN_SPEED = 5.0f; //移動速度最小値
-    private const float MAX_RAND = 40.0f; //乱数最大値
+    private const float MAX_RAND = 10.0f; //乱数最大値
 
     private ParticleSystem[] ps = new ParticleSystem[3];
     private Vector3 movement;
