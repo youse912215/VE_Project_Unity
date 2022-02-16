@@ -15,9 +15,10 @@ public class SuppliesVirus : MonoBehaviour
 {
     public static bool isGetItem;
     public static bool isSupplies;
+    public bool endCoroutine;
 
-    private List<int> suppliesItemList = new List<int> { 0, 0, 0, 0 };
-    private List<int> getItemNumList = new List<int> { 99, 99, 99, 99 };
+    public static List<int> suppliesItemList = new List<int> { 0, 0, 0, 0 };
+    public static List<int> getItemNumList = new List<int> { 99, 99, 99, 99 };
 
     private const int MAX_GET_NUM = 4;
     private int dayCount;
@@ -29,27 +30,26 @@ public class SuppliesVirus : MonoBehaviour
     void Start()
     {
         this.GetComponent<SynthesizeVirus>().InitText(V_CATEGORY, "supText", supText, sup);
-        dayCount = 1;
+        dayCount = 0;
         isGetItem = false;
-        isSupplies = false;
-        SetSuppliesMaterial();
+        isSupplies = true;
+        endCoroutine = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
-        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.SUPPLIES_MODE) return;
-
+        if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.SUPPLIES_MODE) return; 
         UpdateText();
 
         if (dayCount != DAY) return;
         if (!isSupplies) return;
         SetSuppliesMaterial();
-        Debug.Log("初期化");
     }
     private void UpdateText()
     {
+        if (!endCoroutine) return;
         sup[0].text = VIRUS_NAME[suppliesItemList[0]];
         sup[1].text = VIRUS_NAME[suppliesItemList[1]];
         sup[2].text = VIRUS_NAME[suppliesItemList[2]];
@@ -63,17 +63,14 @@ public class SuppliesVirus : MonoBehaviour
     private void SetSuppliesMaterial()
     {
         StartCoroutine(GetRandomInformation());
-        
 
         supText[0].transform.parent.gameObject.transform.localPosition = Vector3.zero;
 
-        isGetItem = false;
-        isSupplies = false;
-        dayCount++;
+
         StopCoroutine(GetRandomInformation());
         //suppliesItemList.RemoveRange(0, MATERIAL_LIST_NUM);
         //getItemNumList.RemoveRange(0, MATERIAL_LIST_NUM);
-        
+
     }
 
     public void PushGetSuppliesButton()
@@ -113,6 +110,14 @@ public class SuppliesVirus : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             GetItem(suppliesItemList, vMatNam, i);
             GetItem(getItemNumList, MAX_GET_NUM, i);
+
+            if (i == MATERIAL_LIST_NUM - 1)
+            {
+                isSupplies = false;
+                isGetItem = false;
+                endCoroutine = true;
+                dayCount++;
+            }
         }
     }
 }

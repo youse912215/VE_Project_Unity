@@ -24,7 +24,7 @@ public class WaveGauge : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log("残りウェーブゲージ::" + currentGauge + " 現在::" + currentDay + " DAY::" + Scene.DAY);
+        Debug.Log("残りウェーブゲージ::" + currentGauge + " 現在::" + currentDay + " DAY::" + Scene.DAY);
 
         //キャンバスモードがTowerDefense以外なら、処理をスキップ
         if (canvasMode != CANVAS_MODE.TOWER_DEFENCE_MODE) return;
@@ -42,6 +42,7 @@ public class WaveGauge : MonoBehaviour
         deadCount = 0;
         this.GetComponent<ActEnemy>().ResetSurvivalCount();
         this.GetComponent<CanvasManager>().PushSuppliesScreenButton();
+        this.GetComponent<CanvasManager>().LoadCanvasEnabled(true);
 
         Scene.DAY++;
         //Debug.Log("[DAY " + Scene.DAY + " ]");

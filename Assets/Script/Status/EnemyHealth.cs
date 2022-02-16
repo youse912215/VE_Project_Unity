@@ -16,11 +16,13 @@ public class EnemyHealth : MonoBehaviour
     /* private */
     [SerializeField] private Slider slider; //スライダー
     [SerializeField] private ParticleSystem impactPs; //衝撃波のパーティクルシステム
+    [SerializeField] private ParticleSystem impactPs2; //衝撃波のパーティクルシステム2
     [SerializeField] private ParticleSystem bloodPs; //血しぶきのパーティクルシステム
     [SerializeField] private ParticleSystem steamPs; //steamのパーティクルシステム
     [SerializeField] private ParticleSystem jewelPs; //宝石のパーティクルシステム
 
     private ParticleSystem impactEffect; //衝撃波のエフェクト
+    private ParticleSystem impactEffect2; //衝撃波のエフェクト2
     private ParticleSystem bloodEffect; //衝撃波のエフェクト
     private ParticleSystem steamEffect; //スチームのエフェクト
     private ParticleSystem jewelEffect; //宝石のエフェクト
@@ -63,6 +65,8 @@ public class EnemyHealth : MonoBehaviour
         isImpactSet = false;
         impactEffect = Instantiate(impactPs); //エフェクト生成
         impactEffect.Stop(); //エフェクト停止
+        impactEffect2 = Instantiate(impactPs2); //エフェクト生成
+        impactEffect2.Stop(); //エフェクト停止
 
         //他スクリプト取得
         mE = this.gameObject.GetComponent<MoveEnemy>();
@@ -76,7 +80,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
         steamEffect = Instantiate(steamPs); //エフェクト生成
-        steamEffect.Play(); //エフェクト開始
+        steamEffect.Play(); //エフェクト開始    
 
         steamEffect.transform.rotation =
                 Quaternion.Euler(new Vector3(ONE_CIRCLE, QUARTER_CIRCLE * mE.startPos, 0.0f));
@@ -149,8 +153,11 @@ public class EnemyHealth : MonoBehaviour
 
             if (isImpactSet) return; //衝撃波をセットしているなら、処理をスキップ            
             if (mE.startPos != 0) StartCoroutine("RotationBody");
-            SetEffectPos(impactEffect, IMPACT_POS_Z); //エフェクトの位置をセット
+
             impactEffect.Play(); //衝撃波エフェクト
+            impactEffect2.Play(); //衝撃波エフェクト
+            SetEffectPos(impactEffect, IMPACT_POS_Z); //エフェクトの位置をセット
+            SetEffectPos(impactEffect2, IMPACT_POS_Z); //エフェクトの位置をセット      
             isImpactSet = true; //セットフラグをtrue
             //GetComponent<AudioSource>().Play();
         }
@@ -176,10 +183,12 @@ public class EnemyHealth : MonoBehaviour
         deadCount++; //累計の死亡数をカウント
         GameObject.Find("GameManager").GetComponent<WaveGauge>().UpdateGauge(); //ゲージを更新
         SetStopAction(impactEffect, true); //衝撃エフェクトを削除
+        SetStopAction(impactEffect2, true); //衝撃エフェクトを削除
         if (this.gameObject.layer == ENEMEY1_LAYER)
             SetStopAction(steamEffect, true); //敵1のみ、スチームエフェクトを削除
         DeadEffect(bloodPs, bloodEffect); //血エフェクト
         DeadEffect(jewelPs, jewelEffect); //宝石エフェクト
+        //StartCoroutine(StayEffect(impactEffect2));
         Destroy(gameObject); //敵オブジェクトを削除
     }
 
@@ -195,6 +204,16 @@ public class EnemyHealth : MonoBehaviour
         iMain.stopAction = ParticleSystemStopAction.Destroy;
         if (!isLoop) return;
         effect.Stop();
+    }
+
+    private IEnumerator StayEffect(ParticleSystem effect)
+    {
+        while (effect)
+        {
+            yield return new WaitForSeconds(0.1f); //0.1f待つ
+
+        }
+
     }
 
     /// <summary>

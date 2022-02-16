@@ -24,6 +24,8 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] private GameObject manualButtonCanvas;
     [SerializeField] private GameObject simulationCanvas;
     [SerializeField] private GameObject mainCanvas;
+    [SerializeField] private GameObject loadCanvas;
+    [SerializeField] private GameObject backgroundCanvas;
 
     GameObject obj;
     SynthesizeVirus syV;
@@ -74,6 +76,16 @@ public class CanvasManager : MonoBehaviour
         mainCanvas.transform.localPosition = Vec3Pos(main);
     }
 
+    public void LoadCanvasEnabled(bool state)
+    {
+        loadCanvas.SetActive(state);
+    }
+
+    public void BackGroundEnabled(bool state)
+    {
+        backgroundCanvas.SetActive(state);
+    }
+
     /// <summary>
     /// Pushing create screen button
     /// </summary>
@@ -110,6 +122,7 @@ public class CanvasManager : MonoBehaviour
         syV.PushVirusButton((int)currentCode);
         canvasMode = CANVAS_MODE.OPTION_MODE;
         SetCanvas(false, false, false, false, true, false, false, true, false);
+        BackGroundEnabled(true);
 
         actV.SetUIActivity(false);
         actV.comCanvas.SetActive(true);
@@ -130,6 +143,7 @@ public class CanvasManager : MonoBehaviour
     {
         canvasMode = CANVAS_MODE.TOWER_DEFENCE_MODE;
         SetCanvas(false, false, false, false, false, false, false, false, true);
+        BackGroundEnabled(false);
 
         actV.SetUIActivity(true);
         

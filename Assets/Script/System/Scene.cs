@@ -14,6 +14,8 @@ public class Scene : MonoBehaviour
     public static int DAY = 0; //1“ú–Ú
     private const int WIN_COUNT = 10000;
 
+    [SerializeField] private AudioSource clickAudio;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,17 +23,9 @@ public class Scene : MonoBehaviour
         Application.targetFrameRate = 60; //FPSŒÅ’è
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        sceneName = SceneManager.GetActiveScene().buildIndex; //Œ»İ‚ÌƒV[ƒ“”Ô†‚ğ•Û‘¶
-
-        if (deadCount <= WIN_COUNT) return;
-        SceneManager.LoadScene("End");
-    }
-
     public void startgame()
     {
+        clickAudio.PlayOneShot(clickAudio.clip);
         SceneManager.LoadScene("TowerDefence");
     }
 }
