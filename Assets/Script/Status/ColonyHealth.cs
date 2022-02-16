@@ -29,7 +29,7 @@ public class ColonyHealth : MonoBehaviour
     private bool isFire; //炎エフェクトフラグ
     public static bool isLevelUp = false;
 
-    [SerializeField] private GameObject redd;
+    
 
     //レベルごとの経験値リスト（必要経験値）
     public static readonly List<float> EXP_LIST = new List<float>{
@@ -76,10 +76,7 @@ public class ColonyHealth : MonoBehaviour
 
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
-
-        if (Input.GetKeyDown(KeyCode.A))
-            redd.GetComponent<StrongEnemyEvent>().StartCoroutine("WarningCoroutine");
-
+            
         levelText.text = "Colony Lv " + (colonyLevel + 1).ToString(); //レベル表示
         StartLevelEffect(); //レベルアップエフェクト開始
 

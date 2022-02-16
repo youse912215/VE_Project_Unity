@@ -70,7 +70,7 @@ public class SuppliesVirus : MonoBehaviour
         supText[0].transform.parent.gameObject.transform.localPosition = Vector3.zero;
 
 
-        StopCoroutine(GetRandomInformation());
+        //StopCoroutine(GetRandomInformation());
         //suppliesItemList.RemoveRange(0, MATERIAL_LIST_NUM);
         //getItemNumList.RemoveRange(0, MATERIAL_LIST_NUM);
 

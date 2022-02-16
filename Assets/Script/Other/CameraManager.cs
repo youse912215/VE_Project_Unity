@@ -13,7 +13,7 @@ using static VirusMaterialData;
 public class CameraManager : MonoBehaviour
 {
     private bool isSetButton;
-    private bool isPerChange; //視点変更したか
+    public bool isPerChange; //視点変更したか
     private GameObject pMenuButton;
     public static GameObject pVirusButton;
     public static bool isActiveButton;

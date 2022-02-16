@@ -9,9 +9,4 @@ public class EndProcess : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Escape)) {Application.Quit(); return; }
     }
-
-    public void PushEnd()
-    {
-        Application.Quit();
-    }
 }

@@ -86,16 +86,18 @@ public class EnemyHealth : MonoBehaviour
         confirmDamage = (enemyRank * 0.5f) + ATTACK_DAMAGE;
 
         if (this.gameObject.layer != ENEMEY1_LAYER) return; //対象レイヤー以外は、処理をスキップ
-
-        if (enemyRank >= 0) {
-            for (int i = 0; i < 5; ++i) BlinkingEnemy.SetMaterials(body[i], mate);
-        }
+        
         steamEffect = Instantiate(steamPs); //エフェクト生成
         steamEffect.Play(); //エフェクト開始
 
         steamEffect.transform.rotation =
                 Quaternion.Euler(new Vector3(ONE_CIRCLE, QUARTER_CIRCLE * mE.startPos, 0.0f));
         updatePos = new Vector3(-150.0f * mE.startPos, 0, 0);
+
+        if (enemyRank >= 6) {   
+            for (int i = 0; i < 5; ++i) BlinkingEnemy.SetMaterials(body[i], mate);
+            GameObject.Find("GameManager").GetComponent<WaveGauge>().isEventDanger = true;
+        }
     }
 
     /// <summary>
