@@ -42,7 +42,7 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private Text currentOwnedText;
 
-    private const float WHEEL_INTERVAL = 0.3f; //ホイールの間隔時間
+    private const float WHEEL_INTERVAL = 0.5f; //ホイールの間隔時間
     private readonly Vector2 CLICK_POS = new Vector2(1600.0f, 350.0f); //クリックできる位置
     private const float MOUSE_DIFF_POS = 55.0f; //マウスの差分座標
 
@@ -52,6 +52,7 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         owned = 0;
+        currentSetNum = 0;
 
         pMenuButton = GetHierarchyObject("ParentMenuButton");
         pVirusButton = GetHierarchyObject("ParentVirusButton");
@@ -76,11 +77,14 @@ public class CameraManager : MonoBehaviour
         wheelUI.SetActive(false);
 
         waterRenderer = water.GetComponent<Renderer>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(currentSetNum);
+
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
         MoveCamera();

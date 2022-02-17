@@ -86,14 +86,14 @@ namespace Call
         //3—Í
         public static readonly Vector3[] force =
         {
-            new Vector3(2.0f, 0.5f, 5.0f), //code.cld
-            new Vector3(6.0f, 1.0f, 5.0f), //code.inf
-            new Vector3(4.0f, 1.5f, 5.0f), //code.19
-            new Vector3(2.0f, 1.5f, 5.0f), //code.Nov
-            new Vector3(10.0f, 1.0f, 1.0f), //code.Ehf
+            new Vector3(2.5f, 0.5f, 5.0f), //code.cld
+            new Vector3(7.5f, 1.0f, 5.0f), //code.inf
+            new Vector3(5.0f, 1.5f, 5.0f), //code.19
+            new Vector3(5.0f, 2.0f, 5.0f), //code.Nov
+            new Vector3(12.5f, 1.0f, 1.0f), //code.Ehf
             new Vector3(1f, 1f, 1f), //code.Ev
             new Vector3(1f, 1f, 1f), //code.Bd
-            new Vector3(10.0f, 2.5f, 5.0f), //code.ult
+            new Vector3(12.5f, 2.5f, 5.0f), //code.ult
 
         };
 

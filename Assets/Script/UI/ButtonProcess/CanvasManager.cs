@@ -164,7 +164,6 @@ public class CanvasManager : MonoBehaviour
 
             actV.SetUIActivity(true);
 
-            currentSetNum = 0;
             SetVirusButtonPosition(ACTIVE_POS);
 
             for (int i = 0; i < 8; ++i)

@@ -39,7 +39,8 @@ public class SuppliesVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(dayCount);
+        //Debug.Log(dayCount);
+        
 
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.SUPPLIES_MODE) return;
@@ -110,7 +111,7 @@ public class SuppliesVirus : MonoBehaviour
     {
         for (int i = 0; i < MATERIAL_LIST_NUM; ++i)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.3f);
             GetItem(suppliesItemList, vMatNam, i);
             GetItem(getItemNumList, MAX_GET_NUM, i);
 

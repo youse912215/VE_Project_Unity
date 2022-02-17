@@ -19,6 +19,8 @@ public class PrepareVirus : MonoBehaviour
 
     [SerializeField] private Sprite[] sprite = new Sprite[8];
 
+    [SerializeField] private AudioSource[] seVirus = new AudioSource[8]; 
+
     private GameObject prepareButton;
 
     // Start is called before the first frame update
@@ -37,9 +39,6 @@ public class PrepareVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("v::" + virusSetList[0] + ":" + virusSetList[1] + ":" + virusSetList[2]);
-        //Debug.Log("ov::" + oldVirusSetList[0] + ":" + oldVirusSetList[1] + ":" + oldVirusSetList[2]);
-
         if (!isPreVirus) return;
         prepareButton.transform.GetChild(selectSetNumber).GetComponent<Image>().sprite =
             sprite[virusSetList[selectSetNumber]];
@@ -53,16 +52,19 @@ public class PrepareVirus : MonoBehaviour
 
     public void PushSetListButton(int n)
     {
+        
+
         isSetList = true;
         selectSetNumber = n; //選択したセット番号を取得
 
         if (!isSetList) return;
 
         isPreVirus = true;
-        virusSetList[selectSetNumber] = selectList[num_];
-        prepareButton.transform.GetChild(selectSetNumber).GetComponent<Image>().sprite =
-            sprite[virusSetList[selectSetNumber]];
+        virusSetList[n] = selectList[num_];
+        prepareButton.transform.GetChild(n).GetComponent<Image>().sprite =
+            sprite[virusSetList[n]];
 
+        seVirus[virusSetList[selectSetNumber]].PlayOneShot(seVirus[virusSetList[n]].clip);
         num_ = num_ != 5 ? ++num_ : 0;
     }
 

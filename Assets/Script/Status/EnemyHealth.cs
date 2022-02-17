@@ -45,7 +45,7 @@ public class EnemyHealth : MonoBehaviour
     private readonly Vector3 STEAM_POS = new Vector3(-65.0f, 145.0f, -ONE_CIRCLE);
     private int getCount;
     private int getMaterial;
-    private const int MAX_DROP = 5; //最大ドロップ数
+    private const int MAX_DROP = 10; //最大ドロップ数
     private List<bool> isVirusDamage = new List<bool> { false, false, false, false, false, false, false, false };
     private float pDefence; //シールド量
 
@@ -298,6 +298,10 @@ public class EnemyHealth : MonoBehaviour
         getCount = (int)Integerization(rand) % MAX_DROP + 1; //1~MAX_DROP個取得
         getMaterial = (int)Integerization(rand) % vMatNam; //素材番号を取得
         vMatOwned[getMaterial] += getCount; //所持素材リストに加える
-        //Debug.Log(VIRUS_NAME[getMaterial] + "を" + getCount + "個入手");
+
+        var sVM = GameObject.Find("GameManager").GetComponent<ShowVirusMaterial>();
+        sVM.dropTextList.Insert(0, VIRUS_NAME[getMaterial] + "を" + getCount + "個入手");
+
+        if (sVM.dropTextList.Count == 4) sVM.dropTextList.RemoveRange(3, 1);
     }
 }
