@@ -13,23 +13,24 @@ using static Call.VirusData;
 
 public class SuppliesVirus : MonoBehaviour
 {
-    public static bool isGetItem;
-    public static bool isSupplies;
-    public bool endCoroutine;
+    private const int MAX_GET_NUM = 4; //最大入手量
+    private const float WAIT_TIME = 0.5f; //待ち時間
+    private readonly Vector3 ENABLED_POS = new Vector3(1000, 1000, 1000); //非表示の座標
+    private int dayCount; //dayカウント
 
-    public static List<int> suppliesItemList = new List<int> { 0, 0, 0, 0 };
-    public static List<int> getItemNumList = new List<int> { 99, 99, 99, 99 };
+    public static bool isGetItem; //入手フラグ
+    public static bool isSupplies; //支給フラグ
+    public bool endCoroutine; //コルーチンフラグ
 
-    private const int MAX_GET_NUM = 4;
-    private int dayCount;
-
-    public static Text[] sup = new Text[V_CATEGORY];
-    public static GameObject[] supText = new GameObject[V_CATEGORY];
+    private List<int> suppliesItemList = new List<int> {}; //支給アイテム名リスト
+    private List<int> getItemNumList = new List<int> {}; //入手アイテム量リスト
+    public static Text[] itemListText = new Text[V_CATEGORY]; //アイテムテキスト
+    public static GameObject[] textObject = new GameObject[V_CATEGORY]; //テキストオブジェクト
 
     // Start is called before the first frame update
     void Start()
     {
-        this.GetComponent<SynthesizeVirus>().InitText(V_CATEGORY, "supText", supText, sup);
+        this.GetComponent<SynthesizeVirus>().InitText(V_CATEGORY, "supText", textObject, itemListText); //テキストの初期化
         dayCount = 0;
         isGetItem = false;
         isSupplies = true;
@@ -39,65 +40,75 @@ public class SuppliesVirus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(dayCount);
-        
-
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.SUPPLIES_MODE) return;
+        //更新処理
+        UpdateList();
         UpdateText();
+    }
 
+    /// <summary>
+    /// 支給品リストを更新
+    /// </summary>
+    private void UpdateList()
+    {
         if (dayCount != DAY) return;
         if (!isSupplies) return;
-        SetSuppliesMaterial();
-        dayCount++;
+        suppliesItemList.Clear(); //リストをクリア
+        getItemNumList.Clear(); //リストをクリア
+        StartCoroutine(GetRandomInformation()); //ランダムでアイテム情報を入手するコルーチンをまわす
+        textObject[0].transform.parent.gameObject.transform.localPosition = Vector3.zero; //表示
+        dayCount++; //dayをカウント
     }
+
+    /// <summary>
+    /// 支給品テキストを更新
+    /// </summary>
     private void UpdateText()
     {
         if (!endCoroutine) return;
-        sup[0].text = VIRUS_NAME[suppliesItemList[0]];
-        sup[1].text = VIRUS_NAME[suppliesItemList[1]];
-        sup[2].text = VIRUS_NAME[suppliesItemList[2]];
-        sup[3].text = VIRUS_NAME[suppliesItemList[3]];
-        sup[4].text = "x" + getItemNumList[0].ToString();
-        sup[5].text = "x" + getItemNumList[1].ToString();
-        sup[6].text = "x" + getItemNumList[2].ToString();
-        sup[7].text = "x" + getItemNumList[3].ToString();
+        if (isSupplies) return;
+        if (isGetItem) return;
+        /* アイテム名 */
+        itemListText[0].text = VIRUS_NAME[suppliesItemList[0]];
+        itemListText[1].text = VIRUS_NAME[suppliesItemList[1]];
+        itemListText[2].text = VIRUS_NAME[suppliesItemList[2]];
+        itemListText[3].text = VIRUS_NAME[suppliesItemList[3]];
+        /* アイテム量 */
+        itemListText[4].text = "x" + getItemNumList[0].ToString();
+        itemListText[5].text = "x" + getItemNumList[1].ToString();
+        itemListText[6].text = "x" + getItemNumList[2].ToString();
+        itemListText[7].text = "x" + getItemNumList[3].ToString();
     }
 
-    private void SetSuppliesMaterial()
-    {
-        StartCoroutine(GetRandomInformation());
-
-        supText[0].transform.parent.gameObject.transform.localPosition = Vector3.zero;
-
-
-        //StopCoroutine(GetRandomInformation());
-        //suppliesItemList.RemoveRange(0, MATERIAL_LIST_NUM);
-        //getItemNumList.RemoveRange(0, MATERIAL_LIST_NUM);
-
-    }
-
+    /// <summary>
+    /// 支給品を入手するボタンを押したとき
+    /// </summary>
     public void PushGetSuppliesButton()
     {
         if (isGetItem) return;
-
         StartCoroutine(GetRandomItem()); //開始
         StopCoroutine(GetRandomItem()); //停止
-        isGetItem = true;
-
-        supText[0].transform.parent.gameObject.transform.localPosition =
-            new Vector3(1000, 1000, 1000);
+        isGetItem = true; //入手済み
+        textObject[0].transform.parent.gameObject.transform.localPosition = ENABLED_POS; //非表示
     }
 
-    private void GetItem(List<int> list, int n, int i)
+    /// <summary>
+    /// アイテム入手
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="n"></param>
+    private void GetItem(List<int> list, int n)
     {
-        //list.Add((int)Integerization(rand % n));
-        list[i] = ((int)Integerization(rand % n)) + 1;
-
-        if (list != getItemNumList) return;
-        if (list[list.Count() - 1] == 0) list[list.Count() - 1]++;
+        list.Add((int)Integerization(rand % n)); //ランダム値を取得
+        if (list != getItemNumList) return; //アイテム量リスト以外は、処理をスキップ
+        if (list[list.Count() - 1] == 0) list[list.Count() - 1]++; //入手量が0のとき、1増やす
     }
 
+    /// <summary>
+    /// リストにあるランダムなアイテムを入手する
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator GetRandomItem()
     {
         for (int i = 0; i < MATERIAL_LIST_NUM; ++i)
@@ -107,21 +118,31 @@ public class SuppliesVirus : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ランダムでアイテム情報を入手
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator GetRandomInformation()
     {
-        for (int i = 0; i < MATERIAL_LIST_NUM; ++i)
+        //アイテム量のリストが最後まで到達していない間、繰り返す
+        while (getItemNumList.Count != MATERIAL_LIST_NUM)
         {
-            yield return new WaitForSeconds(0.3f);
-            GetItem(suppliesItemList, vMatNam, i);
-            GetItem(getItemNumList, MAX_GET_NUM, i);
-
-            if (i == MATERIAL_LIST_NUM - 1)
+            //MATERIAL_LIST_NUM分回す
+            for (int i = 0; i < MATERIAL_LIST_NUM; ++i)
             {
-                isSupplies = false;
-                isGetItem = false;
-                endCoroutine = true;
-                
+                yield return new WaitForSeconds(WAIT_TIME); //WAIT_TIME 待つ
+                GetItem(suppliesItemList, vMatNam); //入手アイテム情報を取得
+                GetItem(getItemNumList, MAX_GET_NUM); //アイテム量を取得
+
+                //繰り返しの最後に、各フラグをセット
+                if (i == MATERIAL_LIST_NUM - 1)
+                {
+                    isSupplies = false;
+                    isGetItem = false;
+                    endCoroutine = true;
+                }
             }
         }
+
     }
 }

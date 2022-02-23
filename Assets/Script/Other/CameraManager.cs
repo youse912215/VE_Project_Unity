@@ -83,8 +83,6 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentSetNum);
-
         //キャンバスモードがTowerDefense以外のとき、処理をスキップ
         if (CanvasManager.canvasMode != CanvasManager.CANVAS_MODE.TOWER_DEFENCE_MODE) return;
         MoveCamera();

@@ -4,14 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LoadingManager : MonoBehaviour
-{
-    private float count;
-    public bool isLoading;
+{ 
+    [SerializeField] private Image loadImage; //ロード画像
+    [SerializeField] private Text hintText; //ヒントテキスト
 
-    [SerializeField] private Image loadImage;
-    [SerializeField] private Text hintText;
+    private readonly Color ADD_LOAD_COLOR = new Color(0.001f, 0.001f, 0.001f, 0.0f); //読み込み時の加算色
+    private const float ADD_COUNT = 0.005f; //加算カウント
+    private const float LOAD_COUNT = 5.0f; //ロード時間
+    private float count; //カウント量
+    private List<string> comma = new List<string>{" ", " .", " ..", " ...", " ....", " ....."}; //ロード時の点
 
-    private List<string> comma = new List<string>{" ", ".", "..", "...", "....", "....."};
+    public bool isLoading; //ロードフラグ
 
     private void Start()
     {
@@ -24,24 +27,29 @@ public class LoadingManager : MonoBehaviour
     {
         hintText.text = "Day " + (Scene.DAY + 1).ToString() + comma[(int)count];
 
-        if(isLoading) StartCoroutine(CountLoadTime());
+        if(isLoading && this.GetComponent<SuppliesVirus>().endCoroutine)
+            StartCoroutine(CountLoadTime()); //ロード開始
 
-        if (count < 5.0f) return;
-        this.GetComponent<CanvasManager>().LoadCanvasEnabled(false);
-        StopCoroutine(CountLoadTime());
-        count = 0.0f;
-        isLoading = false;
-        this.GetComponent<SuppliesVirus>().endCoroutine = false;
-        
+        if (count < LOAD_COUNT) return; //ロード時間に満たないとき、処理をスキップ
+        this.GetComponent<CanvasManager>().LoadCanvasEnabled(false); //キャンバスをoff
+        StopCoroutine(CountLoadTime()); //ロードのコルーチンを停止
+        count = 0.0f; //カウントを初期化
+        isLoading = false; //ロードフラグをfalse
+        this.GetComponent<SuppliesVirus>().endCoroutine = false; //コルーチンフラグをfalse       
     }
 
+    /// <summary>
+    /// ロード時間をカウント
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator CountLoadTime()
     {
+        //ロードフラグがtrueの間、繰り返す
         while (isLoading)
         {
             yield return new WaitForSeconds(0.1f);
-            loadImage.color += new Color(0.002f, 0.002f, 0.002f, 0);
-            count += 0.005f;
+            loadImage.color += ADD_LOAD_COLOR; //RGB値を加算
+            count += ADD_COUNT; //カウント
         }
         
     }
